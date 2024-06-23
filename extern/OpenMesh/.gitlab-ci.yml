@@ -1,0 +1,526 @@
+#############################################################
+#                                                           #
+# This is an auto generated file. Do not make               #
+# changes to this file. They possible will be overriden.    #
+#                                                           #
+# To make persistent changes, changes files in              #
+# ./CI/gitlab-ci/ ...                                       #
+# and regenerate this file with the configuration tool      #
+# python3 ./CI/gitlab-ci/assemble-gitlab-ci.py              #
+#                                                           #
+#############################################################
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+# -----------------
+# Linux tasks
+# -----------------
+
+cppcheck:
+  stage: build
+  script: "CI/ci-cppcheck.sh"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  timeout: 3h
+  artifacts:
+    paths:
+      - cppcheck.log
+
+#-----------  Job Informations:
+# Type:       Build: debug
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp11
+
+build-debug-gcc-cpp11:
+  stage: build
+  script: "CI/ci-linux-build.sh gcc cpp11 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-gcc-cpp11-debug-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: debug
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp11
+
+test-debug-gcc-cpp11:
+  stage: test
+  script: "CI/ci-linux-test.sh gcc cpp11 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-debug-gcc-cpp11]
+
+#-----------  Job Informations:
+# Type:       Build: release
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp11
+
+build-release-gcc-cpp11:
+  stage: build
+  script: "CI/ci-linux-build.sh gcc cpp11 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-gcc-cpp11-release-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: release
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp11
+
+test-release-gcc-cpp11:
+  stage: test
+  script: "CI/ci-linux-test.sh gcc cpp11 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-release-gcc-cpp11]
+
+#-----------  Job Informations:
+# Type:       Build: debug
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp11
+
+build-debug-clang-cpp11:
+  stage: build
+  script: "CI/ci-linux-build.sh clang cpp11 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-clang-cpp11-debug-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: debug
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp11
+
+test-debug-clang-cpp11:
+  stage: test
+  script: "CI/ci-linux-test.sh clang cpp11 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-debug-clang-cpp11]
+
+#-----------  Job Informations:
+# Type:       Build: release
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp11
+
+build-release-clang-cpp11:
+  stage: build
+  script: "CI/ci-linux-build.sh clang cpp11 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-clang-cpp11-release-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: release
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp11
+
+test-release-clang-cpp11:
+  stage: test
+  script: "CI/ci-linux-test.sh clang cpp11 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-release-clang-cpp11]
+
+#-----------  Job Informations:
+# Type:       Build: debug
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp14
+
+build-debug-gcc-cpp14:
+  stage: build
+  script: "CI/ci-linux-build.sh gcc cpp14 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-gcc-cpp14-debug-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: debug
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp14
+
+test-debug-gcc-cpp14:
+  stage: test
+  script: "CI/ci-linux-test.sh gcc cpp14 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-debug-gcc-cpp14]
+
+#-----------  Job Informations:
+# Type:       Build: release
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp14
+
+build-release-gcc-cpp14:
+  stage: build
+  script: "CI/ci-linux-build.sh gcc cpp14 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-gcc-cpp14-release-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: release
+# OS:         Linux
+# Compiler:   gcc
+# Language:   cpp14
+
+test-release-gcc-cpp14:
+  stage: test
+  script: "CI/ci-linux-test.sh gcc cpp14 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-release-gcc-cpp14]
+
+#-----------  Job Informations:
+# Type:       Build: debug
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp14
+
+build-debug-clang-cpp14:
+  stage: build
+  script: "CI/ci-linux-build.sh clang cpp14 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-clang-cpp14-debug-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: debug
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp14
+
+test-debug-clang-cpp14:
+  stage: test
+  script: "CI/ci-linux-test.sh clang cpp14 debug"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-debug-clang-cpp14]
+
+#-----------  Job Informations:
+# Type:       Build: release
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp14
+
+build-release-clang-cpp14:
+  stage: build
+  script: "CI/ci-linux-build.sh clang cpp14 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  artifacts:
+    paths:
+    - build-clang-cpp14-release-Vector-Checks/
+
+#-----------  Job Informations:
+# Type:       Test: release
+# OS:         Linux
+# Compiler:   clang
+# Language:   cpp14
+
+test-release-clang-cpp14:
+  stage: test
+  script: "CI/ci-linux-test.sh clang cpp14 release"
+  image: graphics.rwth-aachen.de:4567/docker/docker/docker-openmesh-container
+  tags: [Docker]
+  dependencies: [build-release-clang-cpp14]
+
+
+# -----------------
+# Apple tasks
+# -----------------
+
+macos-cpp11-debug:
+  stage: build
+  script: "CI/ci-mac-build.sh C++11 debug ; CI/ci-mac-test.sh C++11 debug"
+  tags:
+    - Apple
+
+macos-cpp14-debug:
+  stage: build
+  script: "CI/ci-mac-build.sh C++14 debug ; CI/ci-mac-test.sh C++14 debug"
+  tags:
+    - Apple
+
+macos-cpp11-release:
+  stage: build
+  script: "CI/ci-mac-build.sh C++11 release ; CI/ci-mac-test.sh C++11 release"
+  tags:
+    - Apple
+  artifacts:
+    paths:
+      - build-release-cpp11/*.dmg
+      - build-release-cpp11/*.tar.gz
+
+macos-cpp14-release:
+  stage: build
+  script: "CI/ci-mac-build.sh C++14 release ; CI/ci-mac-test.sh C++14 release"
+  tags:
+    - Apple
+  artifacts:
+    paths:
+      - build-release-cpp14/*.dmg
+      - build-release-cpp14/*.tar.gz
+
+# -----------------
+# Windows tasks
+# -----------------
+
+VS2017-64-bit-shared-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x64"
+    SHARED:         "TRUE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+    - Qt5101
+  artifacts:
+    paths:
+      - build-release/*.exe      
+      
+VS2017-64-bit-static-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x64"
+    SHARED:         "FALSE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+    - Qt5101    
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+      
+VS2017-64-bit-shared-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x64"
+    SHARED:         "TRUE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+
+VS2017-32-bit-shared-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x32"
+    SHARED:         "TRUE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+  artifacts:
+    paths:
+      - build-release/*.exe
+      
+
+VS2017-64-bit-static-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x64"
+    SHARED:         "FALSE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+
+VS2017-32-bit-static-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2017"
+    ARCHITECTURE:   "x32"
+    SHARED:         "FALSE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2017
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-64-bit-shared-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x64"
+    SHARED:         "TRUE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+      
+      
+VS2015-64-bit-shared-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x64"
+    SHARED:         "TRUE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-32-bit-shared-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x32"
+    SHARED:         "TRUE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-32-bit-shared-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x32"
+    SHARED:         "TRUE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+      
+VS2015-64-bit-static-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x64"
+    SHARED:         "FALSE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-64-bit-static-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x64"
+    SHARED:         "FALSE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-32-bit-static-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x32"
+    SHARED:         "FALSE"
+    APPS:           "ON"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+VS2015-32-bit-static-no-apps:
+  stage: build
+  variables:
+    BUILD_PLATFORM: "VS2015"
+    ARCHITECTURE:   "x32"
+    SHARED:         "FALSE"
+    APPS:           "OFF"
+  script: "CI\\Windows.bat"
+  tags:
+    - VS2015
+  artifacts:
+    paths:
+      - build-release/*.exe
+
+Doc-publish:
+  stage: deploy
+  only:
+     - master
+  script: "CI/ci-doc.sh"
+  tags:
+     - Linux
+     - stretch     
+
+Sources:
+  stage: deploy
+  only:
+     - master
+  script: "CI/ci-source.sh"
+  tags:
+     - Linux
+     - stretch     
+  artifacts:
+    paths:
+      - OpenMesh*.zip
+      - OpenMesh*.tar.bz2
+      - OpenMesh*.tar.gz
+
+

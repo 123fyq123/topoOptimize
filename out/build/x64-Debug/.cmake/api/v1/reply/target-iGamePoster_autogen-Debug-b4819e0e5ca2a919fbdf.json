@@ -1,0 +1,121 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Apps/Poster/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "CommonLib::@efd11b196db6ba59144a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "OpenMeshCore::@e941df43cfa7b8617a8a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "OpenMeshTools::@4bda8efd5b915e73e1c6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Tools::@2af1914ea379099daa5d"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "json::@56b1eefa359e4181520f"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "BMesh::@3488afd3d253e65838c6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "BSpline3D::@844d2dc36c84d6af475b"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "VolumeAlgorithm::@ba99964d8590824046c5"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "SkeletalMesh::@b4fc59617ce4381c1b97"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "SurfaceAlgorithm::@042d1708d919bf1dad8c"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "SkeletalPipeline::@3d379e1b3ba7e3e4b784"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "freeglut::@b21453d6b712ce8c9e06"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tinyXML::@a51e2f33458dc53165c5"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "SolverGPU::@44129a7a7ff99871879b"
+		}
+	],
+	"id" : "iGamePoster_autogen::@410d1bf66196416a171b",
+	"isGeneratorProvided" : true,
+	"name" : "iGamePoster_autogen",
+	"paths" : 
+	{
+		"build" : "Apps/Poster",
+		"source" : "Apps/Poster"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/Poster/CMakeFiles/iGamePoster_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/Poster/CMakeFiles/iGamePoster_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

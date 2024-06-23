@@ -1,0 +1,42 @@
+std::cout << "[DEBUG] id " << v[i]->id << " " << v[i]->children[j]->id << std::endl;
+            unsigned int rlt = Geometry::isAHexFaceContainBHexFace(v[i]->root, v[i]->children[j]->root, diffPoint, samePoint, ai, bi);
+            if(rlt == 1){
+                // a 中面 包含 b 中面， 将a的六面体进行分裂
+                Point3D tmpP = Point3D(0,0,0);
+                v[vNum] = new Node(tmpP, SN);
+                vNum++;
+                v[vNum-1]->root = new Hex();
+                if(Geometry::splitHexUseALine(*(v[i]->root), *(v[vNum-1]->root), diffPoint, samePoint, ai)){
+                    std::cout << "[DEBUG] can split it" <<std::endl;
+                }
+                // 重建链接关系
+                for(int k=0; k<v[i]->children.size(); k++){
+                    v[vNum-1]->addChild(v[i]->children[k]);
+                }
+                v[vNum-1]->addChild(v[i]);
+                v[vNum-1]->deleteChild(v[i]->children[j]);
+                v[i]->addChild(v[vNum-1]);
+                // i = 0; // 重新进行遍历
+            }
+            else if(rlt == 4){
+                // b 中面 包含 a 中面， 将b的六面体进行分裂
+                Point3D tmpP = Point3D(0,0,0);
+                v[vNum] = new Node(tmpP, SN);
+                vNum++;
+                v[vNum-1]->root = new Hex();
+                if(Geometry::splitHexUseALine(*(v[i]->children[j]->root), *(v[vNum-1]->root), diffPoint, samePoint, bi)){
+                    std::cout << "[DEBUG] can split it" <<std::endl;
+                }
+                // 重建链接关系
+                for(int k=0; k<v[i]->children[j]->children.size(); k++){
+                    v[vNum-1]->addChild(v[i]->children[j]->children[k]);
+                }
+                v[vNum-1]->addChild(v[i]->children[j]);
+                v[vNum-1]->deleteChild(v[i]);
+                v[i]->children[j]->addChild(v[vNum-1]);
+                // i = 0; // 重新进行遍历
+            }
+            else if(rlt == 3){
+                // v[i]->deleteChild(v[i]->children[j]);
+                // v[i]->children[j]->deleteChild(v[i]);
+            }

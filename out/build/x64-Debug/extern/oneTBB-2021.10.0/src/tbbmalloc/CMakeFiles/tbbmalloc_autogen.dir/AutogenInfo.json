@@ -1,0 +1,120 @@
+{
+	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen",
+	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc",
+	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc",
+	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbb/itt_notify.h",
+			"MU",
+			"F5N2RKSOEZ/moc_itt_notify.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.h",
+			"MU",
+			"EWIEGA46WW/moc_backend.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.h",
+			"MU",
+			"EWIEGA46WW/moc_large_objects.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/include",
+	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"TBB_USE_DEBUG",
+		"WIN32",
+		"_HAS_STD_BYTE=0",
+		"_USE_MATH_DEFINES",
+		"__TBBMALLOC_BUILD",
+		"__TBB_DYNAMIC_LOAD_ENABLED=0",
+		"__TBB_SOURCE_DIRECTLY_INCLUDED=1",
+		"__TBB_USE_ITT_NOTIFY"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
+		"E:/LabViewer/extern/boost_1_76_0",
+		"E:/LabViewer/include",
+		"E:/LabViewer/include/rapidjson/include",
+		"E:/LabViewer/include/spdlog/include",
+		"E:/LabViewer/extern",
+		"E:/LabViewer/Apps",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/freeglut/include",
+		"E:/LabViewer/extern/oneTBB-2021.10.0/include"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 12,
+	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbb/itt_notify.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backref.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/frontend.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

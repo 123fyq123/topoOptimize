@@ -1,0 +1,34 @@
+{
+    "Record Name": "Geodesic_OpenMesh",
+    "git_sha": "54f29b3e2b8f020a9d5e89f94002fdcc5273d124",
+    "date": "Tue 22:11:2022 16:09:03",
+    "command_line": "/mnt/a/ManjaroProjects/RXMesh/cmake-build-debug-wsl/bin/Geodesic",
+    "System": {
+        "Hostname": "littleSavior",
+        "compiler_name": "g++",
+        "compiler_version": "9.4.0",
+        "C++ version": 201703,
+        "Build Mode": "Debug"
+    },
+    "Model": {
+        "model_name": "/mnt/a/ManjaroProjects/RXMesh/input/sphere3.obj",
+        "num_vertices": 386,
+        "num_edges": 1152,
+        "num_faces": 768
+    },
+    "seeds": [
+        286
+    ],
+    "method": "OpenMeshSingleCore",
+    "compute_toplesets_time": 0.06970299780368805,
+    "num_iter_taken": 24,
+    "Geodesic": {
+        "num_threads": 1,
+        "passed": [
+            true
+        ],
+        "time (ms)": [
+            2.1365699768066408
+        ]
+    }
+}

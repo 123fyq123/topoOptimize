@@ -1,0 +1,104 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"extern/nlopt/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 244,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 296,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 380,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 398,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"extern/nlopt/src/api/nlopt.h",
+				"out/build/x64-Debug/extern/nlopt/nlopt.hpp",
+				"out/build/x64-Debug/extern/nlopt/nlopt.f"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"extern/nlopt/nlopt.lib"
+			],
+			"targetId" : "nlopt::@5e26cef8e9aabe5821de",
+			"targetIndex" : 58,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Development",
+			"destination" : "lib/cmake/nlopt",
+			"exportName" : "NLoptLibraryDepends",
+			"exportTargets" : 
+			[
+				{
+					"id" : "nlopt::@5e26cef8e9aabe5821de",
+					"index" : 58
+				}
+			],
+			"paths" : 
+			[
+				"extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Development",
+			"destination" : "lib/cmake/nlopt",
+			"paths" : 
+			[
+				"out/build/x64-Debug/extern/nlopt/NLoptConfig.cmake",
+				"out/build/x64-Debug/extern/nlopt/NLoptConfigVersion.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "extern/nlopt",
+		"source" : "extern/nlopt"
+	}
+}

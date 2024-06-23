@@ -1,0 +1,69 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/Tools/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Geom::@f2f4b18113ac329b99e2"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		}
+	],
+	"id" : "Tools_autogen::@2af1914ea379099daa5d",
+	"isGeneratorProvided" : true,
+	"name" : "Tools_autogen",
+	"paths" : 
+	{
+		"build" : "extern/Tools",
+		"source" : "extern/Tools"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,240 @@
+{
+	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen",
+	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm",
+	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/SurfaceAlgorithm",
+	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/SurfaceAlgorithm/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Analysis_TriMesh.h",
+			"MU",
+			"EWIEGA46WW/moc_Analysis_TriMesh.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Deformation.h",
+			"MU",
+			"EWIEGA46WW/moc_Deformation.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Denoising_BNF.h",
+			"MU",
+			"EWIEGA46WW/moc_Denoising_BNF.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/LSCM_Parameterization.h",
+			"MU",
+			"EWIEGA46WW/moc_LSCM_Parameterization.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/MeshInterpolation_ARAP.h",
+			"MU",
+			"EWIEGA46WW/moc_MeshInterpolation_ARAP.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/MinimalSurface_Global.h",
+			"MU",
+			"EWIEGA46WW/moc_MinimalSurface_Global.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.h",
+			"MU",
+			"HEAD3SFZ5S/moc_OpenMesh_Denoising.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.h",
+			"MU",
+			"HEAD3SFZ5S/moc_OpenMesh_Remeshing.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.h",
+			"MU",
+			"HEAD3SFZ5S/moc_OpenMesh_Simplification.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.h",
+			"MU",
+			"HEAD3SFZ5S/moc_OpenMesh_Smoothing.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Typedef.h",
+			"MU",
+			"HEAD3SFZ5S/moc_OpenMesh_Typedef.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Parameterization.h",
+			"MU",
+			"EWIEGA46WW/moc_Parameterization.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Parameterization_BFF.h",
+			"MU",
+			"EWIEGA46WW/moc_Parameterization_BFF.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Remeshing.h",
+			"MU",
+			"EWIEGA46WW/moc_Remeshing.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Simplification_Powered_QEM.h",
+			"MU",
+			"EWIEGA46WW/moc_Simplification_Powered_QEM.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Simplification_QEM.h",
+			"MU",
+			"EWIEGA46WW/moc_Simplification_QEM.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Subdivision_Loop.h",
+			"MU",
+			"EWIEGA46WW/moc_Subdivision_Loop.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Surface_Algorithm.h",
+			"MU",
+			"EWIEGA46WW/moc_Surface_Algorithm.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/include",
+	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"WIN32",
+		"_HAS_STD_BYTE=0",
+		"_USE_MATH_DEFINES"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
+		"E:/LabViewer/extern/boost_1_76_0",
+		"E:/LabViewer/include",
+		"E:/LabViewer/include/rapidjson/include",
+		"E:/LabViewer/include/spdlog/include",
+		"E:/LabViewer/extern",
+		"E:/LabViewer/Apps",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/freeglut/include",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/opencascade/opencascade770-install/inc"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 12,
+	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Analysis_TriMesh.cpp",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/extern/SurfaceAlgorithm/Deformation.cpp", "MU", null ],
+		[ "E:/LabViewer/extern/SurfaceAlgorithm/Denoising_BNF.cpp", "MU", null ],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/LSCM_Parameterization.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/MinimalSurface_Global.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Parameterization.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Parameterization_BFF.cpp",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/extern/SurfaceAlgorithm/Remeshing.cpp", "MU", null ],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Simplification_Powered_QEM.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Simplification_QEM.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SurfaceAlgorithm/Subdivision_Loop.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

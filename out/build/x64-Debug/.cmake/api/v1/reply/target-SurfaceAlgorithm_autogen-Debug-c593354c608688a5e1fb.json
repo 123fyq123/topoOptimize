@@ -1,0 +1,77 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/SurfaceAlgorithm/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "OpenMeshCore::@e941df43cfa7b8617a8a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "OpenMeshTools::@4bda8efd5b915e73e1c6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Tools::@2af1914ea379099daa5d"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		}
+	],
+	"id" : "SurfaceAlgorithm_autogen::@042d1708d919bf1dad8c",
+	"isGeneratorProvided" : true,
+	"name" : "SurfaceAlgorithm_autogen",
+	"paths" : 
+	{
+		"build" : "extern/SurfaceAlgorithm",
+		"source" : "extern/SurfaceAlgorithm"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

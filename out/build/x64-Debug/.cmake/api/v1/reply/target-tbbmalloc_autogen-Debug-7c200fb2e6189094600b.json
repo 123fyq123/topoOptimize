@@ -1,0 +1,58 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "tbbmalloc_autogen::@9f1f967618940acdabcd",
+	"isGeneratorProvided" : true,
+	"name" : "tbbmalloc_autogen",
+	"paths" : 
+	{
+		"build" : "extern/oneTBB-2021.10.0/src/tbbmalloc",
+		"source" : "extern/oneTBB-2021.10.0/src/tbbmalloc"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

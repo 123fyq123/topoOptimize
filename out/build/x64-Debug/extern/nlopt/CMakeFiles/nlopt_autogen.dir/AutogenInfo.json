@@ -1,0 +1,379 @@
+{
+	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt_autogen",
+	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt",
+	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/nlopt",
+	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"E:/LabViewer/extern/nlopt/CMakeLists.txt",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/GNUInstallDirs.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckIncludeFiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckFunctionExists.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckTypeSize.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckIncludeFile.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckIncludeFileCXX.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCCompilerFlag.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckFlagCommonConfig.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCXXSymbolExists.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckSymbolExists.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCXXCompilerFlag.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckCXXSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CheckLibraryExists.cmake",
+		"E:/LabViewer/out/build/x64-Debug/extern/nlopt/fpclassify.c",
+		"E:/LabViewer/extern/nlopt/nlopt_config.h.in",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CPack.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/CPackComponent.cmake",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Templates/CPackConfig.cmake.in",
+		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Templates/CPackConfig.cmake.in",
+		"E:/LabViewer/extern/nlopt/cmake/NLoptConfig.cmake.in",
+		"E:/LabViewer/extern/nlopt/cmake/NLoptConfigVersion.cmake.in"
+	],
+	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/ags.h",
+			"MU",
+			"VMLPMGIJ3X/moc_ags.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/data_types.hpp",
+			"MU",
+			"VMLPMGIJ3X/moc_data_types.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/evolvent.hpp",
+			"MU",
+			"VMLPMGIJ3X/moc_evolvent.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/local_optimizer.hpp",
+			"MU",
+			"VMLPMGIJ3X/moc_local_optimizer.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/solver.hpp",
+			"MU",
+			"VMLPMGIJ3X/moc_solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/auglag/auglag.h",
+			"MU",
+			"GSBCVTPFGY/moc_auglag.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/bobyqa/bobyqa.h",
+			"MU",
+			"NWW7ZRKXJZ/moc_bobyqa.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/cdirect/cdirect.h",
+			"MU",
+			"OXJFASE47Y/moc_cdirect.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/cobyla/cobyla.h",
+			"MU",
+			"QRTTZJWYQZ/moc_cobyla.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/crs/crs.h",
+			"MU",
+			"KNVDZS3NOL/moc_crs.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/direct/direct-internal.h",
+			"MU",
+			"Q4TCOCPUU4/moc_direct-internal.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/direct/direct.h",
+			"MU",
+			"Q4TCOCPUU4/moc_direct.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/esch/esch.h",
+			"MU",
+			"BZ7OCXJWRG/moc_esch.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/isres/isres.h",
+			"MU",
+			"XTQXZV7BJV/moc_isres.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/luksan/luksan.h",
+			"MU",
+			"TM3FM7KOBL/moc_luksan.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/mlsl/mlsl.h",
+			"MU",
+			"WS3PLTJIQN/moc_mlsl.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/mma/mma.h",
+			"MU",
+			"PASWMCQGCK/moc_mma.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/neldermead/neldermead.h",
+			"MU",
+			"REHOCVG2WX/moc_neldermead.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/newuoa/newuoa.h",
+			"MU",
+			"73Z7CXU765/moc_newuoa.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/praxis/praxis.h",
+			"MU",
+			"HXAURI24LZ/moc_praxis.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/slsqp/slsqp.h",
+			"MU",
+			"DKUFMBEQ4P/moc_slsqp.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/global.h",
+			"MU",
+			"MOGXWBTBG2/moc_global.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/linalg.h",
+			"MU",
+			"MOGXWBTBG2/moc_linalg.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/local.h",
+			"MU",
+			"MOGXWBTBG2/moc_local.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/stogo.h",
+			"MU",
+			"MOGXWBTBG2/moc_stogo.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/stogo_config.h",
+			"MU",
+			"MOGXWBTBG2/moc_stogo_config.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/stogo/tools.h",
+			"MU",
+			"MOGXWBTBG2/moc_tools.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/api/f77funcs.h",
+			"MU",
+			"PA7CP7W2FZ/moc_f77funcs.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/api/f77funcs_.h",
+			"MU",
+			"PA7CP7W2FZ/moc_f77funcs_.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/api/nlopt-internal.h",
+			"MU",
+			"PA7CP7W2FZ/moc_nlopt-internal.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/api/nlopt.h",
+			"MU",
+			"PA7CP7W2FZ/moc_nlopt.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/util/nlopt-util.h",
+			"MU",
+			"2V62BZ2VFR/moc_nlopt-util.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/util/redblack.h",
+			"MU",
+			"2V62BZ2VFR/moc_redblack.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/nlopt/src/util/soboldata.h",
+			"MU",
+			"2V62BZ2VFR/moc_soboldata.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt.hpp",
+			"MU",
+			"EJRQKI7XPS/moc_nlopt.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt_autogen/include",
+	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"WIN32",
+		"_HAS_STD_BYTE=0",
+		"_USE_MATH_DEFINES"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
+		"E:/LabViewer/extern/boost_1_76_0",
+		"E:/LabViewer/include",
+		"E:/LabViewer/include/rapidjson/include",
+		"E:/LabViewer/include/spdlog/include",
+		"E:/LabViewer/extern",
+		"E:/LabViewer/Apps",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/freeglut/include",
+		"E:/LabViewer/out/build/x64-Debug/extern/nlopt/src/api",
+		"E:/LabViewer/out/build/x64-Debug/extern/nlopt",
+		"E:/LabViewer/extern/nlopt/src/algs/stogo",
+		"E:/LabViewer/extern/nlopt/src/algs/ags",
+		"E:/LabViewer/extern/nlopt/src/util",
+		"E:/LabViewer/extern/nlopt/src/algs/direct",
+		"E:/LabViewer/extern/nlopt/src/algs/cdirect",
+		"E:/LabViewer/extern/nlopt/src/algs/praxis",
+		"E:/LabViewer/extern/nlopt/src/algs/luksan",
+		"E:/LabViewer/extern/nlopt/src/algs/crs",
+		"E:/LabViewer/extern/nlopt/src/algs/mlsl",
+		"E:/LabViewer/extern/nlopt/src/algs/mma",
+		"E:/LabViewer/extern/nlopt/src/algs/cobyla",
+		"E:/LabViewer/extern/nlopt/src/algs/newuoa",
+		"E:/LabViewer/extern/nlopt/src/algs/neldermead",
+		"E:/LabViewer/extern/nlopt/src/algs/auglag",
+		"E:/LabViewer/extern/nlopt/src/algs/bobyqa",
+		"E:/LabViewer/extern/nlopt/src/algs/isres",
+		"E:/LabViewer/extern/nlopt/src/algs/slsqp",
+		"E:/LabViewer/extern/nlopt/src/algs/esch",
+		"E:/LabViewer/extern/nlopt/src/api"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt/CMakeFiles/nlopt_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 12,
+	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/nlopt/CMakeFiles/nlopt_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "E:/LabViewer/extern/nlopt/src/algs/ags/ags.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/ags/evolvent.cc", "MU", null ],
+		[
+			"E:/LabViewer/extern/nlopt/src/algs/ags/local_optimizer.cc",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/extern/nlopt/src/algs/ags/solver.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/auglag/auglag.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/bobyqa/bobyqa.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/cdirect/cdirect.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/cdirect/hybrid.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/cobyla/cobyla.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/crs/crs.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/direct/DIRect.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/direct/DIRserial.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/direct/DIRsubrout.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/direct/direct_wrap.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/esch/esch.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/isres/isres.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/luksan/mssubs.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/luksan/plip.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/luksan/plis.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/luksan/pnet.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/luksan/pssubs.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/mlsl/mlsl.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/mma/ccsa_quadratic.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/mma/mma.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/neldermead/nldrmd.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/neldermead/sbplx.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/newuoa/newuoa.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/praxis/praxis.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/slsqp/slsqp.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/stogo/global.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/stogo/linalg.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/stogo/local.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/stogo/stogo.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/algs/stogo/tools.cc", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/api/deprecated.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/api/f77api.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/api/general.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/api/optimize.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/api/options.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/mt19937ar.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/qsort_r.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/redblack.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/rescale.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/sobolseq.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/stop.c", "MU", null ],
+		[ "E:/LabViewer/extern/nlopt/src/util/timer.c", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

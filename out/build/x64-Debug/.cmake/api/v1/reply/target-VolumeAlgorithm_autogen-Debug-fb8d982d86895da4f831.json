@@ -1,0 +1,73 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/VolumeAlgorithm/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Tools::@2af1914ea379099daa5d"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tetgen::@611443b987e720a3c584"
+		}
+	],
+	"id" : "VolumeAlgorithm_autogen::@ba99964d8590824046c5",
+	"isGeneratorProvided" : true,
+	"name" : "VolumeAlgorithm_autogen",
+	"paths" : 
+	{
+		"build" : "extern/VolumeAlgorithm",
+		"source" : "extern/VolumeAlgorithm"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/VolumeAlgorithm/CMakeFiles/VolumeAlgorithm_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/VolumeAlgorithm/CMakeFiles/VolumeAlgorithm_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,85 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Apps/SolverGPU/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "CommonLib::@efd11b196db6ba59144a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tinyXML::@a51e2f33458dc53165c5"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Hyperelasticity::@2d9b84b4199002331bb7"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tbb::@ae321a360dffca134be5"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "apps"
+	},
+	"id" : "SolverGPU_autogen::@44129a7a7ff99871879b",
+	"isGeneratorProvided" : true,
+	"name" : "SolverGPU_autogen",
+	"paths" : 
+	{
+		"build" : "Apps/SolverGPU",
+		"source" : "Apps/SolverGPU"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/SolverGPU/CMakeFiles/SolverGPU_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/SolverGPU/CMakeFiles/SolverGPU_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

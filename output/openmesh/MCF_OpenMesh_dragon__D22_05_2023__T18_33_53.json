@@ -1,0 +1,37 @@
+{
+    "Record Name": "MCF_OpenMesh",
+    "git_sha": "d23f3bc62546b1742741084dd219e790a831af8b",
+    "date": "Mon 22:05:2023 18:33:53",
+    "command_line": "F:\\Projects\\GPMesh\\cmake-build-release-visualstudio2022\\apps\\MCF\\MCF.exe",
+    "System": {
+        "Hostname": "littleConsole",
+        "Microsoft Full Compiler Version": 193632532,
+        "Microsoft Compiler Version": 1936,
+        "C++ version": 199711,
+        "Build Mode": "Release"
+    },
+    "Model": {
+        "model_name": "F:/Projects/GPMesh/input/dragon.obj",
+        "num_vertices": 10000,
+        "num_edges": 30000,
+        "num_faces": 20000
+    },
+    "method": "OpenMesh 24 Core",
+    "time_step": 0.0010000000474974514,
+    "cg_tolerance": 9.999999974752428e-7,
+    "use_uniform_laplace": false,
+    "max_num_cg_iter": 1000,
+    "start_residual": 0.00012784435239154845,
+    "end_residual": 9.904332429442892e-17,
+    "num_cg_iter_taken": 63,
+    "total_time (ms)": 123.34089660644531,
+    "MCF": {
+        "num_threads": 24,
+        "passed": [
+            true
+        ],
+        "time (ms)": [
+            1.957792043685913
+        ]
+    }
+}

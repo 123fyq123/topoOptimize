@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"tbb_install_target"
+		],
+		"files" : 
+		[
+			"extern/oneTBB-2021.10.0/cmake/utils.cmake",
+			"extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 112,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "devel",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"msvc_19.39_cxx17_64_md_debug/tbbmalloc_debug.lib"
+			],
+			"targetId" : "tbbmalloc::@9f1f967618940acdabcd",
+			"targetIndex" : 62,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "extern/oneTBB-2021.10.0/src/tbbmalloc",
+		"source" : "extern/oneTBB-2021.10.0/src/tbbmalloc"
+	}
+}

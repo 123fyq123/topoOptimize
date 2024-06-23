@@ -1,0 +1,316 @@
+{
+	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU/SolverGPU_autogen",
+	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU",
+	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/Apps/SolverGPU",
+	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "E:/LabViewer/Apps/SolverGPU/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_Hyperelasticity_Solver.h",
+			"MU",
+			"EWIEGA46WW/moc_CPU_Hyperelasticity_Solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_Linear_Elastic_Solver.h",
+			"MU",
+			"EWIEGA46WW/moc_CPU_Linear_Elastic_Solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_TimeIntegrator_Hyperelasticity_Solver.h",
+			"MU",
+			"EWIEGA46WW/moc_CPU_TimeIntegrator_Hyperelasticity_Solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Cuda_Hyperelasticity_Solver.h",
+			"MU",
+			"EWIEGA46WW/moc_Cuda_Hyperelasticity_Solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Cuda_Linear_Elastic_Solver.h",
+			"MU",
+			"EWIEGA46WW/moc_Cuda_Linear_Elastic_Solver.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Cuda_TopOpt_Pipeline.h",
+			"MU",
+			"EWIEGA46WW/moc_Cuda_TopOpt_Pipeline.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Eigen_helper.h",
+			"MU",
+			"EWIEGA46WW/moc_Eigen_helper.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Attribute.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Attribute.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_BSplineSolid.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_BSplineSolid.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_BoundaryCPoint.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_BoundaryCPoint.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Geometry_info.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Geometry_info.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Handle.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Handle.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_IGA_CPU_Kernel.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_IGA_CPU_Kernel.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Invoke.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Invoke.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Mesh.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Mesh.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Mesh_Static.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Mesh_Static.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Param.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Param.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Reduce_Handle.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Reduce_Handle.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline_Attribute.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline_Attribute.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline_CPU.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline_CPU.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline_Static.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline_Static.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline_Test.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline_Test.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Spline_v0.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Spline_v0.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/GP_Types.h",
+			"MU",
+			"EWIEGA46WW/moc_GP_Types.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Patcher/GP_Patcher.h",
+			"MU",
+			"KY3JLDA37L/moc_GP_Patcher.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Util/GP_Cuda_Query.h",
+			"MU",
+			"ENRGVLQ2BA/moc_GP_Cuda_Query.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Util/GP_Vector.h",
+			"MU",
+			"ENRGVLQ2BA/moc_GP_Vector.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU/SolverGPU_autogen/include",
+	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU/SolverGPU_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"IGA_OUTPUT_DIR=\"E:/LabViewer/output/IGADataOutput/\"",
+		"INPUT_DIR=E:/LabViewer/input/",
+		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"OUTPUT_DIR=E:/LabViewer/output/",
+		"TBB_USE_DEBUG",
+		"WIN32",
+		"_HAS_STD_BYTE=0",
+		"_USE_MATH_DEFINES"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
+		"E:/LabViewer/extern/boost_1_76_0",
+		"E:/LabViewer/include",
+		"E:/LabViewer/include/rapidjson/include",
+		"E:/LabViewer/include/spdlog/include",
+		"E:/LabViewer/extern",
+		"E:/LabViewer/Apps",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/freeglut/include",
+		"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.4/include",
+		"E:/LabViewer/Apps/SolverGPU/CPU_Hyperelasticity_Solver.h",
+		"E:/LabViewer/Apps/SolverGPU/CPU_Linear_Elastic_Solver.h",
+		"E:/LabViewer/Apps/SolverGPU/CPU_TimeIntegrator_Hyperelasticity_Solver.h",
+		"E:/LabViewer/Apps/SolverGPU/CatmullClarkBezierSolver.h",
+		"E:/LabViewer/Apps/SolverGPU/Cuda_Hyperelasticity_Solver.h",
+		"E:/LabViewer/Apps/SolverGPU/Cuda_Linear_Elastic_Solver.h",
+		"E:/LabViewer/Apps/SolverGPU/Cuda_TopOpt_Pipeline.h",
+		"E:/LabViewer/Apps/SolverGPU/Eigen_helper.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Attribute.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_BSplineSolid.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_BoundaryCPoint.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Context.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Debug.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Geometry_info.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Handle.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_IGA_CPU_Kernel.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Invoke.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Launch_Box.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Local.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Mesh.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Mesh_Static.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Mesh_Writer.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Mesh_t.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Param.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Patch_Info.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Reduce_Handle.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_Attribute.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_Attribute_CPU.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_CPU.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_Static.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_Test.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_t.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Spline_v0.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_Types.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_nsp.h",
+		"E:/LabViewer/Apps/SolverGPU/GP_vertex_normal_ref.h",
+		"E:/LabViewer/Apps/SolverGPU/IGA_helper_function.h",
+		"E:/LabViewer/Apps/SolverGPU/gpmesh_MeshKernel_helper.h",
+		"E:/LabViewer/extern/oneTBB-2021.10.0/include",
+		"E:/LabViewer/extern/opencascade/opencascade770-install/inc"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU/CMakeFiles/SolverGPU_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 12,
+	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/Apps/SolverGPU/CMakeFiles/SolverGPU_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_Hyperelasticity_Solver.cu",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_Linear_Elastic_Solver.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/CPU_TimeIntegrator_Hyperelasticity_Solver.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Cuda_Hyperelasticity_Solver.cu",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/Apps/SolverGPU/Cuda_Linear_Elastic_Solver.cu",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/Apps/SolverGPU/Cuda_TopOpt_Pipeline.cu", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_BoundaryCPoint.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_IGA_CPU_Kernel.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_Invoke.cu", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_Mesh.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_Param.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_Spline.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/GP_Spline_CPU.cpp", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/Kernels/GP_Debug.cu", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/Patcher/GP_Patcher.cu", "MU", null ],
+		[ "E:/LabViewer/Apps/SolverGPU/test.cu", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

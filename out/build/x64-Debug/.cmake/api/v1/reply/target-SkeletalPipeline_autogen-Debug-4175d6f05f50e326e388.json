@@ -1,0 +1,73 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"extern/SkeletalPipeline/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "nlopt::@5e26cef8e9aabe5821de"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "OpenMeshCore::@e941df43cfa7b8617a8a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		}
+	],
+	"id" : "SkeletalPipeline_autogen::@3d379e1b3ba7e3e4b784",
+	"isGeneratorProvided" : true,
+	"name" : "SkeletalPipeline_autogen",
+	"paths" : 
+	{
+		"build" : "extern/SkeletalPipeline",
+		"source" : "extern/SkeletalPipeline"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/SkeletalPipeline/CMakeFiles/SkeletalPipeline_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/extern/SkeletalPipeline/CMakeFiles/SkeletalPipeline_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

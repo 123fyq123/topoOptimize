@@ -1,0 +1,37 @@
+{
+    "Record Name": "MCF_OpenMesh",
+    "git_sha": "d23f3bc62546b1742741084dd219e790a831af8b",
+    "date": "Wed 22:02:2023 22:23:45",
+    "command_line": "/run/media/whalesea/PortableProjects/WSLProjects/RXMesh/cmake-build-debug-main-arch-make-clang/apps/MCF/MCF",
+    "System": {
+        "Hostname": "littleGaruda",
+        "compiler_name": "g++",
+        "compiler_version": "11.3.0",
+        "C++ version": 201703,
+        "Build Mode": "Debug"
+    },
+    "Model": {
+        "model_name": "/run/media/whalesea/PortableProjects/WSLProjects/RXMesh/input/sphere3.obj",
+        "num_vertices": 386,
+        "num_edges": 1152,
+        "num_faces": 768
+    },
+    "method": "OpenMesh 16 Core",
+    "time_step": 0.0010000000474974514,
+    "cg_tolerance": 9.999999974752428e-7,
+    "use_uniform_laplace": false,
+    "max_num_cg_iter": 1000,
+    "start_residual": 0.000010864471732929815,
+    "end_residual": 6.65604735166054e-19,
+    "num_cg_iter_taken": 8,
+    "total_time (ms)": 173.6109619140625,
+    "MCF": {
+        "num_threads": 16,
+        "passed": [
+            true
+        ],
+        "time (ms)": [
+            21.701370239257814
+        ]
+    }
+}

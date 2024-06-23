@@ -1,0 +1,32 @@
+{
+    "Record Name": "Filtering_OpenMesh",
+    "git_sha": "54f29b3e2b8f020a9d5e89f94002fdcc5273d124",
+    "date": "Tue 22:11:2022 16:07:50",
+    "command_line": "/mnt/a/ManjaroProjects/RXMesh/cmake-build-debug-wsl/bin/Filtering",
+    "System": {
+        "Hostname": "littleSavior",
+        "compiler_name": "g++",
+        "compiler_version": "9.4.0",
+        "C++ version": 201703,
+        "Build Mode": "Debug"
+    },
+    "Model": {
+        "model_name": "/mnt/a/ManjaroProjects/RXMesh/input/sphere3.obj",
+        "num_vertices": 386,
+        "num_edges": 1152,
+        "num_faces": 768
+    },
+    "method": "OpenMesh 16 Core",
+    "num_filter_iter": 5,
+    "max_neighbour_size": 16,
+    "total_time (ms)": 6.245687007904053,
+    "MCF": {
+        "num_threads": 16,
+        "passed": [
+            true
+        ],
+        "time (ms)": [
+            6.245687007904053
+        ]
+    }
+}

@@ -1,0 +1,131 @@
+{
+	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline/SkeletalPipeline_autogen",
+	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline",
+	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/SkeletalPipeline",
+	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/SkeletalPipeline/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/ComponentSymmetryAxi.h",
+			"MU",
+			"EWIEGA46WW/moc_ComponentSymmetryAxi.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/MMC.h",
+			"MU",
+			"EWIEGA46WW/moc_MMC.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/Pipeline.h",
+			"MU",
+			"EWIEGA46WW/moc_Pipeline.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/PointClustersCal.h",
+			"MU",
+			"EWIEGA46WW/moc_PointClustersCal.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/ShapeApproximate.h",
+			"MU",
+			"EWIEGA46WW/moc_ShapeApproximate.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/SkeletonEx.h",
+			"MU",
+			"EWIEGA46WW/moc_SkeletonEx.cpp",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/pointcloud.h",
+			"MU",
+			"EWIEGA46WW/moc_pointcloud.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline/SkeletalPipeline_autogen/include",
+	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline/SkeletalPipeline_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"WIN32",
+		"_HAS_STD_BYTE=0",
+		"_USE_MATH_DEFINES"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
+		"E:/LabViewer/extern/boost_1_76_0",
+		"E:/LabViewer/include",
+		"E:/LabViewer/include/rapidjson/include",
+		"E:/LabViewer/include/spdlog/include",
+		"E:/LabViewer/extern",
+		"E:/LabViewer/Apps",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/freeglut/include",
+		"E:/LabViewer/extern/nlopt/src/api",
+		"E:/LabViewer/extern/OpenMesh/src",
+		"E:/LabViewer/extern/nlopt/src/api",
+		"E:/LabViewer/out/build/x64-Debug/extern/nlopt"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline/CMakeFiles/SkeletalPipeline_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 12,
+	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/SkeletalPipeline/CMakeFiles/SkeletalPipeline_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/ComponentSymmetryAxi.cpp",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/extern/SkeletalPipeline/MMC.cpp", "MU", null ],
+		[ "E:/LabViewer/extern/SkeletalPipeline/Pipeline.cpp", "MU", null ],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/PointClustersCal.cpp",
+			"MU",
+			null
+		],
+		[
+			"E:/LabViewer/extern/SkeletalPipeline/ShapeApproximate.cpp",
+			"MU",
+			null
+		],
+		[ "E:/LabViewer/extern/SkeletalPipeline/SkeletonEx.cpp", "MU", null ],
+		[ "E:/LabViewer/extern/SkeletalPipeline/pointcloud.cpp", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

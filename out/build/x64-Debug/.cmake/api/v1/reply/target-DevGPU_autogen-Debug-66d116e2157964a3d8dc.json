@@ -1,0 +1,81 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Apps/DevGPU/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "MeshKernel::@56d7d2efef7a1180a0f6"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tinyXML::@a51e2f33458dc53165c5"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "Hyperelasticity::@2d9b84b4199002331bb7"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "tbb::@ae321a360dffca134be5"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "SolverGPU::@44129a7a7ff99871879b"
+		}
+	],
+	"id" : "DevGPU_autogen::@af6a61dc22d6cc2830fa",
+	"isGeneratorProvided" : true,
+	"name" : "DevGPU_autogen",
+	"paths" : 
+	{
+		"build" : "Apps/DevGPU",
+		"source" : "Apps/DevGPU"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/DevGPU/CMakeFiles/DevGPU_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/Apps/DevGPU/CMakeFiles/DevGPU_autogen.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

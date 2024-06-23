@@ -1,0 +1,88 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"tbb_install_target"
+		],
+		"files" : 
+		[
+			"extern/oneTBB-2021.10.0/cmake/utils.cmake",
+			"extern/oneTBB-2021.10.0/src/tbb/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 124,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 137,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 173,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "devel",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"msvc_19.39_cxx17_64_md_debug/tbb12_debug.lib"
+			],
+			"targetId" : "tbb::@ae321a360dffca134be5",
+			"targetIndex" : 60,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "devel",
+			"destination" : "lib",
+			"paths" : 
+			[
+				{
+					"from" : "out/build/x64-Debug/msvc_19.39_cxx17_64_md_debug/tbb12_debug.lib",
+					"to" : "tbb_debug.lib"
+				}
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "devel",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbb/tbb.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "extern/oneTBB-2021.10.0/src/tbb",
+		"source" : "extern/oneTBB-2021.10.0/src/tbb"
+	}
+}
