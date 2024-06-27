@@ -17,7 +17,7 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadObjFile(const std::string& _InputFil
         line.clear();
         getline(inputfile, line);
         if (line[0] == '#') {
-            continue;// ע��
+            continue;//
         }
         std::stringstream linestream;
         linestream.str(line);
@@ -29,40 +29,17 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadObjFile(const std::string& _InputFil
             linestream >> x >> y >> z;
             vertices.push_back(iGameVertex(x, y, z));
         } else if (flag == "f") {
-            // f 1575/1514/1569 1581/1520/1575 1576/1515/1570
-            // f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
             std::vector<std::string> vex;
             std::string tmp;
             while (linestream >> tmp) vex.push_back(tmp);
             auto n = vex.size();
             sides_num = n;
-            //std::cout << n << std::endl;
-            // ������
             std::vector<iGameVertexHandle> face(n);
             for (size_t i = 0; i < n; i++) {
                 size_t idx = 0;
                 while (idx < vex[i].length() && std::isdigit(vex[i][idx])) idx++;
-                int vh = std::stoi(vex[i].substr(0, idx)) - 1;// ע�� obj �ļ� v ��1��ʼ
+                int vh = std::stoi(vex[i].substr(0, idx)) - 1;//
                 face[i] = (iGameVertexHandle)(vh);
-                //if (idx != vex[i].length()) {// ָ������������
-                //	// ע�⣺����������ڸ��ã����������ڸ��ã����㡢���������뷨�����������ɻ��಻��
-                //	size_t beg = idx;
-                //	while (beg < vex[i].length() && !std::isdigit(vex[i][beg])) beg++;
-                //	size_t end = beg;
-                //	if (end < vex[i].length() && std::isdigit(vex[i][end])) end++;
-                //	if (!V2T.count(vh)) {
-                //		int uv_idx = std::stoi(vex[i].substr(beg, end - beg));// ע�� obj �ļ� vt ��0��ʼ
-                //		V2T[vh] = uv_idx;
-                //	}
-                //	if (end != vex[i].length() && !V2N.count(vh)) {// ָ���˷�����
-                //		beg = end;
-                //		if (beg < vex[i].length() && !std::isdigit(vex[i][beg])) beg++;
-                //		end = beg;
-                //		if (end < vex[i].length() && std::isdigit(vex[i][end])) end++;
-                //		int n_idx = std::stoi(vex[i].substr(beg, end - beg));// ע�� obj �ļ� vn ��0��ʼ
-                //		V2N[vh] = n_idx;
-                //	}
-                //}
             }
             faces.push_back(face);
         } else if (flag == "vt") {
@@ -634,6 +611,67 @@ bool MeshKernel::IO::WriteObjFile(const SurfaceMesh& _mesh, const std::string& _
     return true;
 }
 
+bool MeshKernel::IO::WriteObjFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& outputFile) {
+    std::ofstream outputfile(outputFile, std::ios::out);
+    if (!outputfile.is_open()) {
+        std::cerr << "Failed to open output file: " << outputFile << std::endl;
+        return false;
+    }
+
+    if (surfacesDraw.empty()) {
+        std::cerr << "Error: surfacesDraw is empty!" << std::endl;
+        return false;
+    }
+
+    std::vector<Eigen::Vector3d> vertices;
+    std::vector<std::vector<int>> faces;
+
+    for (size_t i = 0; i < surfacesDraw.size(); ++i) {
+        double umin, umax, vmin, vmax;
+        surfacesDraw[i].getUVMinMax(umin, umax, vmin, vmax);
+
+        int unumber = 4; // u direction control points
+        int vnumber = 4; // v direction control points
+
+        double sizeu = (umax - umin) / (unumber - 1); // step size in u direction
+        double sizev = (vmax - vmin) / (vnumber - 1); // step size in v direction
+
+        for (int u_index = 0; u_index < unumber; ++u_index) {
+            for (int v_index = 0; v_index < vnumber; ++v_index) {
+                CPoint pnt = surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev);
+                vertices.emplace_back(pnt.getX(), pnt.getY(), pnt.getZ());
+            }
+        }
+
+        for (int u_index = 0; u_index < unumber - 1; ++u_index) {
+            for (int v_index = 0; v_index < vnumber - 1; ++v_index) {
+                int idx0 = i * unumber * vnumber + u_index * vnumber + v_index;
+                int idx1 = idx0 + vnumber;
+                int idx2 = idx1 + 1;
+                int idx3 = idx0 + 1;
+
+                faces.push_back({idx0 + 1, idx1 + 1, idx2 + 1});
+                faces.push_back({idx0 + 1, idx2 + 1, idx3 + 1});
+            }
+        }
+    }
+
+    for (const auto& vertex : vertices) {
+        outputfile << "v " << vertex.x() << " " << vertex.y() << " " << vertex.z() << std::endl;
+    }
+
+    for (const auto& face : faces) {
+        outputfile << "f";
+        for (const auto& idx : face) {
+            outputfile << " " << idx;
+        }
+        outputfile << std::endl;
+    }
+
+    outputfile.close();
+    return true;
+}
+
 bool MeshKernel::IO::WriteOffFile(const SurfaceMesh& _mesh, const std::string& _OutputFile) {
     std::ofstream outputfile(_OutputFile, std::ios::out);
     ReOrderiGameVertexHandle(_mesh);
@@ -691,74 +729,70 @@ bool MeshKernel::IO::WriteStlFile(const SurfaceMesh& _mesh, const std::string& _
 }
 
 bool MeshKernel::IO::WriteStlFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& outputFile) {
-//    std::ofstream outputfile(outputFile, std::ios::out);
-//    if (!outputfile.is_open()) {
-//        std::cerr << "Cannot open output file!" << std::endl;
-//        return false;
-//    }
-//
-//    double umin, umax, vmin, vmax;
-//    vector<CPoint> singlePatch; // 每个面片的离散点
-//    vector<vector<CPoint>> singlelSurface; // 每个曲面的离散点
-//    vector<vector<vector<CPoint>>> allSurface; // 所有曲面集合的离散点
-//
-//    vector<CVector> singlePatch_normal;
-//    vector<vector<CVector>> singlelSurface_normal;
-//    vector<vector<vector<CVector>>> allSurface_normal;
-//    CVector normal; // 保存法向量
-//
-//    STEPControl_Writer stepWriter;
-//
-//    for (size_t i = 0; i < surfacesDraw.size(); ++i) {
-//        surfacesDraw[i].getUVMinMax(umin, umax, vmin, vmax);
-//
-//        int unumber = 4; // u方向的控制顶点数
-//        int vnumber = 4; // v方向的控制顶点数
-//
-//        double sizeu = (umax - umin) / (unumber - 1); // u方向步距
-//        double sizev = (vmax - vmin) / (vnumber - 1); // v方向步距
-//
-//        // 构建样条表面点阵
-//        TColgp_Array2OfPnt points(1, unumber, 1, vnumber);
-//        for (int u_index = 0; u_index < unumber; ++u_index) {
-//            for (int v_index = 0; v_index < vnumber; ++v_index) {
-//                double u = umin + u_index * sizeu;
-//                double v = vmin + v_index * sizev;
-//                auto pnt = surfacesDraw[i].getPointAtParam(u, v);
-//                points.SetValue(u_index + 1, v_index + 1, gp_Pnt(pnt.getX(), pnt.getY(), pnt.getZ()));
-//            }
-//        }
-//
-//        // 创建样条表面
-//        GeomAPI_PointsToBSplineSurface splineBuilder(points, 3, 3, GeomAbs_C2);
-//        Handle(Geom_BSplineSurface) geomSurface = splineBuilder.Surface();
-//
-//        if (geomSurface.IsNull()) {
-//            std::cerr << "Failed to create BSpline surface!" << std::endl;
-//            outputfile.close();
-//            return false;
-//        }
-//
-//        // 创建面
-//        TopoDS_Face face = BRepBuilderAPI_MakeFace(geomSurface, umin, umax, vmin, vmax, 1.0e-9);
-//
-//        // 离散化为三角网格
-//        BRepMesh_IncrementalMesh mesh(face, 0.01, Standard_True);
-//
-//        if (!mesh.IsDone()) {
-//            std::cerr << "Failed to mesh the surface!" << std::endl;
-//            outputfile.close();
-//            return false;
-//        }
-//
-//        // 准备写入 STL 文件
-//        StlAPI_Writer stlWriter;
-//        stlWriter.Write(face, outputFile.c_str());
+    std::ofstream outputfile(outputFile, std::ios::out);
+    if (!outputfile.is_open()) {
+        std::cerr << "Failed to open output file: " << outputFile << std::endl;
+        return false;
+    }
 
-//        std::cout << "STL file successfully written: " << outputFile << std::endl;
-//    }
-//
-//    outputfile.close();
+    if (surfacesDraw.empty()) {
+        std::cerr << "Error: surfacesDraw is empty!" << std::endl;
+        return false;
+    }
+
+    int front = outputFile.find_last_of('/');
+    std::string output = outputFile.substr(++front, outputFile.length() - front);
+
+    outputfile << "solid " << output << std::endl;
+
+    for (size_t i = 0; i < surfacesDraw.size(); i++) {
+        double umin, umax, vmin, vmax;
+        surfacesDraw[i].getUVMinMax(umin, umax, vmin, vmax);
+
+        int unumber = 4; // u direction control points
+        int vnumber = 4; // v direction control points
+
+        double sizeu = (umax - umin) / (unumber - 1); // step size in u direction
+        double sizev = (vmax - vmin) / (vnumber - 1); // step size in v direction
+
+        for (int u_index = 0; u_index < unumber - 1; ++u_index) {
+            for (int v_index = 0; v_index < vnumber - 1; ++v_index) {
+                std::vector<Eigen::Vector3d> vertices(4);
+                CPoint pnt0 = surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev);
+                CPoint pnt1 = surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + v_index * sizev);
+                CPoint pnt2 = surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + (v_index + 1) * sizev);
+                CPoint pnt3 = surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + (v_index + 1) * sizev);
+                vertices[0] = Eigen::Vector3d(pnt0.getX(), pnt0.getY(), pnt0.getZ());
+                vertices[1] = Eigen::Vector3d(pnt1.getX(), pnt1.getY(), pnt1.getZ());
+                vertices[2] = Eigen::Vector3d(pnt2.getX(), pnt2.getY(), pnt2.getZ());
+                vertices[3] = Eigen::Vector3d(pnt3.getX(), pnt3.getY(), pnt3.getZ());
+
+                Eigen::Vector3d normal = (vertices[2] - vertices[1]).cross(vertices[0] - vertices[1]);
+                normal.normalize();
+
+                // First triangle
+                outputfile << "  facet normal " << normal.x() << " " << normal.y() << " " << normal.z() << std::endl;
+                outputfile << "    outer loop" << std::endl;
+                outputfile << "      vertex " << vertices[0].x() << " " << vertices[0].y() << " " << vertices[0].z() << std::endl;
+                outputfile << "      vertex " << vertices[1].x() << " " << vertices[1].y() << " " << vertices[1].z() << std::endl;
+                outputfile << "      vertex " << vertices[2].x() << " " << vertices[2].y() << " " << vertices[2].z() << std::endl;
+                outputfile << "    endloop" << std::endl;
+                outputfile << "  endfacet" << std::endl;
+
+                // Second triangle
+                outputfile << "  facet normal " << normal.x() << " " << normal.y() << " " << normal.z() << std::endl;
+                outputfile << "    outer loop" << std::endl;
+                outputfile << "      vertex " << vertices[0].x() << " " << vertices[0].y() << " " << vertices[0].z() << std::endl;
+                outputfile << "      vertex " << vertices[2].x() << " " << vertices[2].y() << " " << vertices[2].z() << std::endl;
+                outputfile << "      vertex " << vertices[3].x() << " " << vertices[3].y() << " " << vertices[3].z() << std::endl;
+                outputfile << "    endloop" << std::endl;
+                outputfile << "  endfacet" << std::endl;
+            }
+        }
+    }
+
+    outputfile << "endsolid " << output << std::endl;
+    outputfile.close();
     return true;
 }
 
@@ -1547,40 +1581,6 @@ void MeshKernel::IO::iGameWriteVolumeFile(const VolumeMesh& _mesh, const std::st
     off << "End" << std::endl;
     off.close();
 
-    //// para : �µ����� �� ������ļ���
-    //std::cout << "Is Writing : " << _OutputFile << std::endl;
-    //std::ofstream outputfile(_OutputFile, std::ios::out);
-    //outputfile << "MeshVersionFormatted 1" << std::endl;
-    //outputfile << "Dimension 3" << std::endl;
-    //// ���ȶ���ȫ���ĵ�
-    //outputfile << "Vertices";
-    //outputfile << std::endl;
-    //int n = _mesh.vsize();
-    //std::cout << "��ģ���еĵ�ĸ���Ϊ : " << n << std::endl;
-    //outputfile << std::to_string(n);
-    //outputfile << std::endl;
-    //std::unordered_map<int, int> mp;
-    //for (auto& vp : _mesh.allvertices()) {
-    //	auto& vh = vp.first;
-    //	auto& v = vp.second;
-    //	mp[vh] = mp.size();
-    //	outputfile << v.x() << " " << v.y() << " " << v.z() << " " << -1 << std::endl;
-    //}
-    //outputfile << "Hexahedra";
-    //outputfile << std::endl;
-    //n = _mesh.CellSize();
-    //std::cout << "��ģ���е���ĸ���Ϊ : " << n << std::endl;
-    //outputfile << std::to_string(n);
-    //outputfile << std::endl;
-    //for (auto& cp : _mesh.allcells()) {
-    //	auto vhs = cp.second.getVertexHandle();
-    //	for (auto& vh : vhs) {
-    //		outputfile << (int)mp[vh] + 1 << " ";
-    //	}
-    //	outputfile << 1 << std::endl;
-    //}
-    //outputfile << "End" << std::endl;
-    //outputfile.close();
 }
 
 MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile_TopOptMeshGeneration(const std::string& _InputFile) {
@@ -1620,16 +1620,16 @@ MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile(const std::string& _I
     std::string line;
     //std::cout << "Is Reading : " << _InputFile << " File." << std::endl;
 
-    std::vector<int> invalid_vhs;// ��¼��Ч�Ķ��� id
+    std::vector<int> invalid_vhs;
 
     while (inputfile) {
         line.clear();
-        getline(inputfile, line);// ����ÿһ��
+        getline(inputfile, line);
         //std::cout << line << "\n";
-        if (line[0] == '#') continue;// ע�� �����
+        if (line[0] == '#') continue;
 
         else if (line[0] == 'V') {
-            // ��ʼ����
+
             std::istringstream isstream(line);
             size_t num = 0;
             std::string Vertices;
@@ -1654,9 +1654,8 @@ MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile(const std::string& _I
             }
 
 
-            //std::cout << "��ģ���ļ��е�ĸ���Ϊ : " << num << std::endl;
             for (int i = 0; i < num; ++i) {
-                // ���ζ���ÿһ����
+
                 line.clear();
                 getline(inputfile, line);
                 std::stringstream linestream;
@@ -1673,7 +1672,7 @@ MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile(const std::string& _I
         }
 
         else if (line[0] == 'H') {
-            // ��ʼ����
+
             std::istringstream isstream(line);
 
             size_t num = 0;
@@ -1699,9 +1698,9 @@ MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile(const std::string& _I
 
 
             std::stringstream linestream;
-            //std::cout << "��ģ���ļ�����ĸ���Ϊ : " << num << std::endl;
+
             for (int i = 0; i < num; i++) {
-                // ���ζ���ÿһ����
+
                 line.clear();
                 getline(inputfile, line);
                 linestream.str(line);
@@ -1718,20 +1717,9 @@ MeshKernel::VolumeMesh MeshKernel::IO::iGameReadVolumeFile(const std::string& _I
         }
     }
     inputfile.close();
-    //std::cout << "����ģ�����"<< std::endl;
+
     auto volume_mesh = VolumeMesh(vertices, cells);
-    //for (auto& vh : invalid_vhs) {// ɾ����Ч��
-    //	volume_mesh.DeleteVertex(MeshKernel::iGameVertexHandle(vh));
-    //}
-    //auto vps = volume_mesh.allvertices();
-    //int invalid_cnt = invalid_vhs.size();
-    //for (auto& vp : vps) {
-    //	if (volume_mesh.NeighborVh(vp.first).size() == 0) {
-    //		volume_mesh.DeleteVertex(vp.first);
-    //		invalid_cnt++;
-    //	}
-    //}
-    //std::cout << "��ģ���ļ�����Ч��ĸ���Ϊ : " << invalid_cnt << std::endl;
+
     return volume_mesh;
 }
 
@@ -1743,22 +1731,21 @@ MeshKernel::TetMesh MeshKernel::IO::iGameReadTetMeshFile(const std::string& _Inp
     std::string line;
     std::cout << "Is Reading : " << _InputFile << " File." << std::endl;
 
-    std::vector<int> invalid_vhs;// ��¼��Ч�Ķ��� id
+    std::vector<int> invalid_vhs;
 
     while (inputfile) {
         line.clear();
-        getline(inputfile, line);// ����ÿһ��
+        getline(inputfile, line);
         //std::cout << line << "\n";
-        if (line[0] == '#') continue;// ע�� �����
+        if (line[0] == '#') continue;
 
         else if (line[0] == 'V') {
-            // ��ʼ����
             line.clear();
-            getline(inputfile, line);// ������һ��
-            int num = stoi(line);// ��ĸ���
-            std::cout << "��ģ���ļ��е�ĸ���Ϊ : " << num << std::endl;
+            getline(inputfile, line);
+            int num = stoi(line);
+            std::cout << "!: " << num << std::endl;
             for (int i = 0; i < num; ++i) {
-                // ���ζ���ÿһ����
+
                 line.clear();
                 getline(inputfile, line);
                 std::stringstream linestream;
@@ -1773,14 +1760,13 @@ MeshKernel::TetMesh MeshKernel::IO::iGameReadTetMeshFile(const std::string& _Inp
         }
 
         else if (line[0] == 'T') {
-            // ��ʼ����
+
             line.clear();
             getline(inputfile, line);
             std::stringstream linestream;
             int num = stoi(line);
-            std::cout << "��ģ���ļ�����ĸ���Ϊ : " << num << std::endl;
+            std::cout << "!: " << num << std::endl;
             for (int i = 0; i < num; i++) {
-                // ���ζ���ÿһ����
                 line.clear();
                 getline(inputfile, line);
                 linestream.str(line);
@@ -1801,7 +1787,7 @@ MeshKernel::TetMesh MeshKernel::IO::iGameReadTetMeshFile(const std::string& _Inp
     auto volume_mesh = TetMesh(vertices, cells);
     std::cout << "the number of vertices is " << volume_mesh.VertexSize() << std::endl;
     std::cout << "the number of cells is " << volume_mesh.CellSize() << std::endl;
-    //std::cout << "��ģ���ļ�����Ч��ĸ���Ϊ : " << invalid_cnt << std::endl;
+
     return volume_mesh;
 
 }

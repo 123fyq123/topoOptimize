@@ -320,6 +320,8 @@ public:
 	int delete_island_HexMesh();
 	int delete_redundancy_cell_HexMesh();
     void generate_coverage_axis();
+    void hex_meshing_test();
+    void test_det_faces();
 
 	void read_constraint_force(string str);
 	void read_constraint_spc(string str);
@@ -331,6 +333,7 @@ public:
 
 
 	bool hexMeshConvertToIGES();
+    bool hexMeshConvertToIGES_2(std::string model_name);
 	bool hexMeshConvertToIGES_skeletonExtraction();
 	bool mesh_to_iges(std::string meshFileName, std::string igesFileName);
 

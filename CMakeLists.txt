@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
+set(CUDA_LIB_DIR "$ENV{CUDA_PATH}\\bin")
+set(CMAKE_CUDA_COMPILER "${CUDA_LIB_DIR}\\nvcc.exe")
+
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
   cmake_policy(SET CMP0104 OLD)
 endif()

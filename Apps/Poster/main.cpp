@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	splash.show ();
 	QTextCodec *codec = QTextCodec::codecForName ("GBK");
 	iGamePoster w;
-	w.setWindowTitle (codec->toUnicode ("iGame"));
+	w.setWindowTitle (codec->toUnicode ("IGA-Top"));
     splash.finish (&w);
 	w.show ();
 	return a.exec();

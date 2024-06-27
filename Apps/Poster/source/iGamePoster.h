@@ -38,7 +38,7 @@ private:
 
 	std::string poster_filename;
 	
-
+    std::string model_name;
 public:
 	iGamePoster( QWidget *parent = Q_NULLPTR );
 	~iGamePoster(void);
@@ -79,7 +79,10 @@ public slots:
     /**************************** 后处理 ******************************************/
 
     bool Line_surface_skel(void);
-    bool Hex_model(void);
+    bool testDetFaces(void);
+    bool testResample(void);
+    bool hexmeshingBaseOnMedialMesh(void);
+    bool ConvertToIGES_2(void);
 
 	/**************************** 几何函数 ******************************************/
 
@@ -145,6 +148,7 @@ public slots:
 	void MMC_Opt();
 	void MMC_appr();
 	void TopOpt_Run();
+    void TopOpt_Run_2();
 	void Protect_topopt();
 
 	bool UpdateTopoptDensity();

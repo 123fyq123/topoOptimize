@@ -992,13 +992,6 @@ background:#444444;
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnConverMeshToIGES">
-              <property name="text">
-               <string>生成样条体</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="btnConverMeshToXML">
               <property name="text">
                <string>转换成XML文件</string>
@@ -1198,7 +1191,7 @@ background:#444444;
               </font>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tab_2">
               <attribute name="title">
@@ -1208,9 +1201,9 @@ background:#444444;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
+                 <y>420</y>
                  <width>291</width>
-                 <height>301</height>
+                 <height>300</height>
                 </rect>
                </property>
                <property name="font">
@@ -1220,15 +1213,15 @@ background:#444444;
                 </font>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="page_10">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>277</width>
+                  <height>212</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1360,8 +1353,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>277</width>
-                  <height>213</height>
+                  <width>100</width>
+                  <height>30</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1618,10 +1611,16 @@ background:#444444;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>310</y>
+                 <y>10</y>
                  <width>291</width>
-                 <height>371</height>
+                 <height>401</height>
                 </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>300</height>
+                </size>
                </property>
                <property name="font">
                 <font>
@@ -1630,8 +1629,34 @@ background:#444444;
                 </font>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
+               <widget class="QWidget" name="page_5">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>277</width>
+                  <height>313</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>体参数化</string>
+                </attribute>
+                <widget class="QPushButton" name="btnConverMeshToIGES">
+                 <property name="geometry">
+                  <rect>
+                   <x>40</x>
+                   <y>90</y>
+                   <width>201</width>
+                   <height>27</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>样条曲体参数化</string>
+                 </property>
+                </widget>
+               </widget>
                <widget class="QWidget" name="page">
                 <property name="geometry">
                  <rect>
@@ -1832,8 +1857,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>277</width>
-                  <height>309</height>
+                  <width>100</width>
+                  <height>30</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1950,7 +1975,7 @@ background:#444444;
                  <x>-1</x>
                  <y>0</y>
                  <width>291</width>
-                 <height>801</height>
+                 <height>771</height>
                 </rect>
                </property>
                <property name="verticalScrollBarPolicy">
@@ -1974,37 +1999,13 @@ background:#444444;
                   <height>901</height>
                  </rect>
                 </property>
-                <widget class="QGroupBox" name="HexMeshApplication">
-                 <property name="geometry">
-                  <rect>
-                   <x>10</x>
-                   <y>810</y>
-                   <width>271</width>
-                   <height>81</height>
-                  </rect>
-                 </property>
-                 <property name="title">
-                  <string>体网格应用</string>
-                 </property>
-                 <widget class="QWidget" name="verticalLayoutWidget_4">
-                  <property name="geometry">
-                   <rect>
-                    <x>9</x>
-                    <y>29</y>
-                    <width>251</width>
-                    <height>41</height>
-                   </rect>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_16"/>
-                 </widget>
-                </widget>
                 <widget class="QTabWidget" name="tabWidget_2">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>10</y>
                    <width>281</width>
-                   <height>781</height>
+                   <height>851</height>
                   </rect>
                  </property>
                  <property name="currentIndex">
@@ -2463,7 +2464,7 @@ background:#444444;
              </widget>
              <widget class="QWidget" name="tab_11">
               <attribute name="title">
-               <string>优化</string>
+               <string>拓扑优化</string>
               </attribute>
               <widget class="QToolBox" name="toolBox_6">
                <property name="geometry">
@@ -2471,8 +2472,14 @@ background:#444444;
                  <x>0</x>
                  <y>0</y>
                  <width>291</width>
-                 <height>501</height>
+                 <height>481</height>
                 </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>300</height>
+                </size>
                </property>
                <property name="font">
                 <font>
@@ -2481,28 +2488,15 @@ background:#444444;
                 </font>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
-               <widget class="QWidget" name="page_3">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
-                 </rect>
-                </property>
-                <attribute name="label">
-                 <string>等几何形状优化</string>
-                </attribute>
-               </widget>
                <widget class="QWidget" name="page_4">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
                   <width>277</width>
-                  <height>439</height>
+                  <height>445</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2641,8 +2635,8 @@ background:#444444;
                  </property>
                  <property name="font">
                   <font>
-                   <family>Agency FB</family>
-                   <pointsize>8</pointsize>
+                   <family>Arial</family>
+                   <pointsize>10</pointsize>
                   </font>
                  </property>
                  <property name="text">
@@ -2660,8 +2654,8 @@ background:#444444;
                  </property>
                  <property name="font">
                   <font>
-                   <family>Agency FB</family>
-                   <pointsize>8</pointsize>
+                   <family>Arial</family>
+                   <pointsize>10</pointsize>
                   </font>
                  </property>
                  <property name="text">
@@ -2672,7 +2666,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>70</x>
-                   <y>260</y>
+                   <y>270</y>
                    <width>161</width>
                    <height>16</height>
                   </rect>
@@ -2684,9 +2678,9 @@ background:#444444;
                 <widget class="QLabel" name="label_12">
                  <property name="geometry">
                   <rect>
-                   <x>30</x>
-                   <y>260</y>
-                   <width>21</width>
+                   <x>20</x>
+                   <y>270</y>
+                   <width>31</width>
                    <height>21</height>
                   </rect>
                  </property>
@@ -2703,19 +2697,70 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>80</x>
-                   <y>290</y>
+                   <y>300</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
                  </property>
                  <property name="font">
                   <font>
-                   <family>Agency FB</family>
-                   <pointsize>8</pointsize>
+                   <family>Arial</family>
+                   <pointsize>10</pointsize>
                   </font>
                  </property>
                  <property name="text">
                   <string>固定结果</string>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="Poster_Smooth">
+                 <property name="geometry">
+                  <rect>
+                   <x>80</x>
+                   <y>380</y>
+                   <width>111</width>
+                   <height>31</height>
+                  </rect>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>网格光顺</string>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="Poster_DeleteElement">
+                 <property name="geometry">
+                  <rect>
+                   <x>80</x>
+                   <y>340</y>
+                   <width>111</width>
+                   <height>31</height>
+                  </rect>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>删除孤岛单元</string>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="TopOpt_Run_2">
+                 <property name="geometry">
+                  <rect>
+                   <x>80</x>
+                   <y>240</y>
+                   <width>111</width>
+                   <height>27</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>执行离散优化</string>
                  </property>
                 </widget>
                </widget>
@@ -2723,7 +2768,7 @@ background:#444444;
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
-               <string>后处理</string>
+               <string>CAD重建</string>
               </attribute>
               <widget class="QGroupBox" name="groupBox_3">
                <property name="geometry">
@@ -2733,6 +2778,12 @@ background:#444444;
                  <width>281</width>
                  <height>321</height>
                 </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>300</height>
+                </size>
                </property>
                <property name="title">
                 <string>操作</string>
@@ -2776,7 +2827,7 @@ background:#444444;
                  <string>生成体细分模型</string>
                 </property>
                </widget>
-               <widget class="QPushButton" name="Hex_model">
+               <widget class="QPushButton" name="btnReadQuadInfo">
                 <property name="geometry">
                  <rect>
                   <x>30</x>
@@ -2787,6 +2838,32 @@ background:#444444;
                 </property>
                 <property name="text">
                  <string>生成六面体模型</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="btnTestDetFaces">
+                <property name="geometry">
+                 <rect>
+                  <x>30</x>
+                  <y>200</y>
+                  <width>221</width>
+                  <height>27</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>探测面片区域</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="btnTestResample">
+                <property name="geometry">
+                 <rect>
+                  <x>30</x>
+                  <y>240</y>
+                  <width>221</width>
+                  <height>27</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>曲面骨架重采样</string>
                 </property>
                </widget>
               </widget>

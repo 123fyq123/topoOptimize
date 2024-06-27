@@ -40,3 +40,13 @@ void TopOpt_GPU_V0(      std::string _filename,
                          double Poissons,
                          std::vector<double>& density,
                          std::atomic_bool& is_need_update_topopt_model);
+
+void TopOpt_GPU_Discrete(      std::string _filename,
+                         IGA::HexBdy& hexbdy,
+                         std::vector<int>& pro,
+                         double target_rate,
+                         double max_iter,
+                         double Yangs,
+                         double Poissons,
+                         std::vector<double>& density,
+                         std::atomic_bool& is_need_update_topopt_model);

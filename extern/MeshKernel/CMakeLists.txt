@@ -13,7 +13,7 @@ set(MESH_KERNEL_SOURCES
 add_library(${LIBRARY_NAME} STATIC ${INCLUDE_FILES} ${SOURCE_FILES} ${MESH_KERNEL_SOURCES})
 
 # 设置 OpenCASCADE 的路径
-set(OpenCASCADE_DIR "D:/Git/LabViewer/extern/opencascade/opencascade770-install/cmake")
+set(OpenCASCADE_DIR "${CMAKE_SOURCE_DIR}/extern/opencascade/opencascade770-install/cmake")
 
 # 查找 OpenCASCADE 组件
 find_package(OpenCASCADE COMPONENTS FoundationClasses REQUIRED)

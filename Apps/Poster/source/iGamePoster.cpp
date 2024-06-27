@@ -23,6 +23,10 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 	// menu bar
 	QMenuBar *menu_bar = menuBar();
 
+    ui->toolBox_4->setVisible(false);
+    ui->btnTestDetFaces->setVisible(false);
+    ui->btnTestResample->setVisible(false);
+
     {
         QDoubleValidator *validator_2 = new QDoubleValidator();
         validator_2->setRange(0, 10000000); // 用实际的最小值和最大值替换 minValue 和 maxValue
@@ -186,7 +190,7 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 	/************************ 网格************************/
 	{
 		QMenu* menu_surface_mesh = menu_bar->addMenu("网格");
-		menu_surface_mesh->setTitle("网格");
+		//menu_surface_mesh->setTitle("网格");
 		menu_surface_mesh->setTitle(QString("\xE6\x9B\xB2\xE9\x9D\xA2\xE7\xBD\x91\xE6\xA0\xBC"));// 曲面网格
 		//menu_surface_mesh->setIcon(QIcon("./Resources/triangle.avg"));
 
@@ -301,17 +305,18 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 
 	/************************ skeletal mesh ************************/
 	{
-		QMenu* menu_skeletal_mesh = menu_bar->addMenu("Skeletal Mesh");
-		menu_skeletal_mesh->menuAction()->setVisible(false);
-		menu_skeletal_mesh->setTitle("\xE9\xAA\xA8\xE6\x9E\xB6\xE7\xBD\x91\xE6\xA0\xBC");
+		QMenu* menu_skeletal_mesh = menu_bar->addMenu("骨架网格");
+        menu_skeletal_mesh->setTitle("骨架网格");
+		//menu_skeletal_mesh->menuAction()->setVisible(false);
+		//menu_skeletal_mesh->setTitle("\xE9\xAA\xA8\xE6\x9E\xB6\xE7\xBD\x91\xE6\xA0\xBC");
 		QAction* load_skeletal_mesh = menu_skeletal_mesh->addAction("\xE5\x8A\xA0\xE8\xBD\xBD\xE9\xAA\xA8\xE6\x9E\xB6\xE7\xBD\x91\xE6\xA0\xBC");
 		QAction* save_skeletal_mesh = menu_skeletal_mesh->addAction("\xE4\xBF\x9D\xE5\xAD\x98\xE9\xAA\xA8\xE6\x9E\xB6\xE7\xBD\x91\xE6\xA0\xBC");
 		menu_skeletal_mesh->addSeparator();
 		QAction* simplification = menu_skeletal_mesh->addAction("\xE7\xAE\x80\xE5\x8C\x96");
 		menu_skeletal_mesh->addSeparator();
-		QAction* subdivision = menu_skeletal_mesh->addAction("Subdivision");
+		QAction* subdivision = menu_skeletal_mesh->addAction("细分");
 		menu_skeletal_mesh->addSeparator();
-		QAction* update_all_handles = menu_skeletal_mesh->addAction("Update All Handles");
+		QAction* update_all_handles = menu_skeletal_mesh->addAction("更新节点");
 		menu_skeletal_mesh->addSeparator();
 		QAction* change_show_tangent_plane = menu_skeletal_mesh->addAction("\xE6\x98\xBE\xE7\xA4\xBA\xE5\xA4\x96\xE5\x88\x87\xE7\xAB\x8B\xE6\x96\xB9\xE4\xBD\x93");
 		connect(load_skeletal_mesh, &QAction::triggered, [=]() {
@@ -360,175 +365,175 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 			});
 	}
 
-	/************************ surface mesh menu ************************/
-	{
-		QMenu* menu_surface_mesh = menu_bar->addMenu("Surface Mesh");
-		menu_surface_mesh->menuAction()->setVisible(false);
-		//QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-		menu_surface_mesh->setTitle(QString("\xE6\x9B\xB2\xE9\x9D\xA2\xE7\xBD\x91\xE6\xA0\xBC"));// 曲面网格
-		//menu_surface_mesh->setIcon(QIcon("./Resources/triangle.avg"));
-
-		QAction* load_surface_mesh = menu_surface_mesh->addAction("Load Surface Mesh");
-		load_surface_mesh->setText(QString("\xE5\x8A\xA0\xE8\xBD\xBD\xE6\xA8\xA1\xE5\x9E\x8B"));
-		QAction* save_surface_mesh = menu_surface_mesh->addAction("Save Surface Mesh");
-		save_surface_mesh->setText(QString("\xE4\xBF\x9D\xE5\xAD\x98\xE6\xA8\xA1\xE5\x9E\x8B"));
-		menu_surface_mesh->addSeparator();
-		QAction* remeshing_adaptive_surface_mesh = menu_surface_mesh->addAction("Remeshing(Adaptive Edge Length)");
-		remeshing_adaptive_surface_mesh->setText(QString("\xE9\x87\x8D\xE6\x96\xB0\xE7\xBD\x91\xE6\xA0\xBC\xE5\x8C\x96\xEF\xBC\x88\xE8\x87\xAA\xE9\x80\x82\xE5\xBA\x94\xEF\xBC\x89"));
-		QAction* remeshing_uniform_surface_mesh = menu_surface_mesh->addAction("Remeshing(Uniform Edge Length)");
-		remeshing_uniform_surface_mesh->setText(QString("\xE9\x87\x8D\xE6\x96\xB0\xE7\xBD\x91\xE6\xA0\xBC\xE5\x8C\x96\xEF\xBC\x88\xE5\x9D\x87\xE5\x8C\x80\xEF\xBC\x89"));
-		menu_surface_mesh->addSeparator();
-		QAction* simplification_surface_mesh = menu_surface_mesh->addAction("Simplification(QEM)");
-		simplification_surface_mesh->setText(QString("\xE7\xBD\x91\xE6\xA0\xBC\xE7\xAE\x80\xE5\x8C\x96"));
-		QAction* simplification_powered_surface_mesh = menu_surface_mesh->addAction("Simplification(Powered QEM)");
-		simplification_powered_surface_mesh->setText(QString("\xE7\xBD\x91\xE6\xA0\xBC\xE7\xAE\x80\xE5\x8C\x96\xEF\xBC\x88\xE8\xB4\xA8\xE9\x87\x8F\xE6\x95\x8F\xE6\x84\x9F\xEF\xBC\x89"));
-		menu_surface_mesh->addSeparator();
-		QAction* denoising_surface_mesh = menu_surface_mesh->addAction("Denoising");
-		denoising_surface_mesh->setText(QString("\xE5\x8E\xBB\xE5\x99\xAA"));
-		menu_surface_mesh->addSeparator();
-		QAction* subdivision_surface_mesh = menu_surface_mesh->addAction("Subdivision");
-		subdivision_surface_mesh->setText(QString("\xE7\xBB\x86\xE5\x88\x86"));
-		menu_surface_mesh->addSeparator();
-		QAction* parameterization_surface_mesh = menu_surface_mesh->addAction("Parameterization");
-		parameterization_surface_mesh->setText(QString("\xE5\x8F\x82\xE6\x95\xB0\xE5\x8C\x96"));
-		menu_surface_mesh->addSeparator();
-		QAction* enter_analysis = menu_surface_mesh->addAction("Exter Analysis Mode");
-		enter_analysis->setText("\xE8\xBF\x9B\xE5\x85\xA5\xE5\x88\x86\xE6\x9E\x90\xE6\xA8\xA1\xE5\xBC\x8F");
-		QAction* exit_analysis = menu_surface_mesh->addAction("Exter Analysis Mode");
-		exit_analysis->setText("\xE9\x80\x80\xE5\x87\xBA\xE5\x88\x86\xE6\x9E\x90\xE6\xA8\xA1\xE5\xBC\x8F");
-		menu_surface_mesh->addSeparator();
-
-		QAction* get_volume = menu_surface_mesh->addAction("Get Volume");
-		QAction* test_action = menu_surface_mesh->addAction("Test");
-		QAction* add_noise = menu_surface_mesh->addAction("Add Gauss Noise");
-
-
-
-		connect(add_noise, &QAction::triggered, [=]() {
-			bool input_ok = true;
-			double max_error = QInputDialog::getDouble(this, "Triangle Mesh", "Please input noise ratio",
-				0.5f, 0.1f, 1.f, 2, &input_ok);
-			if (!input_ok) return;
-			ui->openGLWidget->add_noise(max_error);
-			});
-
-		connect(test_action, &QAction::triggered, [=]() {
-			bool input_ok = true;
-			double alpha = QInputDialog::getDouble(this, "Alpha", "",
-				0.f, 0, 1.f, 2, &input_ok);
-			if (!input_ok) return;
-			ui->openGLWidget->test_action(alpha);
-			});
-
-		connect(get_volume, &QAction::triggered, [=]() {
-			double volume = ui->openGLWidget->getVolume();
-			QString str = "Current volume: " + QString::number(volume) + ".";
-			ui->info->printString(str);
-			});
-
-		connect(load_surface_mesh, &QAction::triggered, [=]() {
-			LoadSurfaceMesh();
-			ui->rtnCell->setCheckable(false);
-			});
-
-		connect(save_surface_mesh, &QAction::triggered, [=]() {
-			SaveSurfaceMesh();
-			});
-
-		connect(remeshing_adaptive_surface_mesh, &QAction::triggered, [=]() {
-			time_t t1 = clock();
-			ui->openGLWidget->remeshing_adaptive();
-			int spend = clock() - t1;
-			QString str = "Remeshing(adaptive) success, cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(remeshing_uniform_surface_mesh, &QAction::triggered, [=]() {
-			time_t t1 = clock();
-			ui->openGLWidget->remeshing_uniform();
-			int spend = clock() - t1;
-			QString str = "Remeshing(uniform) success, cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(denoising_surface_mesh, &QAction::triggered, [=]() {
-			bool input_ok = false;
-			int iter = QInputDialog::getInt(this, "Surface Mesh", "Please input denoising times",
-				1, 1, 15, 1, &input_ok);
-			if (!input_ok) return;
-			time_t t1 = clock();
-			ui->openGLWidget->denoising_bnf(iter);
-			int spend = clock() - t1;
-			QString str = "Denoising success, cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(subdivision_surface_mesh, &QAction::triggered, [=]() {
-			bool input_ok = false;
-			int iter = QInputDialog::getInt(this, "Surface Mesh", "Please input subdivision times",
-				1, 0, 5, 1, &input_ok);
-			if (!input_ok) return;
-			time_t t1 = clock();
-			ui->openGLWidget->subdivision_loop(iter);
-			int spend = clock() - t1;
-			QString str = "Subdivision success, cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(simplification_surface_mesh, &QAction::triggered, [=]() {
-			bool input_ok = false;
-			int vcnt = QInputDialog::getInt(this, "Surface Mesh", "Please input target vertices size",
-				ui->openGLWidget->getVerticesSize(), 3, ui->openGLWidget->getVerticesSize(), 1, &input_ok);
-			if (!input_ok) return;
-			time_t t1 = clock();
-			ui->openGLWidget->simplification_qem(vcnt);
-			int spend = clock() - t1;
-			QString str = "Simplification success, current vertices size: " + QString::number(ui->openGLWidget->getVerticesSize()) +
-				"cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(simplification_powered_surface_mesh, &QAction::triggered, [=]() {
-			bool input_ok = false;
-			int vcnt = QInputDialog::getInt(this, "Surface Mesh", "Please input target vertices size",
-				ui->openGLWidget->getVerticesSize(), 3, ui->openGLWidget->getVerticesSize(), 1, &input_ok);
-			if (!input_ok) return;
-			time_t t1 = clock();
-			ui->openGLWidget->simplification_qem(vcnt, true);
-			int spend = clock() - t1;
-			QString str = "Simplification(Powered) success, current vertices size: " + QString::number(ui->openGLWidget->getVerticesSize()) +
-				"cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(parameterization_surface_mesh, &QAction::triggered, [=]() {
-			bool input_ok = false;
-			int mode = QInputDialog::getInt(this, "Surface Mesh", "Please select boundary: 1 Squard, 2 Circle",
-				2, 1, 2, 1, &input_ok);
-			if (!input_ok) return;
-			time_t t1 = clock();
-			ui->openGLWidget->parameterization(mode);
-			int spend = clock() - t1;
-			QString str = "Parameterization success, cost: " + QString::number(spend) + "ms";
-			ui->info->printString(str);
-			});
-
-		connect(enter_analysis, &QAction::triggered, [=]() {
-				bool input_ok = false;
-				int mode = QInputDialog::getInt(this, "Surface Mesh", "Please select data: 1 Angle, 2 Curvature",
-					2, 1, 2, 1, &input_ok);
-				if (!input_ok) return;
-				ui->openGLWidget->analysis_flag = true;
-				ui->openGLWidget->analysis_mode = mode;
-				ui->openGLWidget->updateDrawData();
-			});
-
-		connect(exit_analysis, &QAction::triggered, [=]() {
-			ui->openGLWidget->analysis_flag = false;
-			ui->openGLWidget->updateDrawData();
-			});
-
-	}
+//	/************************ surface mesh menu ************************/
+//	{
+//		QMenu* menu_surface_mesh = menu_bar->addMenu("Surface Mesh");
+//		menu_surface_mesh->menuAction()->setVisible(false);
+//		//QTextCodec* codec = QTextCodec::codecForName("UTF-8");
+//		menu_surface_mesh->setTitle(QString("\xE6\x9B\xB2\xE9\x9D\xA2\xE7\xBD\x91\xE6\xA0\xBC"));// 曲面网格
+//		//menu_surface_mesh->setIcon(QIcon("./Resources/triangle.avg"));
+//
+//		QAction* load_surface_mesh = menu_surface_mesh->addAction("Load Surface Mesh");
+//		load_surface_mesh->setText(QString("\xE5\x8A\xA0\xE8\xBD\xBD\xE6\xA8\xA1\xE5\x9E\x8B"));
+//		QAction* save_surface_mesh = menu_surface_mesh->addAction("Save Surface Mesh");
+//		save_surface_mesh->setText(QString("\xE4\xBF\x9D\xE5\xAD\x98\xE6\xA8\xA1\xE5\x9E\x8B"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* remeshing_adaptive_surface_mesh = menu_surface_mesh->addAction("Remeshing(Adaptive Edge Length)");
+//		remeshing_adaptive_surface_mesh->setText(QString("\xE9\x87\x8D\xE6\x96\xB0\xE7\xBD\x91\xE6\xA0\xBC\xE5\x8C\x96\xEF\xBC\x88\xE8\x87\xAA\xE9\x80\x82\xE5\xBA\x94\xEF\xBC\x89"));
+//		QAction* remeshing_uniform_surface_mesh = menu_surface_mesh->addAction("Remeshing(Uniform Edge Length)");
+//		remeshing_uniform_surface_mesh->setText(QString("\xE9\x87\x8D\xE6\x96\xB0\xE7\xBD\x91\xE6\xA0\xBC\xE5\x8C\x96\xEF\xBC\x88\xE5\x9D\x87\xE5\x8C\x80\xEF\xBC\x89"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* simplification_surface_mesh = menu_surface_mesh->addAction("Simplification(QEM)");
+//		simplification_surface_mesh->setText(QString("\xE7\xBD\x91\xE6\xA0\xBC\xE7\xAE\x80\xE5\x8C\x96"));
+//		QAction* simplification_powered_surface_mesh = menu_surface_mesh->addAction("Simplification(Powered QEM)");
+//		simplification_powered_surface_mesh->setText(QString("\xE7\xBD\x91\xE6\xA0\xBC\xE7\xAE\x80\xE5\x8C\x96\xEF\xBC\x88\xE8\xB4\xA8\xE9\x87\x8F\xE6\x95\x8F\xE6\x84\x9F\xEF\xBC\x89"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* denoising_surface_mesh = menu_surface_mesh->addAction("Denoising");
+//		denoising_surface_mesh->setText(QString("\xE5\x8E\xBB\xE5\x99\xAA"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* subdivision_surface_mesh = menu_surface_mesh->addAction("Subdivision");
+//		subdivision_surface_mesh->setText(QString("\xE7\xBB\x86\xE5\x88\x86"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* parameterization_surface_mesh = menu_surface_mesh->addAction("Parameterization");
+//		parameterization_surface_mesh->setText(QString("\xE5\x8F\x82\xE6\x95\xB0\xE5\x8C\x96"));
+//		menu_surface_mesh->addSeparator();
+//		QAction* enter_analysis = menu_surface_mesh->addAction("Exter Analysis Mode");
+//		enter_analysis->setText("\xE8\xBF\x9B\xE5\x85\xA5\xE5\x88\x86\xE6\x9E\x90\xE6\xA8\xA1\xE5\xBC\x8F");
+//		QAction* exit_analysis = menu_surface_mesh->addAction("Exter Analysis Mode");
+//		exit_analysis->setText("\xE9\x80\x80\xE5\x87\xBA\xE5\x88\x86\xE6\x9E\x90\xE6\xA8\xA1\xE5\xBC\x8F");
+//		menu_surface_mesh->addSeparator();
+//
+//		QAction* get_volume = menu_surface_mesh->addAction("Get Volume");
+//		QAction* test_action = menu_surface_mesh->addAction("Test");
+//		QAction* add_noise = menu_surface_mesh->addAction("Add Gauss Noise");
+//
+//
+//
+//		connect(add_noise, &QAction::triggered, [=]() {
+//			bool input_ok = true;
+//			double max_error = QInputDialog::getDouble(this, "Triangle Mesh", "Please input noise ratio",
+//				0.5f, 0.1f, 1.f, 2, &input_ok);
+//			if (!input_ok) return;
+//			ui->openGLWidget->add_noise(max_error);
+//			});
+//
+//		connect(test_action, &QAction::triggered, [=]() {
+//			bool input_ok = true;
+//			double alpha = QInputDialog::getDouble(this, "Alpha", "",
+//				0.f, 0, 1.f, 2, &input_ok);
+//			if (!input_ok) return;
+//			ui->openGLWidget->test_action(alpha);
+//			});
+//
+//		connect(get_volume, &QAction::triggered, [=]() {
+//			double volume = ui->openGLWidget->getVolume();
+//			QString str = "Current volume: " + QString::number(volume) + ".";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(load_surface_mesh, &QAction::triggered, [=]() {
+//			LoadSurfaceMesh();
+//			ui->rtnCell->setCheckable(false);
+//			});
+//
+//		connect(save_surface_mesh, &QAction::triggered, [=]() {
+//			SaveSurfaceMesh();
+//			});
+//
+//		connect(remeshing_adaptive_surface_mesh, &QAction::triggered, [=]() {
+//			time_t t1 = clock();
+//			ui->openGLWidget->remeshing_adaptive();
+//			int spend = clock() - t1;
+//			QString str = "Remeshing(adaptive) success, cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(remeshing_uniform_surface_mesh, &QAction::triggered, [=]() {
+//			time_t t1 = clock();
+//			ui->openGLWidget->remeshing_uniform();
+//			int spend = clock() - t1;
+//			QString str = "Remeshing(uniform) success, cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(denoising_surface_mesh, &QAction::triggered, [=]() {
+//			bool input_ok = false;
+//			int iter = QInputDialog::getInt(this, "Surface Mesh", "Please input denoising times",
+//				1, 1, 15, 1, &input_ok);
+//			if (!input_ok) return;
+//			time_t t1 = clock();
+//			ui->openGLWidget->denoising_bnf(iter);
+//			int spend = clock() - t1;
+//			QString str = "Denoising success, cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(subdivision_surface_mesh, &QAction::triggered, [=]() {
+//			bool input_ok = false;
+//			int iter = QInputDialog::getInt(this, "Surface Mesh", "Please input subdivision times",
+//				1, 0, 5, 1, &input_ok);
+//			if (!input_ok) return;
+//			time_t t1 = clock();
+//			ui->openGLWidget->subdivision_loop(iter);
+//			int spend = clock() - t1;
+//			QString str = "Subdivision success, cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(simplification_surface_mesh, &QAction::triggered, [=]() {
+//			bool input_ok = false;
+//			int vcnt = QInputDialog::getInt(this, "Surface Mesh", "Please input target vertices size",
+//				ui->openGLWidget->getVerticesSize(), 3, ui->openGLWidget->getVerticesSize(), 1, &input_ok);
+//			if (!input_ok) return;
+//			time_t t1 = clock();
+//			ui->openGLWidget->simplification_qem(vcnt);
+//			int spend = clock() - t1;
+//			QString str = "Simplification success, current vertices size: " + QString::number(ui->openGLWidget->getVerticesSize()) +
+//				"cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(simplification_powered_surface_mesh, &QAction::triggered, [=]() {
+//			bool input_ok = false;
+//			int vcnt = QInputDialog::getInt(this, "Surface Mesh", "Please input target vertices size",
+//				ui->openGLWidget->getVerticesSize(), 3, ui->openGLWidget->getVerticesSize(), 1, &input_ok);
+//			if (!input_ok) return;
+//			time_t t1 = clock();
+//			ui->openGLWidget->simplification_qem(vcnt, true);
+//			int spend = clock() - t1;
+//			QString str = "Simplification(Powered) success, current vertices size: " + QString::number(ui->openGLWidget->getVerticesSize()) +
+//				"cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(parameterization_surface_mesh, &QAction::triggered, [=]() {
+//			bool input_ok = false;
+//			int mode = QInputDialog::getInt(this, "Surface Mesh", "Please select boundary: 1 Squard, 2 Circle",
+//				2, 1, 2, 1, &input_ok);
+//			if (!input_ok) return;
+//			time_t t1 = clock();
+//			ui->openGLWidget->parameterization(mode);
+//			int spend = clock() - t1;
+//			QString str = "Parameterization success, cost: " + QString::number(spend) + "ms";
+//			ui->info->printString(str);
+//			});
+//
+//		connect(enter_analysis, &QAction::triggered, [=]() {
+//				bool input_ok = false;
+//				int mode = QInputDialog::getInt(this, "Surface Mesh", "Please select data: 1 Angle, 2 Curvature",
+//					2, 1, 2, 1, &input_ok);
+//				if (!input_ok) return;
+//				ui->openGLWidget->analysis_flag = true;
+//				ui->openGLWidget->analysis_mode = mode;
+//				ui->openGLWidget->updateDrawData();
+//			});
+//
+//		connect(exit_analysis, &QAction::triggered, [=]() {
+//			ui->openGLWidget->analysis_flag = false;
+//			ui->openGLWidget->updateDrawData();
+//			});
+//
+//	}
 
 	/************************ tetrahedron mesh menu ************************/
 	{
@@ -1096,17 +1101,20 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 //	connect(ui->MMC_Opt, SIGNAL(clicked(bool)), this, SLOT(MMC_Opt()));
 //	connect(ui->MMC_appr, SIGNAL(clicked(bool)), this, SLOT(MMC_appr()));
 	connect(ui->TopOpt_Run, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run()));
+    connect(ui->TopOpt_Run_2, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_2()));
     connect(ui->fix_topopt_result, SIGNAL(clicked(bool)), this, SLOT(SetFinalTopOptMesh()));
 	// connect(ui->Protect_topopt, SIGNAL(clicked(bool)), this, SLOT(Protect_topopt()));
 
     //IGA
     connect(ui->btnConverMeshToXML, SIGNAL(clicked(bool)), this, SLOT(Conver_Mesh_To_XML()));
-    connect(ui->btnConverMeshToIGES, SIGNAL(clicked(bool)), this, SLOT(ConvertToIGES()));
+    connect(ui->btnConverMeshToIGES, SIGNAL(clicked(bool)), this, SLOT(ConvertToIGES_2()));
 
-    connect(ui->Hex_model, SIGNAL(clicked(bool)), this, SLOT(Hex_model()));
     connect(ui->line_surface_skel, SIGNAL(clicked(bool)), this, SLOT(Line_surface_skel()));
     connect(ui->save_topopt, SIGNAL(clicked(bool)), this, SLOT(SaveSurfaceMesh()));
     connect(ui->volumetric_sub, SIGNAL(clicked(bool)), this, SLOT(ConvertToIGES()));
+    connect(ui->btnTestDetFaces, SIGNAL(clicked(bool)), this, SLOT(testDetFaces()));
+    connect(ui->btnTestResample, SIGNAL(clicked(bool)), this, SLOT(testResample()));
+    connect(ui->btnReadQuadInfo, SIGNAL(clicked(bool)), this, SLOT(hexmeshingBaseOnMedialMesh()));
     //Build Comobox for IGA Solver
     {
         constexpr auto entries = magic_enum::enum_entries<Solver>();
@@ -1135,8 +1143,8 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
     //connect(ui->pushButton_11, SIGNAL(clicked(bool)), this, SLOT(set_material()));
 
 //	connect(ui->Poster_GenSpline, SIGNAL(clicked(bool)), this, SLOT(Poster_GenSpline()));
-//	connect(ui->Poster_DeleteElement, SIGNAL(clicked(bool)), this, SLOT(Poster_DeleteElement()));
-//	connect(ui->Poster_Smooth, SIGNAL(clicked(bool)), this, SLOT(Poster_Smooth()));
+	connect(ui->Poster_DeleteElement, SIGNAL(clicked(bool)), this, SLOT(Poster_DeleteElement()));
+	connect(ui->Poster_Smooth, SIGNAL(clicked(bool)), this, SLOT(Poster_Smooth()));
 //
 //	connect(ui->read_remeshing, SIGNAL(clicked(bool)), this, SLOT(read_remeshing()));
 //	connect(ui->set_remeshing, SIGNAL(clicked(bool)), this, SLOT(set_remeshing()));
@@ -1411,18 +1419,112 @@ bool iGamePoster::ConvertToIGES(void) {
 	return true;
 }
 
+bool iGamePoster::ConvertToIGES_2(void) {
+//    if (this->model_name.empty())
+//        return false;
+//    else {
+//        ui->openGLWidget->loadHexMesh(this->model_name);
+//    }
+    if (ui->openGLWidget->hexMeshConvertToIGES_2(this->model_name)) ui->info->printString("convert success");
+    else ui->info->printString("convert failure");
+    return true;
+}
+//bool iGamePoster::Line_surface_skel(void) {
+//    time_t t1 = clock();
+//    ui->openGLWidget->generate_coverage_axis();
+//    int spend = clock() - t1;
+//    QString str = "Coverage_axis success, cost: " + QString::number(spend) + "ms";
+//    ui->info->printString(str);
+//    return true;
+//};
+
 bool iGamePoster::Line_surface_skel(void) {
     time_t t1 = clock();
-    ui->openGLWidget->generate_coverage_axis();
+    std::string filename = model_name + ".ma";
+    if (filename.empty())
+        return false;
+    else {
+        ui->openGLWidget->loadSkeletalMesh(filename);
+    }
+
+    Sleep(1000);
+    //ui->openGLWidget->generate_coverage_axis();
     int spend = clock() - t1;
     QString str = "Coverage_axis success, cost: " + QString::number(spend) + "ms";
-    ui->info->printString(str);
+    //ui->info->printString(str);
     return true;
 };
 
-bool iGamePoster::Hex_model(void){
+bool iGamePoster::hexmeshingBaseOnMedialMesh(void){
+    time_t t1 = clock();
+    //QString filePath = QFileDialog::getOpenFileName(this, tr("Load ma file"), tr(""), tr("Skeletal Mesh Files(*.ma)"));
+    //QString filePath =
+    std::string filename = model_name + ".mesh";
+    if (filename.empty())
+        return false;
+    else {
+        ui->openGLWidget->loadHexMesh(filename);
+    }
+
+    Sleep(1000);
+    //ui->openGLWidget->generate_coverage_axis();
+    int spend = clock() - t1;
+    QString str = "Coverage_axis success, cost: " + QString::number(spend) + "ms";
+    //ui->info->printString(str);
     return true;
 };
+
+
+bool iGamePoster::LoadSurfaceMesh() {
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj or Off or Stl or Step or Igs Files(*.obj *.off *.stl *.step *.igs);;OFF Files(*.off);;STL Files(*.stl);;STEP Files(*.step);;IGS Files(*.igs)"
+
+    ));
+    if (filePath.isEmpty())
+        return false;
+    else {
+        std::string filename = std::string((const char*)filePath.toLocal8Bit());
+        std::string file_name_without_path;
+        std::string file_name_without_suffix;
+
+        ui->openGLWidget->loadSurfaceMesh(filename);
+
+        int beg = filename.find_last_of('/');
+        file_name_without_path = filename.substr(++beg, filename.length());
+        filePath = filePath.fromLocal8Bit(file_name_without_path.c_str());
+        QString str = "read " + filePath + " success";
+
+        //QString fileName;
+        file_name_without_suffix = filename.substr(0, filename.rfind("."));
+        model_name = file_name_without_suffix;
+        //fileName = fileName.fromLocal8Bit(file_name_without_suffix.c_str());
+        //QString str2 = "fileName: " + fileName;
+
+        ui->info->printString(str);
+        //ui->info->printString(str2);
+        return true;
+    }
+}
+
+//bool iGamePoster::hexmeshingBaseOnMedialMesh(void) {
+//    ui->openGLWidget->hex_meshing_test();// 基于骨架网格的六面体网格剖分
+//    return true;
+//}
+
+bool iGamePoster::testResample(void) {
+
+//    ui->openGLWidget->test_resample();
+//    ui->info->printString("Execute success.");
+    return true;
+}
+
+bool iGamePoster::testDetFaces(void) {
+
+    ui->openGLWidget->test_det_faces();
+
+    QString str = "Execute success.";
+    ui->info->printString(str);
+    return true;
+}
 
 bool iGamePoster::ConvertToIGES_Skel(void) {// 测试中……
 	/*if (!ui->openGLWidget->isVaildHexMesh()) {
@@ -1816,26 +1918,26 @@ bool iGamePoster::updateFixedHandle() {
 	return true;
 }
 
-bool iGamePoster::LoadSurfaceMesh() {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj or Off or Stl or Step or Igs Files(*.obj *.off *.stl *.step *.igs);;OFF Files(*.off);;STL Files(*.stl);;STEP Files(*.step);;IGS Files(*.igs)"
-
-
-
-
-
-    ));
-	if (filePath.isEmpty())
-		return false;
-	else {
-		std::string filename = std::string((const char*)filePath.toLocal8Bit());
-		ui->openGLWidget->loadSurfaceMesh(filename);
-		int beg = filename.find_last_of('/');
-		filePath = filePath.fromLocal8Bit((filename.substr(++beg, filename.length())).c_str());
-		QString str = "read " + filePath + " success";
-		ui->info->printString(str);
-		return true;
-	}
-}
+//bool iGamePoster::LoadSurfaceMesh() {
+//	QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(""), tr("Obj or Off or Stl or Step or Igs Files(*.obj *.off *.stl *.step *.igs);;OFF Files(*.off);;STL Files(*.stl);;STEP Files(*.step);;IGS Files(*.igs)"
+//
+//
+//
+//
+//
+//    ));
+//	if (filePath.isEmpty())
+//		return false;
+//	else {
+//		std::string filename = std::string((const char*)filePath.toLocal8Bit());
+//		ui->openGLWidget->loadSurfaceMesh(filename);
+//		int beg = filename.find_last_of('/');
+//		filePath = filePath.fromLocal8Bit((filename.substr(++beg, filename.length())).c_str());
+//		QString str = "read " + filePath + " success";
+//		ui->info->printString(str);
+//		return true;
+//	}
+//}
 
 bool iGamePoster::SaveSurfaceMesh() {
 	QString fileName = QFileDialog::getSaveFileName(this, tr("Save model file:"), tr("untitld"), tr("Obj File(*.obj);;IGS File(*.IGS);;Off File(*.off);;Stl File(*.stl);;Step File(*.step);;Vtk File(*.vtk)"));
@@ -1915,6 +2017,26 @@ void iGamePoster::TopOpt_Run() {
                             ui->openGLWidget->hex_density,
                             ui->openGLWidget->is_need_update_topopt_model);
 	});
+}
+
+void iGamePoster::TopOpt_Run_2() {
+
+    QtConcurrent::run([&]() {
+        // ui->openGLWidget->updatePickPara();
+        ui->openGLWidget->analysis_flag = false;
+        //TopOpt(ui->openGLWidget, poster_filename, ui->openGLWidget->pickface, ui->openGLWidget->pickedge, ui->openGLWidget->pickcell);
+        //TopOpt_CC_Bezier_V2(ui->openGLWidget, poster_filename, ui->openGLWidget->hexbdy, ui->openGLWidget->is_need_update_topopt_model);
+        TopOpt_GPU_Discrete(  poster_filename,
+                        ui->openGLWidget->hexbdy,
+                        ui->openGLWidget->topopt_pro,
+                        ui->TopOpt_Rate_2->text().toDouble(),
+                        ui->TopOpt_Iters_2->text().toDouble(),
+                        ui->openGLWidget->YoungsModulus,
+                        ui->openGLWidget->PoissonsRatio,
+
+                        ui->openGLWidget->hex_density,
+                        ui->openGLWidget->is_need_update_topopt_model);
+    });
 }
 
 void iGamePoster::Protect_topopt(){
@@ -2181,6 +2303,7 @@ void iGamePoster::Poster_Smooth() {
 	QString str = "Smoothing success, cost: " + QString::number(spend) + "ms";
 	ui->info->printString(str);
 }
+
 void iGamePoster::Poster_DeleteElement() {
 	ui->openGLWidget->delete_island_HexMesh();
 	QString str = "Delete isolated islands success.";

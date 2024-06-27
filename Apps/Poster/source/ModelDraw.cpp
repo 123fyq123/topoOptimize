@@ -153,7 +153,30 @@ bool ModelDraw::saveSurfaceMesh(std::string filename) {
 	string fileformat = filename.substr(++dot_idx, filename.length());
 	MeshKernel::IO io;
 	if (fileformat == "obj") {
-		io.WriteObjFile(*(this->surface_mesh), filename);
+        switch (drawmodule) {
+            case DrawModule::EMPTY:
+                break;
+
+            case DrawModule::SURFACEMESH:
+                io.WriteObjFile(*(this->surface_mesh), filename);
+                break;
+
+            case DrawModule::TETMESH:
+                break;
+
+            case DrawModule::HEXMESH:
+                break;
+
+            case DrawModule::SKEL:
+                break;
+
+            case DrawModule::BSPLINESURFACE:
+                io.WriteObjFileWithSpline(this->surfacesDraw, filename);
+                break;
+
+            default:
+                break;
+        }
 	}
 	else if (fileformat == "off") {
 		io.WriteOffFile(*(this->surface_mesh), filename);
@@ -427,6 +450,103 @@ bool ModelDraw::hexMeshConvertToIGES() {
 	resetViewFlag = true;
 	cout << "HexMesh convert to surface mesh success.\n";
 	return true;
+}
+
+bool ModelDraw::hexMeshConvertToIGES_2(std::string model_name) {
+    if (!this->hexMesh) return false;
+
+    std::string filename = model_name + ".mesh";
+
+    /*MeshKernel::IO io;
+    io.iGameWriteVolumeFile(*hexMesh, filename);*/
+
+    HexV3fMesh* _hexMesh = new HexV3fMesh();
+
+    /* iGame_hexMesh to XIE_hexMesh */
+    {
+        uint64_t vcnt = hexMesh->VertexSize(), ccnt = hexMesh->CellSize();
+        for (uint64_t i = 0; i < vcnt; ++i) {
+            MeshKernel::iGameVertexHandle vh(i);
+            auto& v = hexMesh->vertices(vh);
+            V3f _v(v.x(), v.y(), v.z());
+            _hexMesh->add_vertex(_v);
+        }
+
+        for (uint64_t i = 0; i < ccnt; ++i) {
+            MeshKernel::iGameCellHandle ch(i);
+            if (hexMesh->isValid(ch)) {
+                auto& c = hexMesh->cells(ch);
+                auto vhs = c.getVertexHandle();
+                vector<VertexHandle> _vhs;
+                for (auto& vh : vhs) {
+                    _vhs.push_back(VertexHandle(vh));
+                }
+                _hexMesh->add_cell(_vhs);
+            }
+        }
+
+        /*std::cout << "iGameHexMesh convert to OldHexMesh success. OldHexMesh: #V = " << _hexMesh->vertices_.size() <<
+            ", #C = " << _hexMesh->cells_.size() << std::endl;*/
+
+    }
+
+    std::cout << "trans success" << std::endl;
+    /*FileHandler file(filename);
+    assert(file.read2HexMeshObj(_hexMesh, true, true, true));*/
+
+    if (_hexMesh->vertices_.size() == 0) {
+        QMessageBox::information(this, QString::fromLocal8Bit(" Warning "), QString::fromLocal8Bit(" HexMesh(XIE) is empty! "));
+        return false;
+    }
+
+    _hexMesh->examine_bdy();
+    _hexMesh->cal_cell_cen();
+    _hexMesh->cal_cen();
+    _hexMesh->examine_cs();
+    //_hexMesh->smooth_mesh(); _hexMesh->smooth_mesh(); _hexMesh->smooth_mesh();
+    //_hexMesh->smooth_mesh(); _hexMesh->smooth_mesh(); _hexMesh->smooth_mesh();
+    std::cout << "Converting... hexMesh: vertices = " << _hexMesh->vertices_.size() << ", cells = " << _hexMesh->cells_.size() << std::endl;
+    int udegree = 3;
+    int vdegree = 3;
+    vector<double> uknots{ 0,1 };
+    vector<double> vknots{ 0,1 };
+    vector<int> umultis{ 4,4 };
+    vector<int> vmultis{ 4,4 };
+
+    HexV3fMesh* SkelMesh = _hexMesh;
+    std::vector<EdgeHandle> TempEdge;
+    ApproximationCC AppCC(SkelMesh, SkelMesh, TempEdge);
+
+    int idx = 0;
+    AppCC.approximationing();
+
+    vector<CBSplineSurface> MutiBezierPatch;
+    vector<CBSplineSurface> dx;
+
+    for (int i = 0; i < SkelMesh->faces_.size(); ++i) {
+        if (SkelMesh->is_bdy((FaceHandle)i)) {
+            vector<vector<CPoint>> controlPointsSurface;
+            for (int j = 0; j < 4; ++j) {
+                vector<CPoint> controlPointLine;
+                for (int k = 0; k < 4; ++k) {
+                    controlPointLine.push_back(CPoint(AppCC.beiv[idx][j][k].x, AppCC.beiv[idx][j][k].y, AppCC.beiv[idx][j][k].z));
+                }
+                controlPointsSurface.push_back(controlPointLine);
+            }
+            CBSplineSurface splineSurface(udegree, vdegree, controlPointsSurface, uknots, vknots, umultis, vmultis);
+
+            MutiBezierPatch.push_back(splineSurface);
+
+            idx++;
+        }
+    }
+    //bsplineSurfaces = MutiBezierPatch;
+    //saveIGESFile("./Resources/tmp_convert.iges");
+    resetViewFlag = false;
+    loadIGESSurface(MutiBezierPatch);
+    resetViewFlag = true;
+    cout << "HexMesh convert to surface mesh success.\n";
+    return true;
 }
 
 bool ModelDraw::hexMeshConvertToIGES_skeletonExtraction() {
@@ -7683,6 +7803,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7691,6 +7815,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7698,6 +7825,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7705,6 +7835,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7713,6 +7846,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7720,6 +7856,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7727,6 +7866,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7734,6 +7876,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7742,6 +7887,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7749,6 +7897,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7756,6 +7907,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7763,6 +7917,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7771,6 +7928,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7778,6 +7938,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7785,6 +7948,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7792,6 +7958,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7800,6 +7969,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7807,6 +7979,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7814,6 +7989,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7821,6 +7999,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7829,6 +8010,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7836,6 +8020,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7843,6 +8030,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7850,6 +8040,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7893,6 +8086,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7902,6 +8099,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7910,6 +8110,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7918,6 +8121,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7965,6 +8171,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7974,6 +8184,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7982,6 +8195,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7990,6 +8206,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8037,6 +8256,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8046,6 +8269,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8054,6 +8280,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8062,6 +8291,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
+                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8081,7 +8313,7 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 			}
 		}
 		bd.calcuNormal();
-		totalVerticesSize = vertices_data.size() / 6;
+		totalVerticesSize = vertices_data.size() / 9;
 		singlepatch_vertics_number.push_back(count);
 		time_t end = clock();
 		printf("single bsplineSolidToDiscrete cost: %zdms, vertices size: %zd, \n", int(end - beg), totalVerticesSize);
@@ -8366,5 +8598,106 @@ void ModelDraw::generate_coverage_axis() {
         updateDrawData();
         //update_SurfaceMedialAxis();
     }
+
+}
+
+void ModelDraw::hex_meshing_test() {
+
+//    hexMesh = new MeshKernel::VolumeMesh();
+//
+//    // 1. 生成面片上的六面体
+//    QMessageBox::StandardButton ret1 = QMessageBox::question(this, " Question ", " Is non-manifold ? ", QMessageBox::Ok | QMessageBox::Cancel);
+//    auto start_app = std::chrono::high_resolution_clock::now();
+//    if (ret1 == QMessageBox::Cancel) {
+//        HexMeshing_FaceSkeleton app0(*skeletal_mesh, *hexMesh);// 只适合于流形的
+//        app0.hexmeshing();
+//        updateDrawData();
+//    } else {
+//        HexMeshing_FaceSkeleton_Nonmanifold app0(*skeletal_mesh, *hexMesh);
+//        app0.hexmeshing();
+//        updateDrawData();
+//    }
+//
+//    VH algorithm_insert(-1);
+//    // 2. 在曲线分支节点上放置六面体
+//    HexMeshing_Branch_Processor app1(*skeletal_mesh, *hexMesh);
+//    app1.optimize(algorithm_insert, true);// 只放置, 不细分
+//    updateDrawData();
+//    auto point1 = std::chrono::high_resolution_clock::now();
+//    QMessageBox::StandardButton ret = QMessageBox::question(this, " Question ", " Continue sweep hex ? ", QMessageBox::Ok | QMessageBox::Cancel);
+//    if (ret == QMessageBox::Cancel) return;
+//    auto point2 = std::chrono::high_resolution_clock::now();
+//
+//    // 3. 确定一致性细分并输出扫掠所需要的 源面, 目标面 以及 扫掠路径
+//    HexMeshing_ConformingTessellation app2(*skeletal_mesh, *hexMesh);
+//    app2.conforming_split(algorithm_insert);
+//
+//    auto end_app = std::chrono::high_resolution_clock::now();
+//
+//    std::chrono::duration<double> duration = end_app - start_app;
+//    std::chrono::duration<double> duration_req = point2 - point1;
+//
+//    std::cout << "[HexMeshing]: cost " << (duration.count() - duration_req.count()) << "s\n";
+//
+//    updateDrawData();
+//
+//    /*line_cnt = 0;
+//    unordered_set<EH> drawed;
+//    for (auto& ep : app2.hexeh_pairs) {
+//        auto& p1 = ep.first;
+//        auto& p2 = ep.second;
+//        vertices_data.push_back(p1.x()); vertices_data.push_back(p1.y()); vertices_data.push_back(p1.z());
+//        vertices_data.push_back(0); vertices_data.push_back(0); vertices_data.push_back(0);
+//        vertices_data.push_back(p2.x()); vertices_data.push_back(p2.y()); vertices_data.push_back(p2.z());
+//        vertices_data.push_back(0); vertices_data.push_back(0); vertices_data.push_back(0);
+//        line_cnt++;
+//    }
+//    elements_data.push_back(DrawElement(DrawElementType::T_LINE, -1, line_cnt, false, zFar_line));
+//    std::cout << "The size of eh_pairs is " << app2.hexeh_pairs.size() << ".\n";*/
+//
+//    /*line_cnt = 0;
+//    for (auto& vp : app2.matched_vex) {
+//        auto& p1 = vp.first;
+//        auto& p2 = vp.second;
+//        vertices_data.push_back(p1.x()); vertices_data.push_back(p1.y()); vertices_data.push_back(p1.z());
+//        vertices_data.push_back(1); vertices_data.push_back(0); vertices_data.push_back(0);
+//        vertices_data.push_back(p2.x()); vertices_data.push_back(p2.y()); vertices_data.push_back(p2.z());
+//        vertices_data.push_back(1); vertices_data.push_back(0); vertices_data.push_back(0);
+//        line_cnt++;
+//    }
+//    elements_data.push_back(DrawElement(DrawElementType::T_LINE, -1, line_cnt, false, zFar_line));*/
+//
+//    /*int i = 0;
+//    for (auto& ffhs : app2.rayid_to_sub_fhs) {
+//        if (i % 2 == 0) {
+//            for (auto& fhs : ffhs) {
+//                for (auto& fh : fhs) {
+//                    selected_f_indices.emplace_back(fh);
+//                }
+//            }
+//        }
+//        i++;
+//    }*/
+
+}
+
+void ModelDraw::test_det_faces() {
+
+//    if (!skeletal_mesh) return;
+//
+//    // 光滑分支结点
+//    //BoundarySmoother::smoothing_branch(*skeletal_mesh);// 参数不好设置
+//    // 抽取出三角形面片区域
+//    vector<vector<VH>> domains;
+//    vector<MeshKernel::SurfaceMesh> trimeshs;
+//    DomainProcessor app;
+//    //app.detect_faces(*skeletal_mesh, domains);// 把所有在域边界的VH组织成一串VH
+//    //app.get_input_domains(*skeletal_mesh, domains, expanded_domains);// 偏移顶点, 得到最终的三维边界
+//    ////app.preject_to_2d(*skeletal_mesh, domains, expanded_domains, trimeshs);
+//    //app.remeshing_3d(*skeletal_mesh, domains, expanded_domains, trimeshs);
+//    app.expand_boundary(*skeletal_mesh, expanded_domains);
+//    app.decomposition(*skeletal_mesh);
+//
+//    updateDrawData();
 
 }

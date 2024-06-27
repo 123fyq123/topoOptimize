@@ -39,9 +39,12 @@
 //Iges导出
 #include <..\opencascade\opencascade770-install\inc\IGESControl_Writer.hxx>
 //Stl导出
-//#include <..\opencascade\opencascade770-install\inc\TopoDS_Face.hxx>
-//#include <..\opencascade\opencascade770-install\inc\BRep_Tool.hxx>
-//#include <..\opencascade\opencascade770-install\inc\StlAPI_Writer.hxx>
+#include <..\opencascade\opencascade770-install\inc\TopoDS_Iterator.hxx>
+#include <..\opencascade\opencascade770-install\inc\TopoDS_Face.hxx>
+#include <..\opencascade\opencascade770-install\inc\StlAPI_Writer.hxx>
+#include <..\opencascade\opencascade770-install\inc\BRepTools.hxx>
+#include <..\opencascade\opencascade770-install\inc\TopoDS_Compound.hxx>
+#include <..\opencascade\opencascade770-install\inc\gp_Pnt.hxx>
 
 namespace MeshKernel {
 	class IO {
@@ -63,6 +66,7 @@ namespace MeshKernel {
         bool WriteOffFile(const SurfaceMesh& _mesh, const std::string& _OutputFile);
         bool WriteStlFile(const SurfaceMesh& _mesh, const std::string& _OutputFile);
         bool WriteStepFile(const SurfaceMesh& _mesh, const std::string& _OutputFile);
+        bool WriteObjFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& outputFile);
         bool WriteStlFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& _OutputFile);
         bool WriteStepFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& _OutputFile);
         bool WriteIgesFileWithSpline(std::vector<CBSplineSurface>& surfacesDraw, const std::string& _OutputFile);
