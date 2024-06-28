@@ -1,5 +1,6 @@
 set(APP_NAME iGamePoster)
 
+
 file(GLOB SOURCE_FILES *.cpp)
 file(GLOB SUB_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/source/*.cpp)
 
