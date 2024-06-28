@@ -32,7 +32,7 @@ struct Ray {
 	};
 };
 
-struct Bound3 {// ÈýÎ¬°üÎ§ºÐ
+struct Bound3 {// ï¿½ï¿½Î¬ï¿½ï¿½Î§ï¿½ï¿½
 	Vector3d pos_min, pos_max, centroid;
 	Bound3() {
 		centroid = pos_min = pos_max = Vector3d(0.f, 0.f, 0.f);
@@ -43,7 +43,7 @@ struct Bound3 {// ÈýÎ¬°üÎ§ºÐ
 };
 
 struct Intersection {
-	bool happened;// ÊÇ·ñÏà½»
+	bool happened;// ï¿½Ç·ï¿½ï¿½à½»
 	double distance;
 	Vector3d pos;
 	int index, intersection_count;
@@ -66,7 +66,7 @@ struct BVH_Face {
 
 struct BVH_Node {
 	Bound3 box;
-	BVH_Face face;// ´Ë¶ÔÏóÖ»ÔÚÒ¶×Ó½áµãÖÐÓÐÐ§
+	BVH_Face face;// ï¿½Ë¶ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò¶ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§
 	double area;
 	BVH_Node* left;
 	BVH_Node* right;
@@ -96,7 +96,7 @@ private:
 
 public:
 	//int intersection_count = 0;
-	Intersection getIntersection(const Ray& ray) {// ¼ì²éÏà½»£¬²¢·µ»Ø½»µã¡£½»µãindex = -1 ±íÊ¾Î´Ïà½»
+	Intersection getIntersection(const Ray& ray) {// ï¿½ï¿½ï¿½ï¿½à½»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½ï¿½ã¡£ï¿½ï¿½ï¿½ï¿½index = -1 ï¿½ï¿½Ê¾Î´ï¿½à½»
 		//intersection_count = 0;
 		return getIntersection(ray, root);
 	}

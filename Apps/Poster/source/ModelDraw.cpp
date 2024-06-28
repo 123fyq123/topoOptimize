@@ -3453,6 +3453,7 @@ void ModelDraw::pickEvent(double winX, double winY) {
 	switch (drawmodule) {
 	case ViewOpenGL::EMPTY:
 		break;
+
 	case ViewOpenGL::SURFACEMESH:
 #ifdef DEBUG
 		printf("pick triMesh, mouse at (%.2f, %.2f)\n", winX, winY);
@@ -3476,13 +3477,21 @@ void ModelDraw::pickEvent(double winX, double winY) {
 		pickEvent_HexMesh_BVH(winX, winY);
 		//showPickInfo();
 		break;
+
 	case ViewOpenGL::SKEL:
 #ifdef DEBUG
-		printf("pick hexMesh, mouse at (%.2f, %.2f)\n", winX, winY);
+		printf("pick SKEL, mouse at (%.2f, %.2f)\n", winX, winY);
 #endif // DEBUG
 		pickEvent_SKEL(winX, winY);
 		showPickInfo();
 		break;
+
+    case ViewOpenGL::SKELMESH:
+#ifdef DEBUG
+        printf("pick SKELMESH, mouse at (%.2f, %.2f)\n", winX, winY);
+#endif // DEBUG
+        pickEvent_Skeleton(winX, winY);
+        break;
 	case ViewOpenGL::HYBRIDMESH:
 		break;
 	case ViewOpenGL::BSPLINECURVE:
@@ -3490,9 +3499,9 @@ void ModelDraw::pickEvent(double winX, double winY) {
 	case ViewOpenGL::BSPLINESURFACE:
 		break;
 #ifdef DEBUG
-		printf("pick skeleton, mouse at (%.2f, %.2f)\n", winX, winY);
+		printf("pick BSPLINESURFACE, mouse at (%.2f, %.2f)\n", winX, winY);
 #endif // DEBUG
-		pickEvent_Skeleton(winX, winY);
+		pickEvent_Bsplinesurface(winX, winY);
 		break;
 	default:
 		break;
@@ -3500,6 +3509,80 @@ void ModelDraw::pickEvent(double winX, double winY) {
 }
 
 void ModelDraw::pickEvent_Skeleton(double winX, double winY) {
+    if (!skeletal_mesh) return;
+
+    QVector4D point(winX, winY, 0.9, 1.0);		// point为鼠标点击的位置
+    QVector4D toward(winX, winY, -1, 1.0);	// 指向toward与投影矩阵的fov相关
+    QVector4D pointEnd = point + 2 * toward;
+    QVector4D tpoint = modelmatrix.inverted() * viewmatrix.inverted() * projectionmatrix.inverted() * point;
+    QVector4D tpointEnd = modelmatrix.inverted() * viewmatrix.inverted() * projectionmatrix.inverted() * pointEnd;
+    QVector3D point1(tpoint.x() / tpoint.w(), tpoint.y() / tpoint.w(), tpoint.z() / tpoint.w());
+    QVector3D point2(tpointEnd.x() / tpointEnd.w(), tpointEnd.y() / tpointEnd.w(), tpointEnd.z() / tpointEnd.w());
+
+
+    Vector3d orig(point1.x(), point1.y(), point1.z());
+    auto _dir = point2 - point1;
+    Vector3d dir(_dir.x(), _dir.y(), _dir.z());
+    Ray ray(orig, -dir);
+    auto isec = bvh_tree->getIntersection(ray);
+    MeshKernel::iGameFaceHandle tempFaceHandle(isec.index);
+    QVector3D tempIntersection(isec.pos[0], isec.pos[1], isec.pos[2]);
+
+
+    if (tempFaceHandle != -1) {
+        double min_distance = numeric_limits<double>::max();
+        auto& tempFace = skeletal_mesh->faces(tempFaceHandle);
+        int nearest_handle(-1);
+        MeshKernel::iGameVertex pos(-1, -1, -1);
+        switch (pickType) {
+
+            case PickType::PickPoint:
+                for (auto& vh : tempFace.getVertexHandle()) {
+                    auto& v = skeletal_mesh->vertices(vh);
+                    QVector3D point0(v.x(), v.y(), v.z());
+                    double dist = point2LineDis(point1, point2, point0);
+                    if (dist < min_distance) {
+                        min_distance = dist;
+                        nearest_handle = vh;
+                    }
+                }
+                if (std::find(selected_v_indices.begin(), selected_v_indices.end(), nearest_handle) == selected_v_indices.end()) {
+                    selected_v_indices.push_back(nearest_handle);
+                }
+                break;
+
+            case PickType::PickEdge:
+                for (auto& eh : tempFace.getEdgeHandle()) {
+                    auto& e = skeletal_mesh->edges(eh);
+                    auto& v1 = skeletal_mesh->vertices(e.vh1());
+                    auto& v2 = skeletal_mesh->vertices(e.vh2());
+                    QVector3D ev1(v1.x(), v1.y(), v1.z());
+                    QVector3D ev2(v2.x(), v2.y(), v2.z());
+                    double dist = point2LineDis(ev1, ev2, tempIntersection);
+                    if (dist < min_distance) {
+                        min_distance = dist;
+                        nearest_handle = eh;
+                    }
+                }
+                if (std::find(selected_e_indices.begin(), selected_e_indices.end(), nearest_handle) == selected_e_indices.end()) {
+                    selected_e_indices.push_back(nearest_handle);
+                }
+                break;
+
+            case PickType::PickFace:
+                nearest_handle = tempFaceHandle;
+                if (std::find(selected_f_indices.begin(), selected_f_indices.end(), nearest_handle) == selected_f_indices.end()) {
+                    selected_f_indices.push_back(nearest_handle);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void ModelDraw::pickEvent_Bsplinesurface(double winX, double winY){
 
 }
 
@@ -6084,6 +6167,7 @@ void ModelDraw::updateDrawData(bool need_update_bvhtree) {
 
 	case DrawModule::SKELMESH:
 		updateDrawData_SkelMesh();
+        updateBVH();
 		break;
 
 	case DrawModule::TRIMESH:
@@ -6660,6 +6744,7 @@ void ModelDraw::loadSkeletalMesh(std::string filename) {
 	if (scale_to_uint_flag) skeletal_mesh->scale2Uint();
 	SetDrawModule(SKELMESH);
 	if (resetViewFlag) updateMeshModel();
+
 	updateDrawData();
 	update();
 
@@ -6899,6 +6984,7 @@ void ModelDraw::updateBVH() {
 	case ViewOpenGL::BSPLINESURFACE:
 		break;
 	case ViewOpenGL::SKELMESH:
+        bvh_tree->buildBVH_Tree(*skeletal_mesh);
 		break;
 	case ViewOpenGL::SKEL:
 		break;

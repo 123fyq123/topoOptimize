@@ -404,7 +404,7 @@ protected:
 	void pickEvent_HexMesh(double winX, double winY);
 	void pickEvent_HexMesh_BVH(double winX, double winY);
 	void pickEvent_Skeleton(double winX, double winY);
-
+    void pickEvent_Bsplinesurface(double winX, double winY);
 	
 
 	void pickPoint_getDepth(int x, int y, vector<double>& p, double& d);// 获取点击位置二维坐标的三维点和深度，用于鼠标选点

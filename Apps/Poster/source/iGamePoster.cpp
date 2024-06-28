@@ -1420,15 +1420,26 @@ bool iGamePoster::ConvertToIGES(void) {
 }
 
 bool iGamePoster::ConvertToIGES_2(void) {
-//    if (this->model_name.empty())
-//        return false;
-//    else {
-//        ui->openGLWidget->loadHexMesh(this->model_name);
-//    }
-    if (ui->openGLWidget->hexMeshConvertToIGES_2(this->model_name)) ui->info->printString("convert success");
+    time_t t1 = clock();
+    std::string filename = model_name + ".mesh";
+    if (filename.empty())
+        return false;
+    else {
+        ui->openGLWidget->loadHexMesh(filename);
+    }
+    Sleep(1000);
+    int spend = clock() - t1;
+
+    if (!ui->openGLWidget->isVaildHexMesh()) {
+        ui->info->printString("hexmesh model is null");
+        return false;
+    }
+
+    if (ui->openGLWidget->hexMeshConvertToIGES_2(model_name)) ui->info->printString("convert success");
     else ui->info->printString("convert failure");
     return true;
 }
+
 //bool iGamePoster::Line_surface_skel(void) {
 //    time_t t1 = clock();
 //    ui->openGLWidget->generate_coverage_axis();

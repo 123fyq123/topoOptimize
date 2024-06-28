@@ -186,6 +186,71 @@ void BVH_Tree::buildBVH_Tree(MeshKernel::TetMesh& mesh) {
 
 }
 
+void BVH_Tree::buildBVH_Tree(SkeletalMesh& mesh) {
+
+    if (mesh.fsize() == 0) return;
+
+    std::vector<BVH_Node*> total_nodes;
+
+    for (auto& fp : mesh.allfaces()) {
+        auto& fh = fp.first;
+
+        BVH_Node* node = new BVH_Node();
+        auto& face = mesh.faces(fh);
+        auto vhs = face.getVertexHandle();
+        std::vector<Vector3d> _vertices;
+        for (auto& vh : vhs) {
+            auto& v = mesh.vertices(vh);
+            _vertices.push_back(Vector3d(v.x(), v.y(), v.z()));
+        }
+
+        // 叶子结点的面
+        BVH_Face& bvh_face = node->face;
+        bvh_face.vertices = _vertices;
+        bvh_face.index = fh;
+
+        // 面积
+        Vector3d E1 = _vertices[1] - _vertices[0];
+        Vector3d E2 = _vertices[2] - _vertices[0];
+        Vector3d C = E1.Cross(E2);
+        node->area = C.Length() * 0.5f;
+
+        // 包围盒
+        Vector3d _min = _vertices[0], _max = _vertices[0];
+        for (int i = 1; i < _vertices.size(); ++i) {
+            _min[0] = std::min(_min[0], _vertices[i][0]);
+            _min[1] = std::min(_min[1], _vertices[i][1]);
+            _min[2] = std::min(_min[2], _vertices[i][2]);
+            _max[0] = std::max(_max[0], _vertices[i][0]);
+            _max[1] = std::max(_max[1], _vertices[i][1]);
+            _max[2] = std::max(_max[2], _vertices[i][2]);
+        }
+        node->box = Bound3(_min, _max);
+
+        total_nodes.push_back(node);
+
+    }
+
+    std::sort(total_nodes.begin(), total_nodes.end(), [](BVH_Node* node1, BVH_Node* node2) {
+        auto& box1 = node1->box;
+        auto& box2 = node2->box;
+        if (box1.centroid[0] != box2.centroid[0]) return box1.centroid[0] < box2.centroid[0];
+        if (box1.centroid[1] != box2.centroid[1]) return box1.centroid[1] < box2.centroid[1];
+        return box1.centroid[2] < box2.centroid[2];
+    });
+
+    leaves = total_nodes.size();
+    //std::cout << "Init leaves success. leaves = " << leaves << std::endl;
+
+    root = new BVH_Node();
+    root = recursiveBuild(total_nodes, 2);
+    auto& pos_min = root->box.pos_min;
+    auto& pos_max = root->box.pos_max;
+    /*std::cout << "Init BVH Tree success. height = " << height << ". Bounding Box: (" << pos_min[0] << ", " << pos_min[1] << ", " << pos_min[2] << ") --> " <<
+        "(" << pos_max[0] << ", " << pos_max[1] << ", " << pos_max[2] << ")\n";*/
+
+}
+
 void BVH_Tree::buildBVH_Tree(MeshKernel::VolumeMesh& mesh) {
 
 	std::vector<BVH_Node*> total_nodes;
