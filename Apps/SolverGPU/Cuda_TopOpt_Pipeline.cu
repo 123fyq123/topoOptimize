@@ -1012,8 +1012,8 @@ void Cuda_Linear_Elastic_Solver(const std::string& input_model_file, const std::
 
     std::string origin_output_path = std::string(IGA_OUTPUT_DIR) + "Origin/Origin_";
 
-    stiff.WriteParaview(patch, origin_output_path, UU,
-                        1000, false);
+//    stiff.WriteParaview(patch, origin_output_path, UU,
+//                        1000, false);
 
     std::string output_path = std::string(IGA_OUTPUT_DIR) + "Test/test_linear" + to_string(0) + "_";
 
@@ -1028,8 +1028,8 @@ void Cuda_Linear_Elastic_Solver(const std::string& input_model_file, const std::
         begin += num;
     }
 
-    stiff.WriteParaview(patch, output_path, UU,
-                        1000, false);
+//    stiff.WriteParaview(patch, output_path, UU,
+//                        1000, false);
 
     begin = 0;
     displacement1 *= -1;
