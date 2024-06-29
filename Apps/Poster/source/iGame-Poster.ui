@@ -1201,7 +1201,7 @@ background:#444444;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>420</y>
+                 <y>440</y>
                  <width>291</width>
                  <height>300</height>
                 </rect>
@@ -1353,8 +1353,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>277</width>
+                  <height>212</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1521,8 +1521,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>277</width>
+                  <height>212</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1613,7 +1613,7 @@ background:#444444;
                  <x>0</x>
                  <y>10</y>
                  <width>291</width>
-                 <height>401</height>
+                 <height>421</height>
                 </rect>
                </property>
                <property name="minimumSize">
@@ -1637,7 +1637,7 @@ background:#444444;
                   <x>0</x>
                   <y>0</y>
                   <width>277</width>
-                  <height>313</height>
+                  <height>333</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1662,8 +1662,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>277</width>
+                  <height>333</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1857,8 +1857,8 @@ background:#444444;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>277</width>
+                  <height>333</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2640,7 +2640,7 @@ background:#444444;
                   </font>
                  </property>
                  <property name="text">
-                  <string>执行拓扑优化</string>
+                  <string>SIMP拓扑优化</string>
                  </property>
                 </widget>
                 <widget class="QPushButton" name="Protect_topopt">
@@ -2760,7 +2760,7 @@ background:#444444;
                   </rect>
                  </property>
                  <property name="text">
-                  <string>执行离散优化</string>
+                  <string>0-1离散拓扑优化</string>
                  </property>
                 </widget>
                </widget>

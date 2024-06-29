@@ -15,7 +15,6 @@ uniform float shininess;
 uniform vec3 viewpos;
 uniform int rendermode = 3;     // 渲染模式，1：点，2：线，3：光滑面，4：平面
 uniform int colormode = 1;      // 颜色模式，1：光照方式，2：根据法向方式
-uniform float transparency = 0.5;
 uniform vec4 color = vec4(1, 0, 0, 1.0);  // 自定颜色
 void main() {
     vec3 n;
@@ -26,13 +25,12 @@ void main() {
             n = normalize(normal);  // 连续
     } else if(colormode == 2){     // 法向模式下，物体法向不会改变
         if(rendermode == 4){
-            n = normalize(cross(dFdx(pos_fixed),dFdy(pos_fixed))); 
-        } 
+            n = normalize(cross(dFdx(pos_fixed),dFdy(pos_fixed)));
+        }
         else{
-            n = normalize(normal_fixed); 
+            n = normalize(normal_fixed);
         }
     }else if(colormode == 3){
-        //FragColor = vec4(color, 1.0);////
         FragColor = color;
         return;
     }else if (colormode == 606) {// hexMesh: face color
@@ -40,7 +38,7 @@ void main() {
         return;
     } else if (colormode == 530) {// hexMesh: edge color
         //FragColor = vec4(0.37, 0.18, 0.57, 1.0);
-        FragColor = vec4(0, 0, 0, 1.0);////
+        FragColor = vec4(0, 0, 0, 1.0);
         return;
     } else if (colormode == 231) {// ground color
         FragColor = vec4(0.64, 0.5, 0.98, 1.0);
@@ -94,28 +92,22 @@ void main() {
         FragColor = vec4(normal_fixed, 1.0);
         return;
     }
-	
+
     // ambient
     vec3 ambient = light.ambient;
 
-    // diffuse 
+    // diffuse
     vec3 lightDir = normalize(light.position - pos);
     float diff = max(dot(n, lightDir), 0.0);
     vec3 diffuse = light.diffuse *diff;
-    
+
     // specular
     vec3 viewDir = normalize(viewpos - pos);
     vec3 reflectDir = reflect(-lightDir, n);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    vec3 specular = light.specular * spec;  
+    vec3 specular = light.specular * spec;
 
-    vec3 light_result;// 光照作用强度
-    if (diff > 0.0) {
-        light_result = ambient + diffuse + specular;
-    }
-    else {
-        light_result = ambient;// 在背面, 只显示环境光
-    }
+    vec3 result = ambient + diffuse + specular;
 
       if(colormode == 1){
         switch(rendermode){
@@ -125,14 +117,12 @@ void main() {
             break;
         case 3:
         case 4:
-            FragColor = vec4(light_result[0] * 0.4863, light_result[1] * 0.6745, light_result[2] * 0.9961, 1.0);// blue
-            //FragColor = vec4(ambient * 1.8, 1.0);
-            //FragColor = vec4(light_result,1.0);
+            FragColor = vec4(result,1.0);
             break;
-        }   
+        }
       }
       else if(colormode == 2){
-        FragColor = vec4((n + vec3(1.0,1.0,1.0)) / 2, 1.0);
+        FragColor = vec4((n + vec3(1.0,1.0,1.0))/2,1.0);
       }
       else if(colormode == 3){
         FragColor = vec4(0.8,0.0,0.0,1.0);

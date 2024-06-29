@@ -1235,7 +1235,7 @@ void ModelDraw::drawHexMesh() {
 	// 请在绘制其他物体后再绘制半透明物体
 	glDepthRange(0.01, 2.0);
 	shaderProgram.setUniformValue("colormode", 518);// 半透明
-	core->glDrawArrays(GL_QUADS, quad_cnt * 4 + used_last_vcnt, translucence_vertices_data.size() / 9);
+	core->glDrawArrays(GL_QUADS, quad_cnt * 4 + used_last_vcnt, translucence_vertices_data.size() / 6);
 
 	update();
 }
@@ -1297,9 +1297,9 @@ void ModelDraw::drawSurfaceMesh() {
 		glPolygonOffset(1.0, 1.0);
 		glLineWidth(meshline_width);
 		shaderProgram.setUniformValue("colormode", 530);
-		for (int i = 0; i < tri_cnt; ++i) {
-			core->glDrawArrays(GL_LINE_LOOP, i * 3, 3);
-		}
+//		for (int i = 0; i < tri_cnt; ++i) {
+//			core->glDrawArrays(GL_LINE_LOOP, i * 3, 3);
+//		}
 		for (int i = 0; i < quad_cnt; ++i) {
 			core->glDrawArrays(GL_LINE_LOOP, i * 4 + tri_cnt * 3, 4);
 		}
@@ -1428,9 +1428,6 @@ void ModelDraw::updateDrawData_Topopt() {
                     vertices_data.push_back(f_v.x());
                     vertices_data.push_back(f_v.y());
                     vertices_data.push_back(f_v.z());
-                    vertices_data.push_back(f_v.getNormalX());
-                    vertices_data.push_back(f_v.getNormalY());
-                    vertices_data.push_back(f_v.getNormalZ());
                     if (hexMesh->isOnBoundary(fh)) {
                         vertices_data.push_back(0.349);
                         vertices_data.push_back(0.6);
@@ -1445,14 +1442,14 @@ void ModelDraw::updateDrawData_Topopt() {
             }
         }
     }
-    quad_cnt = vertices_data.size() / 36;
-    int last_vcnt = compared_vertices_data.size() / 9;
+    quad_cnt = vertices_data.size() / 24;
+    int last_vcnt = compared_vertices_data.size() / 6;
     used_last_vcnt = 0;
     for (int i = 0; i < last_vcnt; ++i) {
-        int idx = i * 9;
+        int idx = i * 6;
         if (current_drawed.count(compared_to_current[i])) {
             used_last_vcnt++;
-            for (int j = 0; j < 9; ++j) {
+            for (int j = 0; j < 6; ++j) {
                 vertices_data.push_back(compared_vertices_data[j + idx]);
             }
         }
@@ -1486,9 +1483,6 @@ void ModelDraw::updateDrawData_DensityChange() {
 					vertices_data.push_back(f_v.x());
 					vertices_data.push_back(f_v.y());
 					vertices_data.push_back(f_v.z());
-                    vertices_data.push_back(f_v.getNormalX());
-                    vertices_data.push_back(f_v.getNormalY());
-                    vertices_data.push_back(f_v.getNormalZ());
 					if (hexMesh->isOnBoundary(fh)) {
 						vertices_data.push_back(0.349);
 						vertices_data.push_back(0.6);
@@ -1503,14 +1497,14 @@ void ModelDraw::updateDrawData_DensityChange() {
 			}
 		}
 	}
-	quad_cnt = vertices_data.size() / 36;
-	int last_vcnt = compared_vertices_data.size() / 9;
+	quad_cnt = vertices_data.size() / 24;
+	int last_vcnt = compared_vertices_data.size() / 6;
 	used_last_vcnt = 0;
 	for (int i = 0; i < last_vcnt; ++i) {
-		int idx = i * 9;
+		int idx = i * 6;
 		if (current_drawed.count(compared_to_current[i])) {
 			used_last_vcnt++;
-			for (int j = 0; j < 9; ++j) {
+			for (int j = 0; j < 6; ++j) {
 				vertices_data.push_back(compared_vertices_data[j + idx]);
 			}
 		}
@@ -1552,9 +1546,6 @@ void ModelDraw::updateDrawData_HexMesh_CutPlane() {
 					vertices_data.push_back(f_v.x());
 					vertices_data.push_back(f_v.y());
 					vertices_data.push_back(f_v.z());
-                    vertices_data.push_back(f_v.getNormalX());
-                    vertices_data.push_back(f_v.getNormalY());
-                    vertices_data.push_back(f_v.getNormalZ());
 					if (hexMesh->isOnBoundary(fh)) {
 						vertices_data.push_back(0.349);
 						vertices_data.push_back(0.6);
@@ -1579,9 +1570,6 @@ void ModelDraw::updateDrawData_HexMesh_CutPlane() {
 					translucence_vertices_data.push_back(f_v.x());
 					translucence_vertices_data.push_back(f_v.y());
 					translucence_vertices_data.push_back(f_v.z());
-                    translucence_vertices_data.push_back(f_v.getNormalX());
-                    translucence_vertices_data.push_back(f_v.getNormalY());
-                    translucence_vertices_data.push_back(f_v.getNormalZ());
 					translucence_vertices_data.push_back(0.7725);
 					translucence_vertices_data.push_back(0.7725);
 					translucence_vertices_data.push_back(0.7725);
@@ -1591,14 +1579,14 @@ void ModelDraw::updateDrawData_HexMesh_CutPlane() {
 		}
 
 	}
-	quad_cnt = vertices_data.size() / 36;
-	int last_vcnt = compared_vertices_data.size() / 9;
+	quad_cnt = vertices_data.size() / 24;
+	int last_vcnt = compared_vertices_data.size() / 6;
 	used_last_vcnt = 0;
 	for (int i = 0; i < last_vcnt; ++i) {
-		int idx = i * 9;
+		int idx = i * 6;
 		if (current_drawed.count(compared_to_current[i])) {
 			used_last_vcnt++;
-			for (int j = 0; j < 9; ++j) {
+			for (int j = 0; j < 6; ++j) {
 				vertices_data.push_back(compared_vertices_data[j + idx]);
 			}
 		}
@@ -1639,9 +1627,6 @@ void ModelDraw::updateDrawData_TetMesh_CutPlane() {
 					vertices_data.push_back(f_v.x());
 					vertices_data.push_back(f_v.y());
 					vertices_data.push_back(f_v.z());
-                    vertices_data.push_back(f_v.getNormalX());
-                    vertices_data.push_back(f_v.getNormalY());
-                    vertices_data.push_back(f_v.getNormalZ());
 					if (tetMesh->isOnBoundary(fh)) {
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -2124,17 +2109,17 @@ void ModelDraw::updateSurfaceModel() {
 }
 
 void ModelDraw::drawSurface() {
-//    core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
-//    // 设置面颜色
-//    shaderProgram.setUniformValue("colormode", 1);
-//    core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 9);
+    core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
+    // 设置面颜色
+    shaderProgram.setUniformValue("colormode", -1);
+    core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 6);
 //
 //    // 设置边界颜色
 //    shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
 //    for (size_t i = 0; i < vertices_data.size(); i += 24) { // 4 vertices per quad, each vertex has 6 components
 //        core->glDrawArrays(GL_LINE_LOOP, i / 6, 4); // 4 vertices per quad
 //    }
-
+//··················法向量绘制·····················
 //    float normalLength = 1.1f; // 法向量的长度
 //
 //    for (size_t i = 0; i < data_surfaces.size(); ++i) {
@@ -2166,13 +2151,13 @@ void ModelDraw::drawSurface() {
 //        }
 //        glEnd();
 //    }
-
-    core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
-    if (have_light)
-        shaderProgram.setUniformValue("colormode", 1);
-    else
-        shaderProgram.setUniformValue("colormode", -1);
-    core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 9);
+//··················九维渲染信息·····················
+//    core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
+//    if (have_light)
+//        shaderProgram.setUniformValue("colormode", 1);
+//    else
+//        shaderProgram.setUniformValue("colormode", -1);
+//    core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 9);
 
 //    shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
 //    for (size_t i = 0; i < vertices_data.size(); i += 36) { // 4 vertices per quad, each vertex has 9 components
@@ -2948,7 +2933,7 @@ void ModelDraw::DrawSceneModel(void) {
 		shaderProgram.setUniformValue("colormode", 231);
 		glDepthRange(0.01, 0.9999);
 		glPointSize(meshline_width * 5.f);
-		core->glDrawArrays(GL_POINTS, 0, vertices_data.size() / 9);
+		core->glDrawArrays(GL_POINTS, 0, vertices_data.size() / 6);
 	}
 
 	drawSelectedObject();
@@ -5482,57 +5467,60 @@ void ModelDraw::loadShader() {
 	shaderProgram.setUniformValue("light.specular", 0.5f, 0.5f, 0.5f);	// 镜面反射系数
 	shaderProgram.setUniformValue("shininess", 32.0f);
 
-//	// 释放旧数据的内存
-//	core->glDeleteVertexArrays(1, &VAO);
-//	core->glDeleteBuffers(1, &VBO);
-//	// 1.新建顶点数组对象
-//	core->glGenVertexArrays(1, &VAO);
-//	core->glGenBuffers(1, &VBO);
-//	// 2. 绑定顶点数组对象
-//	core->glBindVertexArray(VAO);
-//	// 3. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
-//	core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	core->glBufferData(GL_ARRAY_BUFFER, vertices_data.size() * sizeof(GLfloat), vertices_data.data(), GL_STATIC_DRAW);
-//	// 4. 设定顶点属性指针
-//	// 顶点坐标传入VBO，location = 0
-//	core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
-//	core->glEnableVertexAttribArray(0);
-//	// 顶点 法向/颜色 传入VBO，location=1
-//	core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-//	core->glEnableVertexAttribArray(1);
-//	core->glBindVertexArray(0);
-//	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
-// 释放旧数据的内存
-    core->glDeleteVertexArrays(1, &VAO);
-    core->glDeleteBuffers(1, &VBO);
+	// 释放旧数据的内存
+	core->glDeleteVertexArrays(1, &VAO);
+	core->glDeleteBuffers(1, &VBO);
+	// 1.新建顶点数组对象
+	core->glGenVertexArrays(1, &VAO);
+	core->glGenBuffers(1, &VBO);
+	// 2. 绑定顶点数组对象
+	core->glBindVertexArray(VAO);
+	// 3. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
+	core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	core->glBufferData(GL_ARRAY_BUFFER, vertices_data.size() * sizeof(GLfloat), vertices_data.data(), GL_STATIC_DRAW);
+	// 4. 设定顶点属性指针
+	// 顶点坐标传入VBO，location = 0
+	core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
+	core->glEnableVertexAttribArray(0);
+	// 顶点 法向/颜色 传入VBO，location=1
+	core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+	core->glEnableVertexAttribArray(1);
+	core->glBindVertexArray(0);
+	core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-// 1. 新建顶点数组对象
-    core->glGenVertexArrays(1, &VAO);
-    core->glGenBuffers(1, &VBO);
+//``````````````````````````````````````````````````````````````````````
 
-// 2. 绑定顶点数组对象
-    core->glBindVertexArray(VAO);
-
-// 3. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
-    core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    core->glBufferData(GL_ARRAY_BUFFER, vertices_data.size() * sizeof(GLfloat), vertices_data.data(), GL_STATIC_DRAW);
-
-// 4. 设定顶点属性指针
-// 顶点坐标传入VBO，location = 0
-    core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)0);
-    core->glEnableVertexAttribArray(0);
-
-// 顶点法向量传入VBO，location = 1
-    core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-    core->glEnableVertexAttribArray(1);
-
-// 顶点颜色传入VBO，location = 2
-    core->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
-    core->glEnableVertexAttribArray(2);
-
-// 解绑 VAO
-    core->glBindVertexArray(0);
-    core->glBindBuffer(GL_ARRAY_BUFFER, 0);
+//// 释放旧数据的内存
+//    core->glDeleteVertexArrays(1, &VAO);
+//    core->glDeleteBuffers(1, &VBO);
+//
+//// 1. 新建顶点数组对象
+//    core->glGenVertexArrays(1, &VAO);
+//    core->glGenBuffers(1, &VBO);
+//
+//// 2. 绑定顶点数组对象
+//    core->glBindVertexArray(VAO);
+//
+//// 3. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
+//    core->glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//    core->glBufferData(GL_ARRAY_BUFFER, vertices_data.size() * sizeof(GLfloat), vertices_data.data(), GL_STATIC_DRAW);
+//
+//// 4. 设定顶点属性指针
+//// 顶点坐标传入VBO，location = 0
+//    core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)0);
+//    core->glEnableVertexAttribArray(0);
+//
+//// 顶点法向量传入VBO，location = 1
+//    core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+//    core->glEnableVertexAttribArray(1);
+//
+//// 顶点颜色传入VBO，location = 2
+//    core->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+//    core->glEnableVertexAttribArray(2);
+//
+//// 解绑 VAO
+//    core->glBindVertexArray(0);
+//    core->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 }
@@ -5559,18 +5547,15 @@ void ModelDraw::updateDrawData_HexMesh() {
 				vertices_data.push_back(v.x());
 				vertices_data.push_back(v.y());
 				vertices_data.push_back(v.z());
-                vertices_data.push_back(v.getNormalX());
-                vertices_data.push_back(v.getNormalY());
-                vertices_data.push_back(v.getNormalZ());
 				vertices_data.push_back(0.349);
 				vertices_data.push_back(0.6);
 				vertices_data.push_back(0.349);
 			}
 		}
 	}
-	quad_cnt = vertices_data.size() / 36;
+	quad_cnt = vertices_data.size() / 24;
 	vertices_data.insert(vertices_data.end(), compared_vertices_data.begin(), compared_vertices_data.end());
-	used_last_vcnt = compared_vertices_data.size() / 9;
+	used_last_vcnt = compared_vertices_data.size() / 6;
 
 	update();
 
@@ -5638,9 +5623,6 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 					vertices_data.push_back(v.x());
 					vertices_data.push_back(v.y());
 					vertices_data.push_back(v.z());
-                    vertices_data.push_back(v.getNormalX());
-                    vertices_data.push_back(v.getNormalY());
-                    vertices_data.push_back(v.getNormalZ());
 					vertices_data.push_back(color[0]);
 					vertices_data.push_back(color[1]);
 					vertices_data.push_back(color[2]);
@@ -5671,9 +5653,6 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 					vertices_data.push_back(v.x());
 					vertices_data.push_back(v.y());
 					vertices_data.push_back(v.z());
-                    vertices_data.push_back(v.getNormalX());
-                    vertices_data.push_back(v.getNormalY());
-                    vertices_data.push_back(v.getNormalZ());
 					vertices_data.push_back(color[0]);
 					vertices_data.push_back(color[1]);
 					vertices_data.push_back(color[2]);
@@ -5683,9 +5662,9 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 
 	}
 	std::cout << " ModelDraw 4778" << std::endl;
-	quad_cnt = vertices_data.size() / 36;
+	quad_cnt = vertices_data.size() / 24;
 	vertices_data.insert(vertices_data.end(), compared_vertices_data.begin(), compared_vertices_data.end());
-	used_last_vcnt = compared_vertices_data.size() / 9;
+	used_last_vcnt = compared_vertices_data.size() / 6;
 	update();
 
 }
@@ -5693,7 +5672,7 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 void ModelDraw::updateDrawData_SurfaceMesh() {
 	if (!surface_mesh) return;
 	vertices_data.clear();
-	vertices_data.reserve(surface_mesh->FaceSize() * 27);
+	vertices_data.reserve(surface_mesh->FaceSize() * 18);
 	surface_mesh->genAllVerticesNormal();
 	//std::cout << "Generate all vertices' normals success." << std::endl;
 	std::vector<GLfloat> quad_data;// 保存四边形的数据
@@ -5706,12 +5685,9 @@ void ModelDraw::updateDrawData_SurfaceMesh() {
 				vertices_data.push_back(v.x());
 				vertices_data.push_back(v.y());
 				vertices_data.push_back(v.z());
-				vertices_data.push_back(v.getNormalX());
-				vertices_data.push_back(v.getNormalY());
-				vertices_data.push_back(v.getNormalZ());
-                vertices_data.push_back(0.349);
-                vertices_data.push_back(0.6);
-                vertices_data.push_back(0.349);
+                vertices_data.push_back(v.getNormalX());
+                vertices_data.push_back(v.getNormalY());
+                vertices_data.push_back(v.getNormalZ());
 			}
 		}
 		else if (vhs.size() == 4) {
@@ -5731,7 +5707,7 @@ void ModelDraw::updateDrawData_SurfaceMesh() {
 
 	}
 
-	tri_cnt = vertices_data.size() / 27;
+	tri_cnt = vertices_data.size() / 18;
 	quad_cnt = quad_data.size() / 24;
 	//std::cout << "The model has " << tri_cnt << " triangles and " << quad_cnt << " quadrangles." << std::endl;
 
@@ -5994,90 +5970,61 @@ void ModelDraw::updateDrawData_TetMesh() {
 
 
 void ModelDraw::updateDrawData_Surface() {
-//	vertices_data.clear();
-//
-//	for (int i = 0; i < data_surfaces.size(); ++i) {
-//		auto& singleSurface = data_surfaces[i];
-//        auto& normals = surface_normals[i];
-//		//auto& color = colors[i % colors.size()];
-//		for (auto& row : singleSurface) {
-//			for (auto& col : row) {
-//				vertices_data.push_back(col.getX());
-//				vertices_data.push_back(col.getY());
-//				vertices_data.push_back(col.getZ());
+	vertices_data.clear();
+
+	for (int i = 0; i < data_surfaces.size(); ++i) {
+		auto& singleSurface = data_surfaces[i];
+		auto& color = colors[i % colors.size()];
+		for (auto& row : singleSurface) {
+			for (auto& col : row) {
+				vertices_data.push_back(col.getX());
+				vertices_data.push_back(col.getY());
+				vertices_data.push_back(col.getZ());
 //                vertices_data.push_back(0.349);
 //                vertices_data.push_back(0.6);
 //                vertices_data.push_back(0.349);
-////				vertices_data.push_back(color.x());
-////				vertices_data.push_back(color.y());
-////				vertices_data.push_back(color.z());
-//			}
-//		}
-//	}
-//	update();
-
-
-    vertices_data.clear();
-// colors[0] = { 227.0 / 255, 121.0 / 255, 77.0 / 255 };
-    for (int i = 0; i < data_surfaces.size(); ++i) {
-        auto& singleSurface = data_surfaces[i];
-        auto& color = colors[i % colors.size()];
-        auto& normals = surface_normals[i];
-        for (int j = 0; j < singleSurface.size(); j++) {
-            for (int k = 0; k < singleSurface[j].size(); ++k) {
-                auto& v = singleSurface[j][k];
-                auto& normal = normals[j][k];
-//                Vex center_c = getCellCenter(ch);
-//                Vex center_f = getFaceCenter(fp.first);
-//                Vec dir_out = (center_f - center_c).normalized();
-                if(v.getX() * normal.getX() + v.getY() * normal.getY() + v.getZ() * normal.getZ() < 0){
-                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0) ;
-                }
-                vertices_data.push_back(v.getX());
-                vertices_data.push_back(v.getY());
-                vertices_data.push_back(v.getZ());
-                vertices_data.push_back(normal.getX());
-                vertices_data.push_back(normal.getY());
-                vertices_data.push_back(normal.getZ());
-                vertices_data.push_back(color[0]);
-                vertices_data.push_back(color[1]);
-                vertices_data.push_back(color[2]);
-//                vertices_data.push_back(0.37);
-//                vertices_data.push_back(0.6);
-//                vertices_data.push_back(0.37);
-            }
-        }
-    }
-    update();
+				vertices_data.push_back(color.x());
+				vertices_data.push_back(color.y());
+				vertices_data.push_back(color.z());
+			}
+		}
+	}
+	update();
 
 
 //    vertices_data.clear();
-//    //colors[0] = { 227.0 /255, 121.0/255, 77.0/255 };
+//// colors[0] = { 227.0 / 255, 121.0 / 255, 77.0 / 255 };
 //    for (int i = 0; i < data_surfaces.size(); ++i) {
 //        auto& singleSurface = data_surfaces[i];
 //        auto& color = colors[i % colors.size()];
 //        auto& normals = surface_normals[i];
 //        for (int j = 0; j < singleSurface.size(); j++) {
-//            for (int k = 2; k < singleSurface[j].size(); ++k) {
-//                vector<CPoint> tri_vhs = { singleSurface[j][0], singleSurface[j][k - 1], singleSurface[j][k] };
-//                vector<int> normalIdx = { 0, k - 1, k };
-//                for (int idx = 0; idx < tri_vhs.size(); ++idx) {
-//                    auto& v = tri_vhs[idx];
-//                    auto& normal = normals[j][normalIdx[idx]];
-//                    vertices_data.push_back(v.getX());
-//                    vertices_data.push_back(v.getY());
-//                    vertices_data.push_back(v.getZ());
-//                    vertices_data.push_back(normal.getX());
-//                    vertices_data.push_back(normal.getY());
-//                    vertices_data.push_back(normal.getZ());
-//                    vertices_data.push_back(color.x());
-//                    vertices_data.push_back(color.y());
-//                    vertices_data.push_back(color.z());
+//            for (int k = 0; k < singleSurface[j].size(); ++k) {
+//                auto& v = singleSurface[j][k];
+//                auto& normal = normals[j][k];
+////                Vex center_c = getCellCenter(ch);
+////                Vex center_f = getFaceCenter(fp.first);
+////                Vec dir_out = (center_f - center_c).normalized();
+//                if(v.getX() * normal.getX() + v.getY() * normal.getY() + v.getZ() * normal.getZ() < 0){
+//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0) ;
 //                }
+//                vertices_data.push_back(v.getX());
+//                vertices_data.push_back(v.getY());
+//                vertices_data.push_back(v.getZ());
+//                vertices_data.push_back(normal.getX());
+//                vertices_data.push_back(normal.getY());
+//                vertices_data.push_back(normal.getZ());
+//                vertices_data.push_back(color[0]);
+//                vertices_data.push_back(color[1]);
+//                vertices_data.push_back(color[2]);
+////                vertices_data.push_back(0.37);
+////                vertices_data.push_back(0.6);
+////                vertices_data.push_back(0.37);
 //            }
 //        }
 //    }
 //    update();
+
 }
 
 void ModelDraw::updateDrawData_Surface_CutPlane() {
@@ -6760,178 +6707,160 @@ void ModelDraw::saveSkeletalMesh(std::string filename) {
 }
 
 void ModelDraw::updateDrawData_SkelMesh() {
-//	vertices_data.clear();
-//	if (!skeletal_mesh) return;
-//
-//	v_cnt = skeletal_mesh->vsize();
-//	e_cnt = skeletal_mesh->esize();
-//	tri_cnt = skeletal_mesh->fsize();
-//	vertices_data.reserve(9 * (2 * e_cnt + 3 * tri_cnt));
-//
-//
-//	for (auto ep : skeletal_mesh->alledges()) {
-//		auto& v1 = skeletal_mesh->vertices(ep.second.vh1());
-//		vertices_data.push_back(v1.x());
-//		vertices_data.push_back(v1.y());
-//		vertices_data.push_back(v1.z());
-//        vertices_data.push_back(v1.getNormalX());
-//        vertices_data.push_back(v1.getNormalY());
-//        vertices_data.push_back(v1.getNormalZ());
-//        vertices_data.push_back(0);
-//        vertices_data.push_back(0);
-//        vertices_data.push_back(0);
-//		auto& v2 = skeletal_mesh->vertices(ep.second.vh2());
-//		vertices_data.push_back(v2.x());
-//		vertices_data.push_back(v2.y());
-//		vertices_data.push_back(v2.z());
-//        vertices_data.push_back(v2.getNormalX());
-//        vertices_data.push_back(v2.getNormalY());
-//        vertices_data.push_back(v2.getNormalZ());
-//        vertices_data.push_back(0);
-//        vertices_data.push_back(0);
-//        vertices_data.push_back(0);
-//	}
-//
-//	for (auto fp : skeletal_mesh->allfaces()) {
-//		for (auto& vh : fp.second.getVertexHandle()) {
-//			auto& v = skeletal_mesh->vertices(vh);
-//			vertices_data.push_back(v.x());
-//			vertices_data.push_back(v.y());
-//			vertices_data.push_back(v.z());
-//            vertices_data.push_back(v.getNormalX());
-//            vertices_data.push_back(v.getNormalY());
-//            vertices_data.push_back(v.getNormalZ());
-//			vertices_data.push_back(0.7725);
-//			vertices_data.push_back(0.7725);
-//			vertices_data.push_back(0);
-//		}
-//	}
-//
-//	if (!show_tangent_plane) return;
-//	quad_cnt = 0;
-//	for (auto& vp : skeletal_mesh->allvertices()) {
-//		auto& vex = vp.second;
-//		quad_cnt += 6;
-//		Eigen::Vector3d pos(vex.x(), vex.y(), vex.z());
-//		double radius = skeletal_mesh->radius[vp.first];
-//		vector<vector<int>> dirs = {
-//			{-1, -1, -1}, {-1, -1, 1}, {1,-1, 1}, {1, -1, -1}, {-1, 1, -1}, {-1, 1, 1}, {1,1, 1}, {1, 1, -1}
-//		};
-//		vector<Eigen::Vector3d> v_plane;
-//		for (auto& dir : dirs) {
-//			Eigen::Vector3d move(dir[0], dir[1], dir[2]);
-//			Eigen::Vector3d v_p = pos + radius * move;
-//			v_plane.push_back(v_p);
-//		}
-//		vector<vector<int>> quad_faces = {
-//			{0, 1, 2, 3}, {4, 5, 6, 7}, {0, 1, 5, 4}, {3, 2, 6, 7}, {0, 3, 7, 4}, {1, 2, 5, 6}
-//		};
-//		for (auto& face : quad_faces) {
-//			for (auto& vid : face) {
-//				auto& vpos = v_plane[vid];
-//				vertices_data.push_back(vpos.x());
-//				vertices_data.push_back(vpos.y());
-//				vertices_data.push_back(vpos.z());
-//				vertices_data.push_back(0.7725);
-//				vertices_data.push_back(0.7725);
-//				vertices_data.push_back(0.7725);
-//			}
-//		}
-//
-//	}
+	vertices_data.clear();
+	if (!skeletal_mesh) return;
 
-    vertices_data.clear();
-    if (!skeletal_mesh) return;
+	v_cnt = skeletal_mesh->vsize();
+	e_cnt = skeletal_mesh->esize();
+	tri_cnt = skeletal_mesh->fsize();
+	vertices_data.reserve(6 * (2 * e_cnt + 3 * tri_cnt));
 
-    v_cnt = skeletal_mesh->vsize();
-    e_cnt = skeletal_mesh->esize();
-    tri_cnt = skeletal_mesh->fsize();
-    vertices_data.reserve(9 * (2 * e_cnt + 3 * tri_cnt));
 
-    for (auto ep : skeletal_mesh->alledges()) {
-        auto& v1 = skeletal_mesh->vertices(ep.second.vh1());
-        vertices_data.push_back(v1.x());
-        vertices_data.push_back(v1.y());
-        vertices_data.push_back(v1.z());
-        vertices_data.push_back(v1.getNormalX());
-        vertices_data.push_back(v1.getNormalY());
-        vertices_data.push_back(v1.getNormalZ());
-        vertices_data.push_back(0.7725);
-        vertices_data.push_back(0.7725);
+	for (auto ep : skeletal_mesh->alledges()) {
+		auto& v1 = skeletal_mesh->vertices(ep.second.vh1());
+		vertices_data.push_back(v1.x());
+		vertices_data.push_back(v1.y());
+		vertices_data.push_back(v1.z());
         vertices_data.push_back(0);
-
-        auto& v2 = skeletal_mesh->vertices(ep.second.vh2());
-        vertices_data.push_back(v2.x());
-        vertices_data.push_back(v2.y());
-        vertices_data.push_back(v2.z());
-        vertices_data.push_back(v2.getNormalX());
-        vertices_data.push_back(v2.getNormalY());
-        vertices_data.push_back(v2.getNormalZ());
-        vertices_data.push_back(0.7725);
-        vertices_data.push_back(0.7725);
         vertices_data.push_back(0);
-    }
+        vertices_data.push_back(0);
+		auto& v2 = skeletal_mesh->vertices(ep.second.vh2());
+		vertices_data.push_back(v2.x());
+		vertices_data.push_back(v2.y());
+		vertices_data.push_back(v2.z());
+        vertices_data.push_back(0);
+        vertices_data.push_back(0);
+        vertices_data.push_back(0);
+	}
 
-    for (auto fp : skeletal_mesh->allfaces()) {
-        vector<iGameVertexHandle> face_vertices = fp.second.getVertexHandle();
-        Eigen::Vector3d normal(0, 0, 0);
-        if (face_vertices.size() == 3) {
-            auto& v1 = skeletal_mesh->vertices(face_vertices[0]);
-            auto& v2 = skeletal_mesh->vertices(face_vertices[1]);
-            auto& v3 = skeletal_mesh->vertices(face_vertices[2]);
-            Eigen::Vector3d vec1(v2.x() - v1.x(), v2.y() - v1.y(), v2.z() - v1.z());
-            Eigen::Vector3d vec2(v3.x() - v1.x(), v3.y() - v1.y(), v3.z() - v1.z());
-            normal = vec1.cross(vec2).normalized();
-        }
+	for (auto fp : skeletal_mesh->allfaces()) {
+		for (auto& vh : fp.second.getVertexHandle()) {
+			auto& v = skeletal_mesh->vertices(vh);
+			vertices_data.push_back(v.x());
+			vertices_data.push_back(v.y());
+			vertices_data.push_back(v.z());
+			vertices_data.push_back(0.7725);
+			vertices_data.push_back(0.7725);
+			vertices_data.push_back(0);
+		}
+	}
 
-        for (auto& vh : face_vertices) {
-            auto& v = skeletal_mesh->vertices(vh);
-            vertices_data.push_back(v.x());
-            vertices_data.push_back(v.y());
-            vertices_data.push_back(v.z());
-            vertices_data.push_back(normal.x());
-            vertices_data.push_back(normal.y());
-            vertices_data.push_back(normal.z());
-            vertices_data.push_back(0.7725);
-            vertices_data.push_back(0.7725);
-            vertices_data.push_back(0);
-        }
-    }
+	if (!show_tangent_plane) return;
+	quad_cnt = 0;
+	for (auto& vp : skeletal_mesh->allvertices()) {
+		auto& vex = vp.second;
+		quad_cnt += 6;
+		Eigen::Vector3d pos(vex.x(), vex.y(), vex.z());
+		double radius = skeletal_mesh->radius[vp.first];
+		vector<vector<int>> dirs = {
+			{-1, -1, -1}, {-1, -1, 1}, {1,-1, 1}, {1, -1, -1}, {-1, 1, -1}, {-1, 1, 1}, {1,1, 1}, {1, 1, -1}
+		};
+		vector<Eigen::Vector3d> v_plane;
+		for (auto& dir : dirs) {
+			Eigen::Vector3d move(dir[0], dir[1], dir[2]);
+			Eigen::Vector3d v_p = pos + radius * move;
+			v_plane.push_back(v_p);
+		}
+		vector<vector<int>> quad_faces = {
+			{0, 1, 2, 3}, {4, 5, 6, 7}, {0, 1, 5, 4}, {3, 2, 6, 7}, {0, 3, 7, 4}, {1, 2, 5, 6}
+		};
+		for (auto& face : quad_faces) {
+			for (auto& vid : face) {
+				auto& vpos = v_plane[vid];
+				vertices_data.push_back(vpos.x());
+				vertices_data.push_back(vpos.y());
+				vertices_data.push_back(vpos.z());
+				vertices_data.push_back(0.7725);
+				vertices_data.push_back(0.7725);
+				vertices_data.push_back(0.7725);
+			}
+		}
 
-    if (!show_tangent_plane) return;
-    quad_cnt = 0;
-    for (auto& vp : skeletal_mesh->allvertices()) {
-        auto& vex = vp.second;
-        quad_cnt += 6;
-        Eigen::Vector3d pos(vex.x(), vex.y(), vex.z());
-        double radius = skeletal_mesh->radius[vp.first];
-        vector<vector<int>> dirs = {
-                {-1, -1, -1}, {-1, -1, 1}, {1,-1, 1}, {1, -1, -1}, {-1, 1, -1}, {-1, 1, 1}, {1,1, 1}, {1, 1, -1}
-        };
-        vector<Eigen::Vector3d> v_plane;
-        for (auto& dir : dirs) {
-            Eigen::Vector3d move(dir[0], dir[1], dir[2]);
-            Eigen::Vector3d v_p = pos + radius * move;
-            v_plane.push_back(v_p);
-        }
-        vector<vector<int>> quad_faces = {
-                {0, 1, 2, 3}, {4, 5, 6, 7}, {0, 1, 5, 4}, {3, 2, 6, 7}, {0, 3, 7, 4}, {1, 2, 5, 6}
-        };
-        for (auto& face : quad_faces) {
-            for (auto& vid : face) {
-                auto& vpos = v_plane[vid];
-                vertices_data.push_back(vpos.x());
-                vertices_data.push_back(vpos.y());
-                vertices_data.push_back(vpos.z());
-                vertices_data.push_back(0);
-                vertices_data.push_back(0);
-                vertices_data.push_back(0);
-                vertices_data.push_back(0.7725);
-                vertices_data.push_back(0.7725);
-                vertices_data.push_back(0.7725);
-            }
-        }
-    }
+	}
+
+//    vertices_data.clear();
+//    if (!skeletal_mesh) return;
+//
+//    v_cnt = skeletal_mesh->vsize();
+//    e_cnt = skeletal_mesh->esize();
+//    tri_cnt = skeletal_mesh->fsize();
+//    vertices_data.reserve(6 * (2 * e_cnt + 3 * tri_cnt));
+//
+//    for (auto ep : skeletal_mesh->alledges()) {
+//        auto& v1 = skeletal_mesh->vertices(ep.second.vh1());
+//        vertices_data.push_back(v1.x());
+//        vertices_data.push_back(v1.y());
+//        vertices_data.push_back(v1.z());
+//        vertices_data.push_back(0);
+//        vertices_data.push_back(0);
+//        vertices_data.push_back(0);
+//
+//        auto& v2 = skeletal_mesh->vertices(ep.second.vh2());
+//        vertices_data.push_back(v2.x());
+//        vertices_data.push_back(v2.y());
+//        vertices_data.push_back(v2.z());
+//        vertices_data.push_back(0);
+//        vertices_data.push_back(0);
+//        vertices_data.push_back(0);
+//    }
+//
+//    for (auto fp : skeletal_mesh->allfaces()) {
+////        vector<iGameVertexHandle> face_vertices = fp.second.getVertexHandle();
+////        Eigen::Vector3d normal(0, 0, 0);
+////        if (face_vertices.size() == 3) {
+////            auto& v1 = skeletal_mesh->vertices(face_vertices[0]);
+////            auto& v2 = skeletal_mesh->vertices(face_vertices[1]);
+////            auto& v3 = skeletal_mesh->vertices(face_vertices[2]);
+////            Eigen::Vector3d vec1(v2.x() - v1.x(), v2.y() - v1.y(), v2.z() - v1.z());
+////            Eigen::Vector3d vec2(v3.x() - v1.x(), v3.y() - v1.y(), v3.z() - v1.z());
+////            normal = vec1.cross(vec2).normalized();
+////        }
+//
+//        for (auto& vh : face_vertices) {
+//            auto& v = skeletal_mesh->vertices(vh);
+//            vertices_data.push_back(v.x());
+//            vertices_data.push_back(v.y());
+//            vertices_data.push_back(v.z());
+//            vertices_data.push_back(normal.x());
+//            vertices_data.push_back(normal.y());
+//            vertices_data.push_back(normal.z());
+//            vertices_data.push_back(0.7725);
+//            vertices_data.push_back(0.7725);
+//            vertices_data.push_back(0);
+//        }
+//    }
+//
+//    if (!show_tangent_plane) return;
+//    quad_cnt = 0;
+//    for (auto& vp : skeletal_mesh->allvertices()) {
+//        auto& vex = vp.second;
+//        quad_cnt += 6;
+//        Eigen::Vector3d pos(vex.x(), vex.y(), vex.z());
+//        double radius = skeletal_mesh->radius[vp.first];
+//        vector<vector<int>> dirs = {
+//                {-1, -1, -1}, {-1, -1, 1}, {1,-1, 1}, {1, -1, -1}, {-1, 1, -1}, {-1, 1, 1}, {1,1, 1}, {1, 1, -1}
+//        };
+//        vector<Eigen::Vector3d> v_plane;
+//        for (auto& dir : dirs) {
+//            Eigen::Vector3d move(dir[0], dir[1], dir[2]);
+//            Eigen::Vector3d v_p = pos + radius * move;
+//            v_plane.push_back(v_p);
+//        }
+//        vector<vector<int>> quad_faces = {
+//                {0, 1, 2, 3}, {4, 5, 6, 7}, {0, 1, 5, 4}, {3, 2, 6, 7}, {0, 3, 7, 4}, {1, 2, 5, 6}
+//        };
+//        for (auto& face : quad_faces) {
+//            for (auto& vid : face) {
+//                auto& vpos = v_plane[vid];
+//                vertices_data.push_back(vpos.x());
+//                vertices_data.push_back(vpos.y());
+//                vertices_data.push_back(vpos.z());
+//                vertices_data.push_back(0.7725);
+//                vertices_data.push_back(0.7725);
+//                vertices_data.push_back(0.7725);
+//            }
+//        }
+//    }
 
 
 }
@@ -6946,8 +6875,6 @@ void ModelDraw::drawSkelMesh() {
 	glLineWidth(meshline_width);
 	core->glDrawArrays(GL_LINES, 0, e_cnt * 2);
 	core->glDrawArrays(GL_TRIANGLES, e_cnt * 2, tri_cnt * 3);
-
-
 
 	if (show_tangent_plane) {
 		// 请在绘制其他物体后再绘制半透明物体
@@ -7889,10 +7816,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        //法向量信息
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7901,9 +7828,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7911,9 +7838,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7921,9 +7848,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7932,9 +7859,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7942,9 +7869,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7952,9 +7879,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7962,9 +7889,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7973,9 +7900,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7983,9 +7910,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -7993,9 +7920,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8003,9 +7930,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8014,9 +7941,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8024,9 +7951,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8034,9 +7961,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8044,9 +7971,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8055,9 +7982,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8065,9 +7992,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8075,9 +8002,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8085,9 +8012,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8096,9 +8023,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8106,9 +8033,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8116,9 +8043,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8126,9 +8053,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8172,10 +8099,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        //法向量信息
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8185,9 +8112,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8196,9 +8123,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8207,9 +8134,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8257,10 +8184,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        //法向量信息
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8270,9 +8197,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8281,9 +8208,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8292,9 +8219,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8342,10 +8269,10 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
 						//顶点坐标
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        //法向量信息
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        //法向量信息
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8355,9 +8282,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8366,9 +8293,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8377,9 +8304,9 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 						vertices_data.push_back(tmp.getX());
 						vertices_data.push_back(tmp.getY());
 						vertices_data.push_back(tmp.getZ());
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
-                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
+//                        vertices_data.push_back(0);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
 						vertices_data.push_back(0.7725);
@@ -8399,7 +8326,7 @@ void ModelDraw::bsplineSolidToDiscreteXJ() {
 			}
 		}
 		bd.calcuNormal();
-		totalVerticesSize = vertices_data.size() / 9;
+		totalVerticesSize = vertices_data.size() / 6;
 		singlepatch_vertics_number.push_back(count);
 		time_t end = clock();
 		printf("single bsplineSolidToDiscrete cost: %zdms, vertices size: %zd, \n", int(end - beg), totalVerticesSize);
@@ -8537,21 +8464,21 @@ void ModelDraw::draw_BSplineSolid_HexMesh() {
 		count += singlepatch_vertics_number[i] / 6;
 	}
 
-	if (drawMeshLine && drawmode != DrawMode::POINTS && drawmode != DrawMode::BOUNDLINE) {
-		// 绘制线框
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0, 1.0);
-		if (editmodel == EditModel::PICKITEM && pickType == PickType::PickEdge) {
-			glLineWidth(meshline_width * 2.5f);
-		}
-		else {
-			glLineWidth(meshline_width * 0.5);
-		}
-		shaderProgram.setUniformValue("colormode", 530);
-		for (int i = 0; i < vertices_data.size() / 24; ++i) {
-			core->glDrawArrays(GL_LINE_LOOP, i * 4, 4);
-		}
-	}
+//	if (drawMeshLine && drawmode != DrawMode::POINTS && drawmode != DrawMode::BOUNDLINE) {
+//		// 绘制线框
+//		glEnable(GL_POLYGON_OFFSET_FILL);
+//		glPolygonOffset(1.0, 1.0);
+//		if (editmodel == EditModel::PICKITEM && pickType == PickType::PickEdge) {
+//			glLineWidth(meshline_width * 2.5f);
+//		}
+//		else {
+//			glLineWidth(meshline_width * 0.5);
+//		}
+//		shaderProgram.setUniformValue("colormode", 530);
+//		for (int i = 0; i < vertices_data.size() / 24; ++i) {
+//			core->glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+//		}
+//	}
 	update();
 }
 // 建议修改：将HexMesh存在solutionSkel里比较好
