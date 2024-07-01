@@ -114,7 +114,7 @@ void GPU_OC(std::vector<double>& Density, const double TargetRate, const std::ve
         double Lmid = 0.5 * (a + b);
         double SumDensity = 0.0;
         for (int i = 0; i < Density.size(); ++i) {
-            if (isPicked[i] == 1) TempDensity[i] = 1, std::cout <<"111\n" << std::endl;
+            if (isPicked[i] == 1) TempDensity[i] = 1;
             else TempDensity[i] = fmax(0.0001, fmax(Density[i] - MoveStep, fmin(1.0, fmin(Density[i] + MoveStep, Density[i] * sqrt(-dc[i] / Lmid)))));
             //TempDensity[i] = fmax(0.001, fmax(Density[i] - MoveStep, fmin(1.0, fmin(Density[i] + MoveStep, Density[i] * sqrt(-dc[i] / Lmid)))));
             SumDensity += TempDensity[i];

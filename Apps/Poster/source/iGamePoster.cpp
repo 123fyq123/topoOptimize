@@ -1317,16 +1317,19 @@ bool iGamePoster::SaveIGESFile(void) {
 }
 
 bool iGamePoster::LoadHexahedralMesh(void) {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Load Mesh file"), tr(""), tr("Mesh Files(*.mesh)"));
-	if (filePath.isEmpty())
-		return false;
-	else {
-		std::string filename = std::string((const char*)filePath.toLocal8Bit());
-		poster_filename = filename;
-		int module_cnt = ui->openGLWidget->loadHexMesh(filename);
-		int beg = filename.find_last_of('/');
-		filePath = filePath.fromLocal8Bit((filename.substr(++beg, filename.length())).c_str());
-		assert(ui->openGLWidget->isVaildHexMesh());
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Load Mesh file"), tr(""), tr("Mesh Files(*.mesh)"));
+    if (filePath.isEmpty())
+        return false;
+    else {
+        std::string filename = std::string((const char*)filePath.toLocal8Bit());
+        poster_filename = filename;
+        int module_cnt = ui->openGLWidget->loadHexMesh(filename);
+        int beg = filename.find_last_of('/');
+        filePath = filePath.fromLocal8Bit((filename.substr(++beg, filename.length())).c_str());
+        auto file_name_without_suffix = filename.substr(0, filename.rfind("."));
+        model_name = file_name_without_suffix;
+
+        assert(ui->openGLWidget->isVaildHexMesh());
 
         {
             ui->openGLWidget->hex_density.clear();
@@ -1362,12 +1365,11 @@ bool iGamePoster::LoadHexahedralMesh(void) {
 
 
 
-		QString str = "read " + filePath + " done!";
-		ui->info->printString(str);
-		return true;
-	}
+        QString str = "read " + filePath + " done!";
+        ui->info->printString(str);
+        return true;
+    }
 }
-
 
 bool iGamePoster::SaveHexahedralMesh(void) {
 	if (!ui->openGLWidget->isVaildHexMesh()) {

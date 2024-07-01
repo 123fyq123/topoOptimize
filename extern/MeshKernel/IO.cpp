@@ -69,8 +69,6 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadObjFile(const std::string& _InputFil
 }
 
 
-
-
 std::string MeshKernel::IO::WriteOffString(const SurfaceMesh& _mesh) {
     std::stringstream ret;
     ReOrderiGameVertexHandle(_mesh);
@@ -90,6 +88,7 @@ std::string MeshKernel::IO::WriteOffString(const SurfaceMesh& _mesh) {
     }
     return std::string(ret.str());
 }
+
 MeshKernel::SurfaceMesh MeshKernel::IO::ReadOffFile(const std::string& _InputFile, int& sides_num) {
     std::ifstream inputfile(_InputFile, std::ios::in);
     std::vector<iGameVertex> vertices;
@@ -623,35 +622,94 @@ bool MeshKernel::IO::WriteObjFileWithSpline(std::vector<CBSplineSurface>& surfac
         return false;
     }
 
+    struct VertexHash {
+        size_t operator()(const Eigen::Vector3d& v) const {
+            return std::hash<double>()(v.x()) ^ std::hash<double>()(v.y()) ^ std::hash<double>()(v.z());
+        }
+    };
+
+    struct VertexEqual {
+        bool operator()(const Eigen::Vector3d& v1, const Eigen::Vector3d& v2) const {
+            const double epsilon = 1e-9;
+            bool flag = std::fabs(v1.x() - v2.x()) <= epsilon &&
+                        std::fabs(v1.y() - v2.y()) <= epsilon &&
+                        std::fabs(v1.z() - v2.z()) <= epsilon;
+            return flag;
+        }
+    };
+
     std::vector<Eigen::Vector3d> vertices;
     std::vector<std::vector<int>> faces;
+    std::unordered_map<Eigen::Vector3d, int, VertexHash> vertexMap;
+
+    auto findVertex = [&](const Eigen::Vector3d& vertex) -> int {
+        for (const auto& pair : vertexMap) {
+            if (VertexEqual()(pair.first, vertex)) {
+                return pair.second;
+            }
+        }
+        return -1;
+    };
+
+    auto addVertex = [&](const Eigen::Vector3d& vertex) -> int {
+        int vertexIndex = findVertex(vertex);
+        if (vertexIndex == -1) {
+            vertexIndex = vertices.size() + 1;
+            vertexMap[vertex] = vertexIndex;
+            vertices.push_back(vertex);
+        }
+        return vertexIndex;
+    };
 
     for (size_t i = 0; i < surfacesDraw.size(); ++i) {
         double umin, umax, vmin, vmax;
         surfacesDraw[i].getUVMinMax(umin, umax, vmin, vmax);
 
-        int unumber = 4; // u direction control points
-        int vnumber = 4; // v direction control points
+        int unumber = 4; // u方向控制点数量
+        int vnumber = 4; // v方向控制点数量
 
-        double sizeu = (umax - umin) / (unumber - 1); // step size in u direction
-        double sizev = (vmax - vmin) / (vnumber - 1); // step size in v direction
+        double sizeu = (umax - umin) / (unumber - 1); // u方向步长
+        double sizev = (vmax - vmin) / (vnumber - 1); // v方向步长
 
         for (int u_index = 0; u_index < unumber; ++u_index) {
             for (int v_index = 0; v_index < vnumber; ++v_index) {
                 CPoint pnt = surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev);
-                vertices.emplace_back(pnt.getX(), pnt.getY(), pnt.getZ());
+                Eigen::Vector3d vertex(pnt.getX(), pnt.getY(), pnt.getZ());
+
+                int vertexIndex = findVertex(vertex);
+                if (vertexIndex == -1) {
+                    vertexIndex = vertices.size() + 1;
+                    vertexMap[vertex] = vertexIndex;
+                    vertices.push_back(vertex);
+                }
             }
         }
 
         for (int u_index = 0; u_index < unumber - 1; ++u_index) {
             for (int v_index = 0; v_index < vnumber - 1; ++v_index) {
-                int idx0 = i * unumber * vnumber + u_index * vnumber + v_index;
-                int idx1 = idx0 + vnumber;
-                int idx2 = idx1 + 1;
-                int idx3 = idx0 + 1;
+                Eigen::Vector3d v0 = Eigen::Vector3d(
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev).getX(),
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev).getY(),
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + v_index * sizev).getZ()
+                );
+                Eigen::Vector3d v1 = Eigen::Vector3d(
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + v_index * sizev).getX(),
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + v_index * sizev).getY(),
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + v_index * sizev).getZ()
+                );
+                Eigen::Vector3d v2 = Eigen::Vector3d(
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + (v_index + 1) * sizev).getX(),
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + (v_index + 1) * sizev).getY(),
+                        surfacesDraw[i].getPointAtParam(umin + (u_index + 1) * sizeu, vmin + (v_index + 1) * sizev).getZ()
+                );
+                Eigen::Vector3d v3 = Eigen::Vector3d(
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + (v_index + 1) * sizev).getX(),
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + (v_index + 1) * sizev).getY(),
+                        surfacesDraw[i].getPointAtParam(umin + u_index * sizeu, vmin + (v_index + 1) * sizev).getZ()
+                );
 
-                faces.push_back({idx0 + 1, idx1 + 1, idx2 + 1});
-                faces.push_back({idx0 + 1, idx2 + 1, idx3 + 1});
+                faces.push_back({addVertex(v0), addVertex(v1), addVertex(v2)});
+                faces.push_back({addVertex(v0), addVertex(v2), addVertex(v3)});
             }
         }
     }

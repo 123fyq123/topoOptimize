@@ -40,6 +40,12 @@ message(STATUS "GUROBI_INCLUDE_DIR: ${GUROBI_INCLUDE_DIR}")
 link_directories(${GUROBI_LIB_DIR})
 include_directories(${GUROBI_INCLUDE_DIR})
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(GUROBI_CPP_LIB "${GUROBI_LIB_DIR}\\gurobi_c++mdd2017.lib")
+else()
+    set(GUROBI_CPP_LIB "${GUROBI_LIB_DIR}\\gurobi_c++md2017.lib")
+endif()
+
 target_link_libraries(
         ${APP_NAME}
         PUBLIC SolverGPU
@@ -65,7 +71,8 @@ target_link_libraries(
         PUBLIC Qt5::Gui
         PUBLIC Qt5::OpenGL
         PUBLIC "${GUROBI_LIB_DIR}\\gurobi110.lib"
-        PUBLIC "${GUROBI_LIB_DIR}\\gurobi_c++mdd2017.lib"
+        #PUBLIC "${GUROBI_LIB_DIR}\\gurobi_c++mdd2017.lib"
+        PUBLIC "${GUROBI_CPP_LIB}"
 )
 
 target_include_directories(

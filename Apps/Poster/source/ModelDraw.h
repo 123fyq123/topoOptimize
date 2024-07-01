@@ -528,7 +528,6 @@ public:
 
 	bool updateAllHandles();
 
-
 	/* 测试函数 */
 	void test_bspline();
 

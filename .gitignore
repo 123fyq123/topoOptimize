@@ -21,3 +21,6 @@
 /extern/boost_1_76_0/libs/math/dot_net_example/distribution_explorer/obj
 /out/build
 /cmake-build-debug-msvc
+output
+cmake-build-release-msvc
+output

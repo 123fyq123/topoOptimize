@@ -1892,37 +1892,37 @@ void ModelDraw::bsplineSurfaceToDiscrete() {
             for (double v = vmin + 1e-9; v < vmax - sizev - 1e-9; v += sizev) {
                 CPoint p0 = surfacesDraw[i].getPointAtParam(u, v);
                 CAidFunction::geomNormal(surfacesDraw[i], u, v, normal);
-                CPoint P0 = p0 - surfaceCentroid;
-                if ((P0.getX() * normal.getX() + P0.getY() * normal.getY() + P0.getZ() * normal.getZ()) < 0) {
-                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
-                }
+//                CPoint P0 = p0 - surfaceCentroid;
+//                if ((P0.getX() * normal.getX() + P0.getY() * normal.getY() + P0.getZ() * normal.getZ()) < 0) {
+//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
+//                }
                 singlePatch.push_back(p0);
                 singlePatch_normal.push_back(normal);
 
                 CPoint p1 = surfacesDraw[i].getPointAtParam(u, v + sizev);
                 CAidFunction::geomNormal(surfacesDraw[i], u, v + sizev, normal);
-                CPoint P1 = p1 - surfaceCentroid;
-                if ((P1.getX() * normal.getX() + P1.getY() * normal.getY() + P1.getZ() * normal.getZ()) < 0) {
-                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
-                }
+//                CPoint P1 = p1 - surfaceCentroid;
+//                if ((P1.getX() * normal.getX() + P1.getY() * normal.getY() + P1.getZ() * normal.getZ()) < 0) {
+//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
+//                }
                 singlePatch.push_back(p1);
                 singlePatch_normal.push_back(normal);
 
                 CPoint p2 = surfacesDraw[i].getPointAtParam(u + sizeu, v + sizev);
                 CAidFunction::geomNormal(surfacesDraw[i], u + sizeu, v + sizev, normal);
-                CPoint P2 = p2 - surfaceCentroid;
-                if ((P2.getX() * normal.getX() + P2.getY() * normal.getY() + P2.getZ() * normal.getZ()) < 0) {
-                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
-                }
+//                CPoint P2 = p2 - surfaceCentroid;
+//                if ((P2.getX() * normal.getX() + P2.getY() * normal.getY() + P2.getZ() * normal.getZ()) < 0) {
+//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
+//                }
                 singlePatch.push_back(p2);
                 singlePatch_normal.push_back(normal);
 
                 CPoint p3 = surfacesDraw[i].getPointAtParam(u + sizeu, v);
                 CAidFunction::geomNormal(surfacesDraw[i], u + sizeu, v, normal);
-                CPoint P3 = p3 - surfaceCentroid;
-                if ((P3.getX() * normal.getX() + P3.getY() * normal.getY() + P3.getZ() * normal.getZ()) < 0) {
-                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
-                }
+//                CPoint P3 = p3 - surfaceCentroid;
+//                if ((P3.getX() * normal.getX() + P3.getY() * normal.getY() + P3.getZ() * normal.getZ()) < 0) {
+//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
+//                }
                 singlePatch.push_back(p3);
                 singlePatch_normal.push_back(normal);
 
@@ -2207,90 +2207,6 @@ void ModelDraw::drawSelectedObject() {
 
 	glDepthRange(0.01, 1.0);
 	update();
-}
-
-void ModelDraw::drawSelectedObject_sklMesh() {
-//	if (!skeletal_mesh) return;
-//	if ((drawSelectedAllFlag || pickType == PickPoint) && selected_v_indices.size()) {
-//		glPointSize(7);
-//		glBegin(GL_POINTS);
-//		for (auto& v_idx : selected_v_indices) {
-//			auto& v = skeletal_mesh->vertices(MeshKernel::iGameVertexHandle(v_idx));
-//			glVertex3d(v.x(), v.y(), v.z());
-//		}
-//		glEnd();
-//	}
-//	if ((drawSelectedAllFlag || pickType == PickEdge) && selected_e_indices.size()) {
-//		glLineWidth(1.5);
-//		glBegin(GL_LINES);
-//		for (auto& e_idx : selected_e_indices) {
-//			auto& e = skeletal_mesh->edges(MeshKernel::iGameEdgeHandle(e_idx));
-//			auto& v1 = skeletal_mesh->vertices(e.vh1());
-//			auto& v2 = skeletal_mesh->vertices(e.vh2());
-//			glVertex3d(v1.x(), v1.y(), v1.z());
-//			glVertex3d(v2.x(), v2.y(), v2.z());
-//		}
-//		glEnd();
-//		//std::cout << "We are drawing edges.\n";
-//	}
-//	if ((drawSelectedAllFlag || pickType == PickFace) && selected_f_indices.size()) {
-//		glBegin(GL_TRIANGLES);
-//		for (auto& f_idx : selected_f_indices) {
-//			auto vhs = skeletal_mesh->faces(MeshKernel::iGameFaceHandle(f_idx)).getVertexHandle();
-//			for (auto& vh : vhs) {
-//				auto& v = skeletal_mesh->vertices(vh);
-//				glVertex3d(v.x(), v.y(), v.z());
-//			}
-//		}
-//		glEnd();
-//	}
-
-    if ((drawSelectedAllFlag || pickType == PickPoint) && selected_v_indices.size()) {
-        glPointSize(17);
-        glBegin(GL_POINTS);
-        for (auto& v_idx : selected_v_indices) {
-            auto& v = hexMesh->vertices(MeshKernel::iGameVertexHandle(v_idx));
-            glVertex3d(v.x(), v.y(), v.z());
-        }
-        glEnd();
-    }
-    if ((drawSelectedAllFlag || pickType == PickEdge) && selected_e_indices.size()) {
-        glLineWidth(7);
-        glBegin(GL_LINES);
-        for (auto& e_idx : selected_e_indices) {
-            auto& e = hexMesh->edges(MeshKernel::iGameEdgeHandle(e_idx));
-            auto& v1 = hexMesh->vertices(e.vh1());
-            auto& v2 = hexMesh->vertices(e.vh2());
-            glVertex3d(v1.x(), v1.y(), v1.z());
-            glVertex3d(v2.x(), v2.y(), v2.z());
-        }
-        glEnd();
-    }
-    if ((drawSelectedAllFlag || pickType == PickFace) && selected_f_indices.size()) {
-        glBegin(GL_QUADS);
-        for (auto& f_idx : selected_f_indices) {
-            auto vhs = hexMesh->faces(MeshKernel::iGameFaceHandle(f_idx)).getVertexHandle();
-            for (auto& vh : vhs) {
-                auto& v = hexMesh->vertices(vh);
-                glVertex3d(v.x(), v.y(), v.z());
-            }
-        }
-        glEnd();
-    }
-    if ((drawSelectedAllFlag || pickType == PickCell) && selected_c_indices.size()) {
-        glBegin(GL_QUADS);
-        for (auto& c_idx : selected_c_indices) {
-            auto fhs = hexMesh->cells(MeshKernel::iGameCellHandle(c_idx)).getFaceHandle();
-            for (auto& fh : fhs) {
-                auto vhs = hexMesh->faces(MeshKernel::iGameFaceHandle(fh)).getVertexHandle();
-                for (auto& vh : vhs) {
-                    auto& v = hexMesh->vertices(vh);
-                    glVertex3d(v.x(), v.y(), v.z());
-                }
-            }
-        }
-        glEnd();
-    }
 }
 
 void ModelDraw::drawSelectedObject_SKEL() {
@@ -3359,47 +3275,128 @@ void ModelDraw::removeSelectedAll() {
 	vector<int>().swap(this->selected_c_indices);
 }
 
+//void ModelDraw::deleteSelectedAll() {
+//	switch (pickType) {
+//	case PickPoint: {
+//		for (auto& i : selected_v_indices) {
+//			MeshKernel::iGameVertexHandle vh(i);
+//			if (hexMesh) hexMesh->DeleteVertex(vh);
+//			else if (surface_mesh) surface_mesh->DeleteVertex(vh);
+//		}
+//		selected_v_indices.clear();
+//		break;
+//	}
+//	case PickEdge: {
+//		for (auto& i : selected_e_indices) {
+//			MeshKernel::iGameEdgeHandle eh(i);
+//			if (hexMesh) hexMesh->DeleteEdge(eh);
+//			else if (surface_mesh) surface_mesh->DeleteEdge(eh);
+//		}
+//		selected_e_indices.clear();
+//		break;
+//	}
+//	case PickFace: {
+//		for (auto& i : selected_f_indices) {
+//			MeshKernel::iGameFaceHandle fh(i);
+//			if (hexMesh) hexMesh->DeleteFace(fh);
+//			else if (surface_mesh) surface_mesh->DeleteFace(fh);
+//		}
+//		selected_f_indices.clear();
+//		break;
+//	}
+//	case PickCell: {
+//		for (auto& i : selected_c_indices) {
+//			MeshKernel::iGameCellHandle ch(i);
+//			hexMesh->DeleteCell(ch);
+//		}
+//		selected_c_indices.clear();
+//		break;
+//	}
+//	}
+//	printf("delete selected all success\n");
+//	updateDrawData();
+//	update();
+//}
 void ModelDraw::deleteSelectedAll() {
-	switch (pickType) {
-	case PickPoint: {
-		for (auto& i : selected_v_indices) {
-			MeshKernel::iGameVertexHandle vh(i);
-			if (hexMesh) hexMesh->DeleteVertex(vh);
-			else if (surface_mesh) surface_mesh->DeleteVertex(vh);
-		}
-		selected_v_indices.clear();
-		break;
-	}
-	case PickEdge: {
-		for (auto& i : selected_e_indices) {
-			MeshKernel::iGameEdgeHandle eh(i);
-			if (hexMesh) hexMesh->DeleteEdge(eh);
-			else if (surface_mesh) surface_mesh->DeleteEdge(eh);
-		}
-		selected_e_indices.clear();
-		break;
-	}
-	case PickFace: {
-		for (auto& i : selected_f_indices) {
-			MeshKernel::iGameFaceHandle fh(i);
-			if (hexMesh) hexMesh->DeleteFace(fh);
-			else if (surface_mesh) surface_mesh->DeleteFace(fh);
-		}
-		selected_f_indices.clear();
-		break;
-	}
-	case PickCell: {
-		for (auto& i : selected_c_indices) {
-			MeshKernel::iGameCellHandle ch(i);
-			hexMesh->DeleteCell(ch);
-		}
-		selected_c_indices.clear();
-		break;
-	}
-	}
-	printf("delete selected all success\n");
-	updateDrawData();
-	update();
+    switch (pickType) {
+        case PickPoint: {
+            for (auto& i : selected_v_indices) {
+                MeshKernel::iGameVertexHandle vh(i);
+                if (hexMesh) hexMesh->DeleteVertex(vh);
+                else if (surface_mesh) surface_mesh->DeleteVertex(vh);
+                else if (skeletal_mesh) skeletal_mesh->DeleteVertex(vh);
+            }
+            selected_v_indices.clear();
+            break;
+        }
+        case PickEdge: {
+            for (auto& i : selected_e_indices) {
+                MeshKernel::iGameEdgeHandle eh(i);
+                if (hexMesh) hexMesh->DeleteEdge(eh);
+                else if (surface_mesh) surface_mesh->DeleteEdge(eh);
+                else if (skeletal_mesh) skeletal_mesh->DeleteEdge(eh);
+            }
+            selected_e_indices.clear();
+            break;
+        }
+        case PickFace: {
+            for (auto& i : selected_f_indices) {
+                MeshKernel::iGameFaceHandle fh(i);
+                if (hexMesh) hexMesh->DeleteFace(fh);
+                else if (surface_mesh) surface_mesh->DeleteFace(fh);
+            }
+            selected_f_indices.clear();
+            break;
+        }
+        case PickCell: {
+            for (auto& i : selected_c_indices) {
+                MeshKernel::iGameCellHandle ch(i);
+                hexMesh->DeleteCell(ch);
+            }
+            selected_c_indices.clear();
+            break;
+        }
+    }
+    printf("delete selected all success\n");
+    updateDrawData();
+    update();
+}
+
+void ModelDraw::drawSelectedObject_sklMesh() {
+    if (!skeletal_mesh) return;
+    if ((drawSelectedAllFlag || pickType == PickPoint) && selected_v_indices.size()) {
+        glPointSize(7);
+        glBegin(GL_POINTS);
+        for (auto& v_idx : selected_v_indices) {
+            auto& v = skeletal_mesh->vertices(MeshKernel::iGameVertexHandle(v_idx));
+            glVertex3d(v.x(), v.y(), v.z());
+        }
+        glEnd();
+    }
+    if ((drawSelectedAllFlag || pickType == PickEdge) && selected_e_indices.size()) {
+        glLineWidth(1.5);
+        glBegin(GL_LINES);
+        for (auto& e_idx : selected_e_indices) {
+            auto& e = skeletal_mesh->edges(MeshKernel::iGameEdgeHandle(e_idx));
+            auto& v1 = skeletal_mesh->vertices(e.vh1());
+            auto& v2 = skeletal_mesh->vertices(e.vh2());
+            glVertex3d(v1.x(), v1.y(), v1.z());
+            glVertex3d(v2.x(), v2.y(), v2.z());
+        }
+        glEnd();
+        //std::cout << "We are drawing edges.\n";
+    }
+    if ((drawSelectedAllFlag || pickType == PickFace) && selected_f_indices.size()) {
+        glBegin(GL_TRIANGLES);
+        for (auto& f_idx : selected_f_indices) {
+            auto vhs = skeletal_mesh->faces(MeshKernel::iGameFaceHandle(f_idx)).getVertexHandle();
+            for (auto& vh : vhs) {
+                auto& v = skeletal_mesh->vertices(vh);
+                glVertex3d(v.x(), v.y(), v.z());
+            }
+        }
+        glEnd();
+    }
 }
 
 void ModelDraw::add_new_cell() {
@@ -5674,20 +5671,22 @@ void ModelDraw::updateDrawData_SurfaceMesh() {
 	vertices_data.clear();
 	vertices_data.reserve(surface_mesh->FaceSize() * 18);
 	surface_mesh->genAllVerticesNormal();
+    surface_mesh->genAllFacesNormal();
 	//std::cout << "Generate all vertices' normals success." << std::endl;
 	std::vector<GLfloat> quad_data;// 保存四边形的数据
 	// 更新绘制数据
 	for (auto& fp : surface_mesh->allfaces()) {
 		auto vhs = fp.second.getVertexHandle();
+        auto& f = surface_mesh->faces(fp.first);
 		if (vhs.size() == 3) {
 			for (auto& vh : vhs) {
 				auto& v = surface_mesh->vertices(vh);
 				vertices_data.push_back(v.x());
 				vertices_data.push_back(v.y());
 				vertices_data.push_back(v.z());
-                vertices_data.push_back(v.getNormalX());
-                vertices_data.push_back(v.getNormalY());
-                vertices_data.push_back(v.getNormalZ());
+                vertices_data.push_back(f.getNormalX());
+                vertices_data.push_back(f.getNormalY());
+                vertices_data.push_back(f.getNormalZ());
 			}
 		}
 		else if (vhs.size() == 4) {
@@ -5696,9 +5695,9 @@ void ModelDraw::updateDrawData_SurfaceMesh() {
 				quad_data.push_back(v.x());
 				quad_data.push_back(v.y());
 				quad_data.push_back(v.z());
-				quad_data.push_back(v.getNormalX());
-				quad_data.push_back(v.getNormalY());
-				quad_data.push_back(v.getNormalZ());
+				quad_data.push_back(f.getNormalX());
+				quad_data.push_back(f.getNormalY());
+				quad_data.push_back(f.getNormalZ());
 			}
 		}
 		else {
