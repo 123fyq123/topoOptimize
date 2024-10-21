@@ -34,7 +34,7 @@ Windows和Linux平台可以成功运行
 - Eigen
 - glm
 
-需要额外安装的依赖
+需要额外安装的依赖(安装完成后记得重启)
 - Qt (>=5.12, <6): 安装链接=https://download.qt.io/archive/qt/5.12/5.12.3/qt-opensource-windows-x86-5.12.3.exe
 - intel-mkl (<=2023.3.0): 现在不能支持mkl2024版本，请使用ReferenceDLL/mkl-2023.2.0/ 下的安装包，安装mkl2023版本
 - cuda (>= 11.8): 安装链接=https://developer.nvidia.com/cuda-downloads
