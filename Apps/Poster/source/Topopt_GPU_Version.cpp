@@ -49,7 +49,7 @@ void TopOpt_GPU_V0(      std::string _filename,
     IGA_CC_Helper::write2Bezier(bezier_file,m_solids);    // xml
 
     IGA::CCBezierBdy ccbdy;
-    IGA::BdyConvert(_filename, hexbdy, ccbdy);
+    IGA::BdyConvert_V2(_filename, hexbdy, ccbdy, AppCCSIMP);
     IGA_CC_Helper::write2bdy(bdy_file, ccbdy, m_solids);  //bdy
 
     // ʩ��filter��Ҫ����Ϣ
@@ -112,6 +112,8 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::vector<double>& density,
     std::atomic_bool& is_need_update_topopt_model) {
 
+    Timer pretime;
+
     if (hexbdy.empty()) {
         std::cerr << "No Boundary Condition!" << std::endl;
         return;
@@ -125,9 +127,12 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::string model_name = IGA_CC_Helper::get_model_name(_filename);
     HexV3fMesh* mesh = new HexV3fMesh();
     file.read2HexMeshObj(mesh, true, true, true);
+    pretime.out("read 2HexMeshObj");
+
     ApproximationCC AppCCSIMP(mesh, nullptr);
     AppCCSIMP.construct_bss_new();
     m_solids = AppCCSIMP.bss;
+    pretime.out("Approximation");
 
     std::filesystem::path temp_path("./temp/");
     if (!std::filesystem::exists(temp_path)) std::filesystem::create_directory(temp_path);
@@ -138,11 +143,13 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::string density_file = "./temp/" + model_name + ".density";
     std::string protect_cells_file = "./temp/" + model_name + ".prot";
 
-
     IGA_CC_Helper::write2Bezier(bezier_file, m_solids);    // xml
+    pretime.out("write2Bezier");
 
     IGA::CCBezierBdy ccbdy;
-    IGA::BdyConvert(_filename, hexbdy, ccbdy);
+    //IGA::BdyConvert(_filename, hexbdy, ccbdy);
+    IGA::BdyConvert_V2(_filename, hexbdy, ccbdy, AppCCSIMP);
+    pretime.out("BdyConvert");
     IGA_CC_Helper::write2bdy(bdy_file, ccbdy, m_solids);  //bdy
 
     // ʩ��filter��Ҫ����Ϣ
@@ -183,7 +190,6 @@ void TopOpt_GPU_Discrete(std::string _filename,
         aroundcell_weight.push_back(temp_aroundcell_weight);
         //std::cout << "aroundcell.size() = " << aroundcell[i].size() << std::endl;
     }
-
 
 
     {

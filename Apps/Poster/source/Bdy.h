@@ -1,6 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <algorithm>
+#include "Subdivision.h"
+#include "FileHandler.h"
+#include "Timer.h"
 namespace IGA {
 	class BdyBase {
 	public:
@@ -39,6 +43,7 @@ namespace IGA {
 	typedef std::vector<CCBezierBdyBase> CCBezierBdy;
 
 	void BdyConvert(const std::string& filename, HexBdy& hexbdy, CCBezierBdy& ccbdy);
+	void BdyConvert_V2(const std::string& filename, HexBdy& hexbdy, CCBezierBdy& ccbdy, ApproximationCC& AppCC);
 
 	void WriteBdy(const std::string& filename, HexBdy& hexbdy, std::vector<int>& pro);
 	//void WriteBdy(const std::string& filename, CCBezierBdy& ccbdy);
