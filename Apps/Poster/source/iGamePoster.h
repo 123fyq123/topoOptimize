@@ -19,6 +19,8 @@
 
 #include "Bdy.h"
 
+#include "IsoThermalSolver.h"
+
 // 建模部分
 #include "BuildUI.h"
 #include "SingalSlot.h"
@@ -160,6 +162,7 @@ public slots:
 	void IGA_Vis_Y();
 	void IGA_Vis_Z();
 	void IGA_Linear_Pro();
+	void IGA_Thermal();
     void IGA_hyperelasticity_simulation();
     void set_material();
 	void Read_Bdy();

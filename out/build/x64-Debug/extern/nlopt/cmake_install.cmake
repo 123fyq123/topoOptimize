@@ -1,8 +1,8 @@
-# Install script for directory: E:/LabViewer/extern/nlopt
+# Install script for directory: D:/iGame/LabViewer-sub/extern/nlopt
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "E:/LabViewer/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,21 +34,21 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES
-    "E:/LabViewer/extern/nlopt/src/api/nlopt.h"
-    "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt.hpp"
-    "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt.f"
+    "D:/iGame/LabViewer-sub/extern/nlopt/src/api/nlopt.h"
+    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/nlopt.hpp"
+    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/nlopt.f"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/nlopt.lib")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Development" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt/NLoptLibraryDepends.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt/NLoptLibraryDepends.cmake"
-         "E:/LabViewer/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends.cmake")
+         "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt/NLoptLibraryDepends-*.cmake")
       if(_cmake_old_config_files)
@@ -61,22 +61,22 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Development" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt" TYPE FILE FILES "E:/LabViewer/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt" TYPE FILE FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt" TYPE FILE FILES "E:/LabViewer/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt" TYPE FILE FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/CMakeFiles/Export/f1922ff44cc4dc88f95ca1075600a5b3/NLoptLibraryDepends-debug.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Development" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/nlopt" TYPE FILE FILES
-    "E:/LabViewer/out/build/x64-Debug/extern/nlopt/NLoptConfig.cmake"
-    "E:/LabViewer/out/build/x64-Debug/extern/nlopt/NLoptConfigVersion.cmake"
+    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/NLoptConfig.cmake"
+    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/NLoptConfigVersion.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("E:/LabViewer/out/build/x64-Debug/extern/nlopt/src/api/cmake_install.cmake")
+  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/src/api/cmake_install.cmake")
 
 endif()
 

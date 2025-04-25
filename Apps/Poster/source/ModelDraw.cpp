@@ -426,23 +426,102 @@ bool ModelDraw::hexMeshConvertToIGES() {
 	vector<CBSplineSurface> MutiBezierPatch;
 	vector<CBSplineSurface> dx;
 
+	//for (int i = 0; i < SkelMesh->faces_.size(); ++i) {
+	//	if (SkelMesh->is_bdy((FaceHandle)i)) {
+	//		vector<vector<CPoint>> controlPointsSurface;
+	//		for (int j = 0; j < 4; ++j) {
+	//			vector<CPoint> controlPointLine;
+	//			for (int k = 0; k < 4; ++k) {
+	//				controlPointLine.push_back(CPoint(AppCC.beiv[idx][j][k].x, AppCC.beiv[idx][j][k].y, AppCC.beiv[idx][j][k].z));
+	//			}
+	//			controlPointsSurface.push_back(controlPointLine);
+	//		}
+	//		CBSplineSurface splineSurface(udegree, vdegree, controlPointsSurface, uknots, vknots, umultis, vmultis);
+	//	
+	//		MutiBezierPatch.push_back(splineSurface);
+	//		
+	//		idx++;
+	//	}
+	//}
+	// 
+	
 	for (int i = 0; i < SkelMesh->faces_.size(); ++i) {
+		//std::cout<<"i  "<<i<<std::endl;
 		if (SkelMesh->is_bdy((FaceHandle)i)) {
-			vector<vector<CPoint>> controlPointsSurface;
-			for (int j = 0; j < 4; ++j) {
-				vector<CPoint> controlPointLine;
-				for (int k = 0; k < 4; ++k) {
-					controlPointLine.push_back(CPoint(AppCC.beiv[idx][j][k].x, AppCC.beiv[idx][j][k].y, AppCC.beiv[idx][j][k].z));
+			//////////////////////////////////////////////////
+			//find the cell it belongs to
+			int face_in_cell_id = -1;
+			bool find = false;
+			for (int cellnum = 0; cellnum < SkelMesh->cells_.size(); ++cellnum)
+			{
+				if (SkelMesh->is_bdy((CellHandle)cellnum))
+				{
+					for (int facenum = 0; facenum < 8; ++facenum)
+					{
+						if ((FaceHandle)i == SkelMesh->cells_[cellnum].faces_[facenum])
+						{
+							face_in_cell_id = cellnum;
+							find = true;
+							break;
+						}
+					}
 				}
-				controlPointsSurface.push_back(controlPointLine);
+				if (find) break;
 			}
-			CBSplineSurface splineSurface(udegree, vdegree, controlPointsSurface, uknots, vknots, umultis, vmultis);
-		
-			MutiBezierPatch.push_back(splineSurface);
-			
+			if (face_in_cell_id == -1) std::cout << "mistake in computation of cell id for boundary face" << std::endl;
+			else
+			{
+				V3f cell_center = SkelMesh->baryCenter((CellHandle)face_in_cell_id);
+				V3f face_center = SkelMesh->cal_face_center((FaceHandle)i);
+				V3f fc_cc = cell_center - face_center; // vector from face_center to cell_center
+				//////////////
+				V3f a; V3f b; //V3f n;
+				std::vector<VertexHandle> fv = SkelMesh->faces_[i].vs_f;
+				b = AppCC.beiv[idx][0][3] - AppCC.beiv[idx][0][0];
+				a = AppCC.beiv[idx][3][3] - AppCC.beiv[idx][0][0];
+				V3f fnorm = a % b;
+				/////////////////////////////////////////////////////////
+
+				/////////////////////////////////////////////////////////
+				double dotprod = fc_cc.x * fnorm.x + fc_cc.y * fnorm.y + fc_cc.z * fnorm.z;
+				vector<vector<CPoint>> controlPointsSurface;
+				if (dotprod > 0)
+				{
+					for (int j = 3; j >= 0; --j) {
+						vector<CPoint> controlPointLine;
+						for (int k = 0; k < 4; ++k) {
+							controlPointLine.push_back(CPoint(AppCC.beiv[idx][j][k].x, AppCC.beiv[idx][j][k].y, AppCC.beiv[idx][j][k].z));
+						}
+						controlPointsSurface.push_back(controlPointLine);
+
+					}
+				}
+				else
+				{
+					for (int j = 0; j < 4; ++j) {
+						vector<CPoint> controlPointLine;
+						for (int k = 0; k < 4; ++k) {
+							controlPointLine.push_back(CPoint(AppCC.beiv[idx][j][k].x, AppCC.beiv[idx][j][k].y, AppCC.beiv[idx][j][k].z));
+						}
+						controlPointsSurface.push_back(controlPointLine);
+					}
+				}
+				/*for(int cnum=0;cnum<4; cnum++)
+				{
+					for( int rnum=0;rnum<4;rnum++)
+						file<<controlPointsSurface[cnum][rnum].getX()<<"  "<<controlPointsSurface[cnum][rnum].getX()<<"  "
+						   <<controlPointsSurface[cnum][rnum].getX()<<std::endl;
+				}*/
+				CBSplineSurface splineSurface(udegree, vdegree, controlPointsSurface, uknots, vknots, umultis, vmultis);
+				MutiBezierPatch.push_back(splineSurface);
+
+			}
 			idx++;
+			//////////////////////////////////////////////////
+
 		}
 	}
+
 	//bsplineSurfaces = MutiBezierPatch;
 	//saveIGESFile("./Resources/tmp_convert.iges");
 	resetViewFlag = false;
@@ -452,7 +531,7 @@ bool ModelDraw::hexMeshConvertToIGES() {
 	return true;
 }
 
-bool ModelDraw::hexMeshConvertToIGES_2(std::string model_name) {
+bool ModelDraw::hexMeshConvertToIGES_2(std::string model_name, int Smooth_Times) {
     if (!this->hexMesh) return false;
 
     std::string filename = model_name + ".mesh";
@@ -503,8 +582,12 @@ bool ModelDraw::hexMeshConvertToIGES_2(std::string model_name) {
     _hexMesh->cal_cell_cen();
     _hexMesh->cal_cen();
     _hexMesh->examine_cs();
-    //_hexMesh->smooth_mesh(); _hexMesh->smooth_mesh(); _hexMesh->smooth_mesh();
-    //_hexMesh->smooth_mesh(); _hexMesh->smooth_mesh(); _hexMesh->smooth_mesh();
+
+	//光滑化
+	for (int i = 0; i < Smooth_Times; i++) {
+		_hexMesh->smooth_mesh();
+	}
+
     std::cout << "Converting... hexMesh: vertices = " << _hexMesh->vertices_.size() << ", cells = " << _hexMesh->cells_.size() << std::endl;
     int udegree = 3;
     int vdegree = 3;
@@ -782,6 +865,7 @@ bool ModelDraw::loadIGESSurface(std::vector<CBSplineSurface>& geomsurface) {
 
 	if (resetViewFlag) updateSurfaceModel();
 	SetDrawModule(BSPLINESURFACE);
+	//SetColorMode(LIGHT);
 	std::cout << "SetDrawModule done" << std::endl;
 	updateDrawData();
 	std::cout << "updateDrawData done" << std::endl;
@@ -2111,14 +2195,17 @@ void ModelDraw::updateSurfaceModel() {
 void ModelDraw::drawSurface() {
     core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
     // 设置面颜色
-    shaderProgram.setUniformValue("colormode", -1);
+    shaderProgram.setUniformValue("colormode", 1);
     core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 6);
 //
 //    // 设置边界颜色
-//    shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
-//    for (size_t i = 0; i < vertices_data.size(); i += 24) { // 4 vertices per quad, each vertex has 6 components
-//        core->glDrawArrays(GL_LINE_LOOP, i / 6, 4); // 4 vertices per quad
-//    }
+    //shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
+    //for (size_t i = 0; i < vertices_data.size(); i += 24) { // 4 vertices per quad, each vertex has 6 components
+    //    core->glDrawArrays(GL_LINE_LOOP, i / 6, 4); // 4 vertices per quad
+    //}
+	//for (size_t i = 0; i < vertices_data.size(); i += 24 * 64) { // 4 vertices per quad, each vertex has 6 components
+	//	core->glDrawArrays(GL_LINE_LOOP, i / 6, 2); // 4 vertices per quad
+	//}
 //··················法向量绘制·····················
 //    float normalLength = 1.1f; // 法向量的长度
 //
@@ -2159,10 +2246,10 @@ void ModelDraw::drawSurface() {
 //        shaderProgram.setUniformValue("colormode", -1);
 //    core->glDrawArrays(GL_QUADS, 0, vertices_data.size() / 9);
 
-//    shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
-//    for (size_t i = 0; i < vertices_data.size(); i += 36) { // 4 vertices per quad, each vertex has 9 components
-//        core->glDrawArrays(GL_LINE_LOOP, i / 9, 4); // 4 vertices per quad
-//    }
+    //shaderProgram.setUniformValue("colormode", 530); // 使用黑色绘制边界
+    //for (size_t i = 0; i < vertices_data.size(); i += 36) { // 4 vertices per quad, each vertex has 9 components
+    //    core->glDrawArrays(GL_LINE_LOOP, i / 9, 4); // 4 vertices per quad
+    //}
 }
 
 void ModelDraw::drawSelectedObject() {
@@ -5083,7 +5170,8 @@ void ModelDraw::mouseMoveEvent(QMouseEvent* _event) {
 				vector<int> tmp_handle_vector;
 				tmp_handle_vector = PointBelongToSolid[old_pick_point];//暂存这个顶点关联的体
 				CPoint last_pick_point = old_pick_point;//保存move后的位置
-				for (int u = 0; u < tmp_handle_vector.size(); u++) {//遍历所有片
+				//for (int u = 0; u < tmp_handle_vector.size(); u++) {//遍历所有片
+				for (int u = 0; u < bsplinesolidmesh.size(); u++) {
 					vector<vector<vector<CPoint>>> tmp = bsplinesolidmesh[u].getControlPoints();
 					bool flag = 1;
 					//三重循环找点
@@ -5463,6 +5551,9 @@ void ModelDraw::loadShader() {
 	shaderProgram.setUniformValue("light.diffuse", 0.5f, 0.5f, 0.5f);	// 漫反射系数
 	shaderProgram.setUniformValue("light.specular", 0.5f, 0.5f, 0.5f);	// 镜面反射系数
 	shaderProgram.setUniformValue("shininess", 32.0f);
+
+	shaderProgram.setUniformValue("colormode", 1);
+	shaderProgram.setUniformValue("keep_positive", 1);
 
 	// 释放旧数据的内存
 	core->glDeleteVertexArrays(1, &VAO);
@@ -5969,60 +6060,73 @@ void ModelDraw::updateDrawData_TetMesh() {
 
 
 void ModelDraw::updateDrawData_Surface() {
-	vertices_data.clear();
-
-	for (int i = 0; i < data_surfaces.size(); ++i) {
-		auto& singleSurface = data_surfaces[i];
-		auto& color = colors[i % colors.size()];
-		for (auto& row : singleSurface) {
-			for (auto& col : row) {
-				vertices_data.push_back(col.getX());
-				vertices_data.push_back(col.getY());
-				vertices_data.push_back(col.getZ());
-//                vertices_data.push_back(0.349);
-//                vertices_data.push_back(0.6);
-//                vertices_data.push_back(0.349);
-				vertices_data.push_back(color.x());
-				vertices_data.push_back(color.y());
-				vertices_data.push_back(color.z());
-			}
-		}
-	}
-	update();
-
-
-//    vertices_data.clear();
-//// colors[0] = { 227.0 / 255, 121.0 / 255, 77.0 / 255 };
-//    for (int i = 0; i < data_surfaces.size(); ++i) {
-//        auto& singleSurface = data_surfaces[i];
-//        auto& color = colors[i % colors.size()];
-//        auto& normals = surface_normals[i];
-//        for (int j = 0; j < singleSurface.size(); j++) {
-//            for (int k = 0; k < singleSurface[j].size(); ++k) {
-//                auto& v = singleSurface[j][k];
-//                auto& normal = normals[j][k];
-////                Vex center_c = getCellCenter(ch);
-////                Vex center_f = getFaceCenter(fp.first);
-////                Vec dir_out = (center_f - center_c).normalized();
-//                if(v.getX() * normal.getX() + v.getY() * normal.getY() + v.getZ() * normal.getZ() < 0){
-//                    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0) ;
-//                }
-//                vertices_data.push_back(v.getX());
-//                vertices_data.push_back(v.getY());
-//                vertices_data.push_back(v.getZ());
-//                vertices_data.push_back(normal.getX());
-//                vertices_data.push_back(normal.getY());
-//                vertices_data.push_back(normal.getZ());
-//                vertices_data.push_back(color[0]);
-//                vertices_data.push_back(color[1]);
-//                vertices_data.push_back(color[2]);
-////                vertices_data.push_back(0.37);
+//	vertices_data.clear();
+//
+//	for (int i = 0; i < data_surfaces.size(); ++i) {
+//		auto& singleSurface = data_surfaces[i];
+//		auto& color = colors[i % colors.size()];
+//		for (auto& row : singleSurface) {
+//			for (auto& col : row) {
+//				vertices_data.push_back(col.getX());
+//				vertices_data.push_back(col.getY());
+//				vertices_data.push_back(col.getZ());
+////                vertices_data.push_back(0.349);
 ////                vertices_data.push_back(0.6);
-////                vertices_data.push_back(0.37);
-//            }
-//        }
-//    }
-//    update();
+////                vertices_data.push_back(0.349);
+//				vertices_data.push_back(color.x());
+//				vertices_data.push_back(color.y());
+//				vertices_data.push_back(color.z());
+//			}
+//		}
+//	}
+//	update();
+
+	//std::cout << colormode << std::endl;
+	//shaderProgram.setUniformValue("colormode", 239);
+    vertices_data.clear();
+// colors[0] = { 227.0 / 255, 121.0 / 255, 77.0 / 255 };
+    for (int i = 0; i < data_surfaces.size(); ++i) {
+        auto& singleSurface = data_surfaces[i];
+        auto& color = colors[i % colors.size()];
+        auto& normals = surface_normals[i];
+        for (int j = 0; j < singleSurface.size(); j++) {
+            for (int k = 0; k < singleSurface[j].size(); ++k) {
+                auto& v = singleSurface[j][k];
+                auto& normal = normals[j][k];
+//                Vex center_c = getCellCenter(ch);
+//                Vex center_f = getFaceCenter(fp.first);
+//                Vec dir_out = (center_f - center_c).normalized();
+                //if((v.getX() + 1) * normal.getX() + (v.getY() + 1) * normal.getY() + (v.getZ() + 1) * normal.getZ() < 0){
+                //    normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0) ;
+                //}
+				if ((v.getX() + 100) * normal.getX() < 0) {
+					normal.setX(normal.getX() * -1.0);
+				}
+				if ((v.getY() + 100) * normal.getY() < 0) {
+					normal.setY(normal.getY() * -1.0);
+				}
+				if ((v.getZ() + 100) * normal.getZ() < 0) {
+					normal.setZ(normal.getZ() * -1.0);
+				}
+				//if (v.getX() * normal.getX() + v.getY() * normal.getY() + v.getZ() * normal.getZ() < 0) {
+				//	normal.setXYZ(normal.getX() * -1.0, normal.getY() * -1.0, normal.getZ() * -1.0);
+				//}
+                vertices_data.push_back(v.getX());
+                vertices_data.push_back(v.getY());
+                vertices_data.push_back(v.getZ());
+                vertices_data.push_back(normal.getX());
+                vertices_data.push_back(normal.getY());
+                vertices_data.push_back(normal.getZ());
+                //vertices_data.push_back(color[0]);
+                //vertices_data.push_back(color[1]);
+                //vertices_data.push_back(color[2]);
+//                vertices_data.push_back(0.37);
+//                vertices_data.push_back(0.6);
+//                vertices_data.push_back(0.37);
+            }
+        }
+    }
+    update();
 
 }
 
@@ -6342,7 +6446,7 @@ bool ModelDraw::loadPickFile(const std::string& filename)
                 }
             }
         }
-        assert(ans > 0);
+        assert(ans >= 0);
         return ans;
     };
     for(auto& temp_bdy : hexbdy){

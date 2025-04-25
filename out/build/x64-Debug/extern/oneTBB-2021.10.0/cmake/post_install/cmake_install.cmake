@@ -1,8 +1,8 @@
-# Install script for directory: E:/LabViewer/extern/oneTBB-2021.10.0/cmake/post_install
+# Install script for directory: D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/cmake/post_install
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "E:/LabViewer/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

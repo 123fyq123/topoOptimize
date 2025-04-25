@@ -46,7 +46,7 @@ public:
     int numControlPoints() { return controlpoints; }
 
     void createStore(const std::vector<CBSplineSolid>& geometry);  // œ° Ëæÿ’Û¥Ê¥¢ø’º‰‘§º∆À„
-
+    void createStore_V2(const std::vector<CBSplineSolid>& geometry);
 
     void constructCoefs(const Eigen::VectorXd& solution, Eigen::MatrixXd& displacement);
 

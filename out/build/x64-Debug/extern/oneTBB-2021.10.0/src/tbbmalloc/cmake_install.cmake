@@ -1,8 +1,8 @@
-# Install script for directory: E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc
+# Install script for directory: D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "E:/LabViewer/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,6 +33,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "E:/LabViewer/out/build/x64-Debug/msvc_19.39_cxx17_64_md_debug/tbbmalloc_debug.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/msvc_19.38_cxx17_64_md_debug/tbbmalloc_debug.lib")
 endif()
 

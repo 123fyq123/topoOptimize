@@ -7,7 +7,7 @@ if(CMAKE_VERSION VERSION_LESS "2.8.3")
    message(FATAL_ERROR "CMake >= 2.8.3 required")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 2.8.3...3.26)
+cmake_policy(VERSION 2.8.3...3.27)
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -50,14 +50,14 @@ unset(_cmake_expected_targets)
 add_library(OpenMeshCore STATIC IMPORTED)
 
 set_target_properties(OpenMeshCore PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/../.."
+  INTERFACE_INCLUDE_DIRECTORIES "D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/../.."
 )
 
 # Create imported target OpenMeshTools
 add_library(OpenMeshTools STATIC IMPORTED)
 
 set_target_properties(OpenMeshTools PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "E:/LabViewer/extern/OpenMesh/src/OpenMesh/Tools/../.."
+  INTERFACE_INCLUDE_DIRECTORIES "D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Tools/../.."
   INTERFACE_LINK_LIBRARIES "OpenMeshCore"
 )
 
@@ -65,14 +65,14 @@ set_target_properties(OpenMeshTools PROPERTIES
 set_property(TARGET OpenMeshCore APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(OpenMeshCore PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCored.lib"
+  IMPORTED_LOCATION_DEBUG "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCored.lib"
   )
 
 # Import target "OpenMeshTools" for configuration "Debug"
 set_property(TARGET OpenMeshTools APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(OpenMeshTools PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C;CXX"
-  IMPORTED_LOCATION_DEBUG "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Tools/OpenMeshToolsd.lib"
+  IMPORTED_LOCATION_DEBUG "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Tools/OpenMeshToolsd.lib"
   )
 
 # This file does not depend on other imported targets which have

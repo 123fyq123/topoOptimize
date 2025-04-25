@@ -44,6 +44,7 @@ namespace IGA {
 
 	void BdyConvert(const std::string& filename, HexBdy& hexbdy, CCBezierBdy& ccbdy);
 	void BdyConvert_V2(const std::string& filename, HexBdy& hexbdy, CCBezierBdy& ccbdy, ApproximationCC& AppCC);
+	void BdyConvert_V3(const HexV3fMesh* mesh, HexBdy& hexbdy, CCBezierBdy& ccbdy, ApproximationCC& AppCC);
 
 	void WriteBdy(const std::string& filename, HexBdy& hexbdy, std::vector<int>& pro);
 	//void WriteBdy(const std::string& filename, CCBezierBdy& ccbdy);

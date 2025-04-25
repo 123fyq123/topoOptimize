@@ -1,8 +1,8 @@
-# Install script for directory: E:/LabViewer/extern/OpenMesh/src/OpenMesh/Tools
+# Install script for directory: D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Tools
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "E:/LabViewer/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,6 +33,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Tools/OpenMeshToolsd.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Tools/OpenMeshToolsd.lib")
 endif()
 

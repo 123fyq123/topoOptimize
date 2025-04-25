@@ -7,7 +7,7 @@ if(CMAKE_VERSION VERSION_LESS "2.8.3")
    message(FATAL_ERROR "CMake >= 2.8.3 required")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 2.8.3...3.26)
+cmake_policy(VERSION 2.8.3...3.27)
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -50,14 +50,14 @@ unset(_cmake_expected_targets)
 add_library(NLopt::nlopt STATIC IMPORTED)
 
 set_target_properties(NLopt::nlopt PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "E:/LabViewer/extern/nlopt/src/api;E:/LabViewer/out/build/x64-Debug/extern/nlopt"
+  INTERFACE_INCLUDE_DIRECTORIES "D:/iGame/LabViewer-sub/extern/nlopt/src/api;D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt"
 )
 
 # Import target "NLopt::nlopt" for configuration "Debug"
 set_property(TARGET NLopt::nlopt APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(NLopt::nlopt PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C;CXX"
-  IMPORTED_LOCATION_DEBUG "E:/LabViewer/out/build/x64-Debug/extern/nlopt/nlopt.lib"
+  IMPORTED_LOCATION_DEBUG "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/nlopt/nlopt.lib"
   )
 
 # This file does not depend on other imported targets which have

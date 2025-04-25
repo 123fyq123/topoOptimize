@@ -23,9 +23,13 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 	// menu bar
 	QMenuBar *menu_bar = menuBar();
 
-    ui->toolBox_4->setVisible(false);
+    ui->toolBox_4->setVisible(true);
     ui->btnTestDetFaces->setVisible(false);
     ui->btnTestResample->setVisible(false);
+
+	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
+	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
+	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
 
     {
         QDoubleValidator *validator_2 = new QDoubleValidator();
@@ -70,6 +74,21 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 
         ui->PoSongBi->setText("0.3");
         ui->PoSongBi->setValidator(validator_2);
+
+		ui->Thermal_alpha->setText("0.5");
+		ui->Thermal_alpha->setValidator(validator_2);
+
+		ui->Thermal_stepTime->setText("1.0");
+		ui->Thermal_stepTime->setValidator(validator_2);
+
+		ui->Thermal_SumTime->setText("100.0");
+		ui->Thermal_SumTime->setValidator(validator_2);
+
+		QIntValidator* validator_3 = new QIntValidator();
+		validator_3->setRange(0, 20);
+
+		ui->Smooth_Times->setText("2");
+		ui->Smooth_Times->setValidator(validator_3);
     }
 	///************************ skeleton menu ************************/
 	/*{
@@ -92,6 +111,7 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 	{
 		QObject::connect(ui->editbsplinesolid, SIGNAL(clicked(bool)), this, SLOT(EditBsplineSolid()));
 		QObject::connect(ui->bssCreator, SIGNAL(clicked(bool)), this, SLOT(auto_ShowBsplineSolid()));
+		QObject::connect(ui->bssCreator1, SIGNAL(clicked(bool)), this, SLOT(manually_ShowBsplineSolid()));
 		//QObject::connect(ui->bssCreator_2, SIGNAL(clicked(bool)), this, SLOT(manually_ShowBsplineSolid()));
 		//QObject::connect(ui->bssCreator_3, SIGNAL(clicked(bool)), this, SLOT(generate_F()));
 		//QObject::connect(ui->bssCreator_4, SIGNAL(clicked(bool)), this, SLOT(generate_V()));
@@ -1142,6 +1162,8 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
 //    connect(ui->IGA_hyperelasticity_simulation, SIGNAL(clicked(bool)), this, SLOT(IGA_hyperelasticity_simulation()));
     //connect(ui->pushButton_11, SIGNAL(clicked(bool)), this, SLOT(set_material()));
 
+	connect(ui->IGA_Thermal, SIGNAL(clicked(bool)), this, SLOT(IGA_Thermal()));
+
 //	connect(ui->Poster_GenSpline, SIGNAL(clicked(bool)), this, SLOT(Poster_GenSpline()));
 	connect(ui->Poster_DeleteElement, SIGNAL(clicked(bool)), this, SLOT(Poster_DeleteElement()));
 	connect(ui->Poster_Smooth, SIGNAL(clicked(bool)), this, SLOT(Poster_Smooth()));
@@ -1323,6 +1345,7 @@ bool iGamePoster::LoadHexahedralMesh(void) {
     else {
         std::string filename = std::string((const char*)filePath.toLocal8Bit());
         poster_filename = filename;
+		ui->openGLWidget->analysis_flag = false;
         int module_cnt = ui->openGLWidget->loadHexMesh(filename);
         int beg = filename.find_last_of('/');
         filePath = filePath.fromLocal8Bit((filename.substr(++beg, filename.length())).c_str());
@@ -1437,7 +1460,9 @@ bool iGamePoster::ConvertToIGES_2(void) {
         return false;
     }
 
-    if (ui->openGLWidget->hexMeshConvertToIGES_2(model_name)) ui->info->printString("convert success");
+	int Smooth_Times = ui->Smooth_Times->text().toInt();
+
+    if (ui->openGLWidget->hexMeshConvertToIGES_2(model_name, Smooth_Times)) ui->info->printString("convert success");
     else ui->info->printString("convert failure");
     return true;
 }
@@ -2233,6 +2258,37 @@ void iGamePoster::IGA_Linear_Pro() {
     //});
 }
 
+void iGamePoster::IGA_Thermal() {
+	std::string filename = poster_filename;
+
+	HexV3fMesh* mesh = new HexV3fMesh();
+	BSplineSolid m_solids;
+	FileHandler file(filename);
+	size_t patch_size = ui->openGLWidget->hexMesh->CellSize();
+
+	std::cout << "read2HexMeshObj" << std::endl;
+	file.read2HexMeshObj(mesh, true, true, true);
+	ApproximationCC AppCCSIMP(mesh, nullptr);
+	AppCCSIMP.construct_bss_new();
+	m_solids = AppCCSIMP.bss;
+
+	IsoThermalSolver* ts = new IsoThermalSolver(ui->Thermal_alpha->text().toDouble(), 
+												ui->Thermal_stepTime->text().toDouble(), 
+												ui->Thermal_SumTime->text().toDouble());
+
+	for (const auto& solid : m_solids.Local_V3f) {
+		CubicBezierSolid cs;
+		int Lp_count = 0;
+		for (const auto& Lp : solid) {
+			cs.control_points.push_back(Eigen::Vector4d(Lp.x, Lp.y, Lp.z, Lp_count++));
+		}
+		std::cout << Lp_count << std::endl;
+		ts->addBezierSolid(cs);
+	}
+
+	ts->run();
+}
+
 void iGamePoster::IGA_hyperelasticity_simulation() {
     ui->info->printString(QString("Start IGA hyperelasticity solving..."));
 
@@ -2382,58 +2438,131 @@ bool iGamePoster::auto_ShowBsplineSolid(){
 
 }
 bool iGamePoster::manually_ShowBsplineSolid() {
-	ui->openGLWidget->ClearAllVector();
-	ifstream in("./C.txt");
-	//ifstream in("E:\\poster\\poster\\test1.txt");
-	string line;
-	int count = 1;
-	while (getline(in, line)) {
-		int cnt = 0;
-		if (line[0] == 'p') {
+	//ui->openGLWidget->ClearAllVector();
+	//ifstream in("./C.txt");
+	////ifstream in("E:\\poster\\poster\\test1.txt");
+	//string line;
+	//int count = 1;
+	//while (getline(in, line)) {
+	//	int cnt = 0;
+	//	if (line[0] == 'p') {
+	//		int udegree, vdegree, wdegree, ucnum, vcnum, wcnum, uknum, vknum, wknum;   //degree是次数
+	//		vector<vector<double>> knots(3);
+	//		vector<double>uknots, vknots, wknots;
+	//		vector<int> degrees(3);
+	//		stringstream ss;
+	//		for (int i = 0; i < 3; ++i) {
+	//			line.clear();
+	//			getline(in, line);
+	//			
+	//			ss.str("");
+	//			ss.clear();
+	//			ss.str(line);
+	//			double kk;
+	//			while (ss >> kk) {
+	//				knots[i].push_back(kk);
+	//				//std::cout << kk << std::endl;
+	//			}
+	//		}
+	//		for (int i = 0; i < 3; ++i) {
+	//			line.clear();
+	//			getline(in, line);
+	//			ss.str("");
+	//			ss.clear();
+	//			ss.str(line);
+	//			ss >> degrees[i];
+	//			//std::cout << degrees[i]<< std::endl;
+	//		}
+	//		ucnum = knots[0].size() - degrees[0] - 1;
+	//		vcnum = knots[1].size() - degrees[1] - 1;
+	//		wcnum = knots[2].size() - degrees[2] - 1;
+	//		line.clear();
+	//		getline(in, line);
+	//		ss.str("");
+	//		ss.clear();
+	//		ss.str(line);
+	//
+	//
+	//		vector<vector<vector<CPoint>>>controlpoints(ucnum, vector<vector<CPoint>>(vcnum, vector<CPoint>(wcnum)));//保存3个参数方向的控制点
+	//		for (int i = 0; i < ucnum; ++i) {
+	//			for (int j = 0; j < vcnum; ++j) {
+	//				for (int s = 0; s < wcnum; ++s) {
+	//					double x, y, z;
+	//					ss >> x >> y >> z;
+	//					controlpoints[i][j][s] = { x*0.5, y*0.5, z*0.5 };
+	//				}
+	//			}
+	//		}
+	//		udegree = degrees[0];  vdegree = degrees[1];  wdegree = degrees[2];
+	//		uknum = knots[0].size();   vknum = knots[1].size();   wknum = knots[2].size();
+	//		uknots = knots[0];  vknots = knots[1]; wknots = knots[2];
+
+	//		vector<int>umultis, vmultis, wmultis;
+	//		
+	//		int handle=ui->openGLWidget->getBsplineSolidFromParamXJ(udegree, vdegree, wdegree, controlpoints, uknots, vknots, wknots, umultis, vmultis, wmultis);
+	//		ui->openGLWidget->SaveIndex(controlpoints, handle);
+	//	}
+	//	//break;
+	//}		
+	
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Load file"), tr(" "), tr("Picked Mesh File(*.txt)"));
+	if (filePath.isEmpty())
+	{
+		return false;
+	}
+	else
+	{
+		//ui->openGLWidget->loadPickFile(filePath.toStdString());
+		//ui->info->printString(QString("Read bdy file done!"));
+		ui->openGLWidget->ClearAllVector();
+		std::ifstream file(filePath.toStdString(), std::ios::in);
+		std::string line;
+
+		std::getline(file, line);
+		std::stringstream ss(line);
+		int num;
+		ss >> num;
+		//num = 3;//test
+		std::cout << "num=" << num << std::endl;
+		for (int linenum = 0; linenum < num; ++linenum) {
+			int cnt = 0;
 			int udegree, vdegree, wdegree, ucnum, vcnum, wcnum, uknum, vknum, wknum;   //degree是次数
 			vector<vector<double>> knots(3);
 			vector<double>uknots, vknots, wknots;
 			vector<int> degrees(3);
 			stringstream ss;
-			for (int i = 0; i < 3; ++i) {
-				line.clear();
-				getline(in, line);
-				
-				ss.str("");
-				ss.clear();
-				ss.str(line);
-				double kk;
-				while (ss >> kk) {
-					knots[i].push_back(kk);
-					//std::cout << kk << std::endl;
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					knots[i].push_back(0);
+				}
+				for (int j = 0; j < 4; ++j)
+				{
+					knots[i].push_back(1);
 				}
 			}
-			for (int i = 0; i < 3; ++i) {
-				line.clear();
-				getline(in, line);
-				ss.str("");
-				ss.clear();
-				ss.str(line);
-				ss >> degrees[i];
-				//std::cout << degrees[i]<< std::endl;
-			}
+			degrees[0] = degrees[1] = degrees[2] = 3;
+
 			ucnum = knots[0].size() - degrees[0] - 1;
 			vcnum = knots[1].size() - degrees[1] - 1;
 			wcnum = knots[2].size() - degrees[2] - 1;
-			line.clear();
-			getline(in, line);
-			ss.str("");
-			ss.clear();
-			ss.str(line);
-	
-	
+
+			//std::cout<<"ucnum= "<<ucnum<<"  , vcnum= "<<vcnum<<" , wcnum= "<<wcnum<<std::endl;
+
 			vector<vector<vector<CPoint>>>controlpoints(ucnum, vector<vector<CPoint>>(vcnum, vector<CPoint>(wcnum)));//保存3个参数方向的控制点
 			for (int i = 0; i < ucnum; ++i) {
 				for (int j = 0; j < vcnum; ++j) {
 					for (int s = 0; s < wcnum; ++s) {
+						std::getline(file, line);
+						ss.clear();
+						ss.str(line);
 						double x, y, z;
 						ss >> x >> y >> z;
-						controlpoints[i][j][s] = { x*0.5, y*0.5, z*0.5 };
+						//std::cout<<"x= "<<x<<" , y = "<<y<<" , z = "<<z<<std::endl;
+						line.clear();
+						controlpoints[i][j][s] = { x, y, z };
+						//std::cout<<	controlpoints[i][j][s].getX()<<",  "<<	controlpoints[i][j][s].getY()<<", "<<	controlpoints[i][j][s].getZ()<<std::endl;
 					}
 				}
 			}
@@ -2442,14 +2571,14 @@ bool iGamePoster::manually_ShowBsplineSolid() {
 			uknots = knots[0];  vknots = knots[1]; wknots = knots[2];
 
 			vector<int>umultis, vmultis, wmultis;
-			
-			int handle=ui->openGLWidget->getBsplineSolidFromParamXJ(udegree, vdegree, wdegree, controlpoints, uknots, vknots, wknots, umultis, vmultis, wmultis);
+
+
+
+			int handle = ui->openGLWidget->getBsplineSolidFromParamXJ(udegree, vdegree, wdegree, controlpoints, uknots, vknots, wknots, umultis, vmultis, wmultis);
 			ui->openGLWidget->SaveIndex(controlpoints, handle);
 		}
-		//break;
-	}		
-	
 
+	}
 
 
 
@@ -2457,7 +2586,7 @@ bool iGamePoster::manually_ShowBsplineSolid() {
 		ui->openGLWidget->bsplineSolidToDiscreteXJ();
 	
 		ui->openGLWidget->SetDrawModule(ModelDraw::BSPLINESOLID);
-		
+		ui->openGLWidget->SetEditModel(ModelDraw::BSPLINESOLIDEDIT);
 		ui->openGLWidget->makeCurrent();
 		
 		update();

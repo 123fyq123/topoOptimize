@@ -1,37 +1,42 @@
 {
-	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen",
-	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc",
-	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc",
-	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeLists.txt" ],
-	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen",
+	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc",
+	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeLists.txt"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbb/itt_notify.h",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbb/itt_notify.h",
 			"MU",
 			"F5N2RKSOEZ/moc_itt_notify.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.h",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.h",
 			"MU",
 			"EWIEGA46WW/moc_backend.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.h",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.h",
 			"MU",
 			"EWIEGA46WW/moc_large_objects.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/include",
-	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"NO_DECREMENT_DEPRECATED_WARNINGS",
@@ -54,15 +59,15 @@
 	"MOC_INCLUDES" : 
 	[
 		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"E:/LabViewer/extern/boost_1_76_0",
-		"E:/LabViewer/include",
-		"E:/LabViewer/include/rapidjson/include",
-		"E:/LabViewer/include/spdlog/include",
-		"E:/LabViewer/extern",
-		"E:/LabViewer/Apps",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/freeglut/include",
-		"E:/LabViewer/extern/oneTBB-2021.10.0/include"
+		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
+		"D:/iGame/LabViewer-sub/include",
+		"D:/iGame/LabViewer-sub/include/rapidjson/include",
+		"D:/iGame/LabViewer-sub/include/spdlog/include",
+		"D:/iGame/LabViewer-sub/extern",
+		"D:/iGame/LabViewer-sub/Apps",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/freeglut/include",
+		"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/include"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -72,42 +77,42 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 16,
-	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 10,
+	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 12,
-	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/AutogenUsed.txt",
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/oneTBB-2021.10.0/src/tbbmalloc/CMakeFiles/tbbmalloc_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbb/itt_notify.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbb/itt_notify.cpp",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/backend.cpp",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/backref.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/backref.cpp",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/frontend.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/frontend.cpp",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/large_objects.cpp",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc.cpp",
+			"D:/iGame/LabViewer-sub/extern/oneTBB-2021.10.0/src/tbbmalloc/tbbmalloc.cpp",
 			"MU",
 			null
 		]
@@ -116,5 +121,6 @@
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0
 }

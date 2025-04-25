@@ -1,79 +1,87 @@
 {
-	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/Tools/Tools_autogen",
-	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/Tools",
-	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/Tools",
-	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/Tools/CMakeLists.txt" ],
-	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools/Tools_autogen",
+	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/Tools",
+	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "D:/iGame/LabViewer-sub/extern/Tools/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
 		[
-			"E:/LabViewer/extern/Tools/AABB_Tree.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/AABB_Tree.h",
 			"MU",
 			"EWIEGA46WW/moc_AABB_Tree.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/BVH.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/BVH.h",
 			"MU",
 			"EWIEGA46WW/moc_BVH.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/CrossField/CrossField_Slover.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/CrossField_Slover.h",
 			"MU",
 			"IXJO743BGV/moc_CrossField_Slover.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/CrossField/basic_types.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/basic_types.h",
 			"MU",
 			"IXJO743BGV/moc_basic_types.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/CrossField/basic_utils.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/basic_utils.h",
 			"MU",
 			"IXJO743BGV/moc_basic_utils.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/CrossField/cross_field.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/cross_field.h",
 			"MU",
 			"IXJO743BGV/moc_cross_field.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/CrossField/linear_solver.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/linear_solver.h",
 			"MU",
 			"IXJO743BGV/moc_linear_solver.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/TinyVector.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/TinyVector.h",
 			"MU",
 			"EWIEGA46WW/moc_TinyVector.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/TriangleKdTree.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/TriangleKdTree.h",
 			"MU",
 			"EWIEGA46WW/moc_TriangleKdTree.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/Tools/meshmath.h",
+			"D:/iGame/LabViewer-sub/extern/Tools/VoronoiDiagram.h",
+			"MU",
+			"EWIEGA46WW/moc_VoronoiDiagram.cpp",
+			null
+		],
+		[
+			"D:/iGame/LabViewer-sub/extern/Tools/meshmath.h",
 			"MU",
 			"EWIEGA46WW/moc_meshmath.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/Tools/Tools_autogen/include",
-	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/Tools/Tools_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools/Tools_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools/Tools_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"NO_DECREMENT_DEPRECATED_WARNINGS",
@@ -91,15 +99,15 @@
 	"MOC_INCLUDES" : 
 	[
 		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"E:/LabViewer/extern/boost_1_76_0",
-		"E:/LabViewer/include",
-		"E:/LabViewer/include/rapidjson/include",
-		"E:/LabViewer/include/spdlog/include",
-		"E:/LabViewer/extern",
-		"E:/LabViewer/Apps",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/freeglut/include",
-		"E:/LabViewer/extern/opencascade/opencascade770-install/inc"
+		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
+		"D:/iGame/LabViewer-sub/include",
+		"D:/iGame/LabViewer-sub/include/rapidjson/include",
+		"D:/iGame/LabViewer-sub/include/spdlog/include",
+		"D:/iGame/LabViewer-sub/extern",
+		"D:/iGame/LabViewer-sub/Apps",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/freeglut/include",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/inc"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -109,25 +117,35 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 16,
-	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 10,
+	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 12,
-	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen.dir/AutogenUsed.txt",
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/Tools/CMakeFiles/Tools_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[ "E:/LabViewer/extern/Tools/AABB_Tree.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/Tools/BVH.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/Tools/CrossField/cross_field.cc", "MU", null ],
-		[ "E:/LabViewer/extern/Tools/CrossField/linear_solver.cc", "MU", null ],
-		[ "E:/LabViewer/extern/Tools/TriangleKdTree.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/Tools/meshmath.cpp", "MU", null ]
+		[ "D:/iGame/LabViewer-sub/extern/Tools/AABB_Tree.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/Tools/BVH.cpp", "MU", null ],
+		[
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/cross_field.cc",
+			"MU",
+			null
+		],
+		[
+			"D:/iGame/LabViewer-sub/extern/Tools/CrossField/linear_solver.cc",
+			"MU",
+			null
+		],
+		[ "D:/iGame/LabViewer-sub/extern/Tools/TriangleKdTree.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/Tools/VoronoiDiagram.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/Tools/meshmath.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0
 }

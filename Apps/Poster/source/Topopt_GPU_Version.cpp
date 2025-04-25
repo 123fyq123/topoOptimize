@@ -112,7 +112,7 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::vector<double>& density,
     std::atomic_bool& is_need_update_topopt_model) {
 
-    Timer pretime;
+    Timer All;
 
     if (hexbdy.empty()) {
         std::cerr << "No Boundary Condition!" << std::endl;
@@ -127,12 +127,12 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::string model_name = IGA_CC_Helper::get_model_name(_filename);
     HexV3fMesh* mesh = new HexV3fMesh();
     file.read2HexMeshObj(mesh, true, true, true);
-    pretime.out("read 2HexMeshObj");
-
+    
+    All.out("construct_bss_new start");
     ApproximationCC AppCCSIMP(mesh, nullptr);
     AppCCSIMP.construct_bss_new();
     m_solids = AppCCSIMP.bss;
-    pretime.out("Approximation");
+    All.out("construct_bss_new end");
 
     std::filesystem::path temp_path("./temp/");
     if (!std::filesystem::exists(temp_path)) std::filesystem::create_directory(temp_path);
@@ -144,12 +144,14 @@ void TopOpt_GPU_Discrete(std::string _filename,
     std::string protect_cells_file = "./temp/" + model_name + ".prot";
 
     IGA_CC_Helper::write2Bezier(bezier_file, m_solids);    // xml
-    pretime.out("write2Bezier");
 
     IGA::CCBezierBdy ccbdy;
+    All.out("BdyConvert start");
     //IGA::BdyConvert(_filename, hexbdy, ccbdy);
-    IGA::BdyConvert_V2(_filename, hexbdy, ccbdy, AppCCSIMP);
-    pretime.out("BdyConvert");
+    //IGA::BdyConvert_V2(_filename, hexbdy, ccbdy, AppCCSIMP);
+    IGA::BdyConvert_V3(mesh, hexbdy, ccbdy, AppCCSIMP);
+    All.out("BdyConvert end");
+
     IGA_CC_Helper::write2bdy(bdy_file, ccbdy, m_solids);  //bdy
 
     // ʩ��filter��Ҫ����Ϣ
@@ -191,12 +193,12 @@ void TopOpt_GPU_Discrete(std::string _filename,
         //std::cout << "aroundcell.size() = " << aroundcell[i].size() << std::endl;
     }
 
-
+    All.out("Cuda_TopOpt_Discrete start");
     {
         std::cout << "protected_cell size = " << pro.size() << "\n";
         Cuda_TopOpt_Discrete(bezier_file, bdy_file, pro, neighbor_info,
             target_rate, max_iter, Yangs, Poisson, density, is_need_update_topopt_model);
     }
-
-
+    All.out("Cuda_TopOpt_Discrete end");
+    std::cout << _filename << "\n";
 }

@@ -1,23 +1,25 @@
 {
-	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen",
-	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core",
-	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core",
-	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen",
+	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core",
+	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
 	"CMAKE_LIST_FILES" : 
 	[
-		"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/CMakeLists.txt",
-		"E:/LabViewer/extern/OpenMesh/cmake/ACGCommon.cmake",
-		"D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.28/Modules/AddFileDependencies.cmake",
-		"E:/LabViewer/extern/OpenMesh/cmake/ACGCompiler.cmake"
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/CMakeLists.txt",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/cmake/ACGCommon.cmake",
+		"D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.29/Modules/AddFileDependencies.cmake",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/cmake/ACGCompiler.cmake"
 	],
-	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : [],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen/include",
-	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/OpenMeshCore_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"INCLUDE_TEMPLATES",
@@ -38,16 +40,16 @@
 	"MOC_INCLUDES" : 
 	[
 		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"E:/LabViewer/extern/boost_1_76_0",
-		"E:/LabViewer/include",
-		"E:/LabViewer/include/rapidjson/include",
-		"E:/LabViewer/include/spdlog/include",
-		"E:/LabViewer/extern",
-		"E:/LabViewer/Apps",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/freeglut/include",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core"
+		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
+		"D:/iGame/LabViewer-sub/include",
+		"D:/iGame/LabViewer-sub/include/rapidjson/include",
+		"D:/iGame/LabViewer-sub/include/spdlog/include",
+		"D:/iGame/LabViewer-sub/extern",
+		"D:/iGame/LabViewer-sub/Apps",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/freeglut/include",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -57,137 +59,137 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 16,
-	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/CMakeFiles/OpenMeshCore_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 10,
+	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/CMakeFiles/OpenMeshCore_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 12,
-	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/CMakeFiles/OpenMeshCore_autogen.dir/AutogenUsed.txt",
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/OpenMesh/src/OpenMesh/Core/CMakeFiles/OpenMeshCore_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/BinaryHelper.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/BinaryHelper.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/IOManager.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/IOManager.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/OMFormat.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/OMFormat.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/BaseReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/BaseReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OBJReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OBJReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OFFReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OFFReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OMReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/OMReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/PLYReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/PLYReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/reader/STLReader.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/reader/STLReader.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/BaseWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/BaseWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OBJWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OBJWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OFFWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OFFWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OMWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/OMWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/PLYWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/PLYWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/STLWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/STLWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/IO/writer/VTKWriter.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/IO/writer/VTKWriter.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Mesh/ArrayKernel.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Mesh/ArrayKernel.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Mesh/BaseKernel.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Mesh/BaseKernel.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Mesh/PolyConnectivity.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Mesh/PolyConnectivity.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Mesh/SmartHandles.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Mesh/SmartHandles.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Mesh/TriConnectivity.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Mesh/TriConnectivity.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/System/omstream.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/System/omstream.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Utils/BaseProperty.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Utils/BaseProperty.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Utils/Endian.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Utils/Endian.cc",
 			"MU",
 			null
 		],
 		[
-			"E:/LabViewer/extern/OpenMesh/src/OpenMesh/Core/Utils/RandomNumberGenerator.cc",
+			"D:/iGame/LabViewer-sub/extern/OpenMesh/src/OpenMesh/Core/Utils/RandomNumberGenerator.cc",
 			"MU",
 			null
 		]
@@ -196,5 +198,6 @@
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0
 }

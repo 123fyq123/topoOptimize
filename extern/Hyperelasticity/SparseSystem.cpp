@@ -28,7 +28,8 @@ void SparseSystem::init_geometry(const std::vector<CBSplineSolid>& geometry, int
     m_rhs.resize(dim * controlpoints,1);
     m_matrix.resize(dim * controlpoints, dim * controlpoints);
 
-    createStore(geometry);
+    //createStore(geometry);
+    createStore_V2(geometry);
 
     int num = 0;
     for (int i = 0; i < geometry.size();++i) {
@@ -334,6 +335,44 @@ void SparseSystem::createStore(const std::vector<CBSplineSolid>& geometry)
                                         m_colids[r][c] = m_bigmatrix[r].size();
                                         m_bigmatrix[r].push_back(0.0);
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void SparseSystem::createStore_V2(const std::vector<CBSplineSolid>& geometry)
+{
+    for (int i = 0; i < geometry.size(); ++i) {
+
+        const CBSplineSolid* geo = &geometry[i];
+        std::vector<double> uknots = geo->getUKnots(),
+            vknots = geo->getVKnots(), wknots = geo->getWKnots();
+        int gaussNum_u = geo->getUDegree() + 1, gaussNum_v = geo->getVDegree() + 1,
+            gaussNum_w = geo->getWDegree() + 1;
+        int gaussNum = gaussNum_u * gaussNum_v * gaussNum_w;
+        std::vector<int> localIndex(gaussNum);
+        int N_D;
+        for (int w_interval = 0; w_interval < wknots.size() - 1; ++w_interval)
+        {
+            for (int v_interval = 0; v_interval < vknots.size() - 1; ++v_interval)
+            {
+                for (int u_interval = 0; u_interval < uknots.size() - 1; ++u_interval)
+                {
+
+                    geo->active(u_interval, v_interval, w_interval, localIndex);
+                    N_D = localIndex.size();
+                    for (int m = 0; m < N_D; ++m) {
+                        for (int n = 0; n < N_D; ++n) {
+                            for (int di = 0; di < dim; di++) {
+                                int r = m_globalIndex[i][localIndex[m]] + di * controlpoints;
+                                for (int dj = 0; dj < dim; dj++) {
+
+                                    m_bigmatrix[r].push_back(0.0);
                                 }
                             }
                         }

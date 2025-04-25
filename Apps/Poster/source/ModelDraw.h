@@ -333,7 +333,7 @@ public:
 
 
 	bool hexMeshConvertToIGES();
-    bool hexMeshConvertToIGES_2(std::string model_name);
+    bool hexMeshConvertToIGES_2(std::string model_name, int Smooth_Times);
 	bool hexMeshConvertToIGES_skeletonExtraction();
 	bool mesh_to_iges(std::string meshFileName, std::string igesFileName);
 

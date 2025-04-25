@@ -1,157 +1,159 @@
 {
-	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh/BMesh_autogen",
-	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh",
-	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/BMesh",
-	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/BMesh/CMakeLists.txt" ],
-	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh/BMesh_autogen",
+	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/BMesh",
+	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "D:/iGame/LabViewer-sub/extern/BMesh/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
 		[
-			"E:/LabViewer/extern/BMesh/bmesh_solution.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/bmesh_solution.hpp",
 			"MU",
 			"EWIEGA46WW/moc_bmesh_solution.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/common.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/common.hpp",
 			"MU",
 			"EWIEGA46WW/moc_common.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/debug.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/debug.hpp",
 			"MU",
 			"EWIEGA46WW/moc_debug.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/face.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/face.hpp",
 			"MU",
 			"EWIEGA46WW/moc_face.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/fixFlip.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/fixFlip.hpp",
 			"MU",
 			"EWIEGA46WW/moc_fixFlip.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/frame.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/frame.hpp",
 			"MU",
 			"EWIEGA46WW/moc_frame.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/geometry.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/geometry.hpp",
 			"MU",
 			"EWIEGA46WW/moc_geometry.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/hex.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/hex.hpp",
 			"MU",
 			"EWIEGA46WW/moc_hex.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/interpolationCurve.h",
+			"D:/iGame/LabViewer-sub/extern/BMesh/interpolationCurve.h",
 			"MU",
 			"EWIEGA46WW/moc_interpolationCurve.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/line.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/line.hpp",
 			"MU",
 			"EWIEGA46WW/moc_line.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/local_vector.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/local_vector.hpp",
 			"MU",
 			"EWIEGA46WW/moc_local_vector.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/mlca_subdivision.h",
+			"D:/iGame/LabViewer-sub/extern/BMesh/mlca_subdivision.h",
 			"MU",
 			"EWIEGA46WW/moc_mlca_subdivision.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/node.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/node.hpp",
 			"MU",
 			"EWIEGA46WW/moc_node.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/point.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/point.hpp",
 			"MU",
 			"EWIEGA46WW/moc_point.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/point2d.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/point2d.hpp",
 			"MU",
 			"EWIEGA46WW/moc_point2d.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/project.h",
+			"D:/iGame/LabViewer-sub/extern/BMesh/project.h",
 			"MU",
 			"EWIEGA46WW/moc_project.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/quat.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/quat.hpp",
 			"MU",
 			"EWIEGA46WW/moc_quat.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/rays.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/rays.hpp",
 			"MU",
 			"EWIEGA46WW/moc_rays.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/rmf.h",
+			"D:/iGame/LabViewer-sub/extern/BMesh/rmf.h",
 			"MU",
 			"EWIEGA46WW/moc_rmf.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/simpleWithCgal.h",
+			"D:/iGame/LabViewer-sub/extern/BMesh/simpleWithCgal.h",
 			"MU",
 			"EWIEGA46WW/moc_simpleWithCgal.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/test.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/test.hpp",
 			"MU",
 			"EWIEGA46WW/moc_test.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/triangle.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/triangle.hpp",
 			"MU",
 			"EWIEGA46WW/moc_triangle.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/BMesh/triangleMesh.hpp",
+			"D:/iGame/LabViewer-sub/extern/BMesh/triangleMesh.hpp",
 			"MU",
 			"EWIEGA46WW/moc_triangleMesh.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh/BMesh_autogen/include",
-	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh/BMesh_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh/BMesh_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh/BMesh_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"NO_DECREMENT_DEPRECATED_WARNINGS",
@@ -173,24 +175,24 @@
 	"MOC_INCLUDES" : 
 	[
 		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"E:/LabViewer/extern/boost_1_76_0",
-		"E:/LabViewer/include",
-		"E:/LabViewer/include/rapidjson/include",
-		"E:/LabViewer/include/spdlog/include",
-		"E:/LabViewer/extern",
-		"E:/LabViewer/Apps",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/freeglut/include",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/opencascade/opencascade770-install/inc",
-		"D:/Qt/5.12.12/msvc2017_64/include",
-		"D:/Qt/5.12.12/msvc2017_64/include/QtWidgets",
-		"D:/Qt/5.12.12/msvc2017_64/include/QtGui",
-		"D:/Qt/5.12.12/msvc2017_64/include/QtANGLE",
-		"D:/Qt/5.12.12/msvc2017_64/include/QtCore",
-		"D:/Qt/5.12.12/msvc2017_64/mkspecs/win32-msvc",
-		"D:/Qt/5.12.12/msvc2017_64/include/QtOpenGL"
+		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
+		"D:/iGame/LabViewer-sub/include",
+		"D:/iGame/LabViewer-sub/include/rapidjson/include",
+		"D:/iGame/LabViewer-sub/include/spdlog/include",
+		"D:/iGame/LabViewer-sub/extern",
+		"D:/iGame/LabViewer-sub/Apps",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/freeglut/include",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/inc",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include/QtWidgets",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include/QtGui",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include/QtANGLE",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include/QtCore",
+		"D:/Dev/QT/5.14.2/msvc2017_64/mkspecs/win32-msvc",
+		"D:/Dev/QT/5.14.2/msvc2017_64/include/QtOpenGL"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -200,41 +202,50 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 16,
-	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh/CMakeFiles/BMesh_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 10,
+	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh/CMakeFiles/BMesh_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 12,
-	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/BMesh/CMakeFiles/BMesh_autogen.dir/AutogenUsed.txt",
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/BMesh/CMakeFiles/BMesh_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[ "E:/LabViewer/extern/BMesh/bmesh_solution.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/common.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/face.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/fixFlip.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/geometry.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/hex.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/interpolationCurve.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/line.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/local_vector.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/main.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/mlca_subdivision.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/node.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/point.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/point2d.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/project.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/quat.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/rays.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/rmf.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/simpleWithCgal.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/test.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/triangle.cc", "MU", null ],
-		[ "E:/LabViewer/extern/BMesh/triangleMesh.cc", "MU", null ]
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/bmesh_solution.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/common.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/face.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/fixFlip.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/geometry.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/hex.cc", "MU", null ],
+		[
+			"D:/iGame/LabViewer-sub/extern/BMesh/interpolationCurve.cpp",
+			"MU",
+			null
+		],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/line.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/local_vector.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/main.cc", "MU", null ],
+		[
+			"D:/iGame/LabViewer-sub/extern/BMesh/mlca_subdivision.cpp",
+			"MU",
+			null
+		],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/node.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/point.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/point2d.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/project.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/quat.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/rays.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/rmf.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/simpleWithCgal.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/test.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/triangle.cc", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/BMesh/triangleMesh.cc", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0
 }

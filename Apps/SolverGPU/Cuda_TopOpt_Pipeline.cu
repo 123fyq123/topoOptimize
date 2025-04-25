@@ -362,8 +362,9 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
 
     std::vector<CBSplineSolid> patch;
 
+    timer.out("read_xml start");
     ToolFunc::readFileXml(input_model_file, patch);
-    timer.out("read_xml");
+    timer.out("read_xml end");
 
     std::vector<CPoint> bdy_points;
     std::vector<int> bdy_type;
@@ -388,7 +389,6 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
             bdy_type.push_back(cur_type);
         }
     }
-    timer.out("add bdy info");
     gpmesh::GPLog::init(spdlog::level::trace);
 
     CUDA_ERROR(cudaDeviceReset());
@@ -404,12 +404,11 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
     gpmesh::GPSplineSolidV0 m_spline;
     //    m_spline.TopOpt_GPU_Init(patch, neumann_points, dirichlet_points);
     //    timer.out("TopOpt_GPU_Init");
+    timer.out("Init_patch start");
     m_spline.init_patch(patch);
-    timer.out("TopOpt_GPU_Geometry_Init");
+    timer.out("Init_patch end");
 
-    timer.out("before sys");
     const SparseSystem& temp_sys = m_spline.m_sparse_system;
-    timer.out("after sys");
     {
         std::vector<Cuda_TopOpt_Pipeline_nsp::Point> A, B;
         std::vector<int> global_ids;
@@ -425,7 +424,6 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
         }
 
         GetNearestIds(A, B, global_ids);
-        timer.out("after GetNearestIds");
         std::cout << "bdy_points.size() = " << bdy_points.size() << std::endl;
         auto& global_local_map = temp_sys.get_l2g_map();
 
@@ -542,6 +540,9 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
     bool flag = false;
     int pareto = 0;
 
+    timer.out("Iteration start");
+
+    Timer itertimer;
     while (topopt_iter < max_iter) {
 
         std::cout << topopt_iter++ << std::endl;
@@ -684,9 +685,12 @@ void Cuda_TopOpt_Discrete(const std::string& input_model_file,
 
         }
 
+        GPU_OC(density, target_rate, dc, isPicked);
+
         is_need_update_model = true;
     }
     std::cout << "Finsh" << std::endl;
+    itertimer.out("Iteration time");
 }
 
 

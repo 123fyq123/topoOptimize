@@ -1,42 +1,63 @@
 {
-	"BUILD_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen",
-	"CMAKE_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel",
-	"CMAKE_CURRENT_SOURCE_DIR" : "E:/LabViewer/extern/MeshKernel",
-	"CMAKE_EXECUTABLE" : "D:/Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : [ "E:/LabViewer/extern/MeshKernel/CMakeLists.txt" ],
-	"CMAKE_SOURCE_DIR" : "E:/LabViewer",
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen",
+	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/MeshKernel",
+	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/iGame/LabViewer-sub/extern/MeshKernel/CMakeLists.txt",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEConfigVersion.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEConfig.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADECompileDefinitionsAndFlags-debug.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADECompileDefinitionsAndFlags-release.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEFoundationClassesTargets.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEFoundationClassesTargets-debug.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEFoundationClassesTargets-release.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEConfigVersion.cmake",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/cmake/OpenCASCADEConfig.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
 		[
-			"E:/LabViewer/extern/MeshKernel/IO.h",
+			"D:/iGame/LabViewer-sub/extern/MeshKernel/IO.h",
 			"MU",
 			"EWIEGA46WW/moc_IO.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/MeshKernel/Mesh.h",
+			"D:/iGame/LabViewer-sub/extern/MeshKernel/Mesh.h",
 			"MU",
 			"EWIEGA46WW/moc_Mesh.cpp",
 			null
 		],
 		[
-			"E:/LabViewer/extern/MeshKernel/MeshFileIO.h",
+			"D:/iGame/LabViewer-sub/extern/MeshKernel/MeshFileIO.h",
 			"MU",
 			"EWIEGA46WW/moc_MeshFileIO.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen/include",
-	"MOC_COMPILATION_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel/MeshKernel_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
+		"HAVE_FREETYPE",
+		"HAVE_OPENGL_EXT",
+		"HAVE_TK",
 		"NO_DECREMENT_DEPRECATED_WARNINGS",
+		"UNICODE",
 		"WIN32",
+		"_CRT_NONSTDC_NO_DEPRECATE",
+		"_CRT_SECURE_NO_WARNINGS",
 		"_HAS_STD_BYTE=0",
+		"_UNICODE",
 		"_USE_MATH_DEFINES"
 	],
 	"MOC_DEPEND_FILTERS" : 
@@ -49,14 +70,15 @@
 	"MOC_INCLUDES" : 
 	[
 		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"E:/LabViewer/extern/boost_1_76_0",
-		"E:/LabViewer/include",
-		"E:/LabViewer/include/rapidjson/include",
-		"E:/LabViewer/include/spdlog/include",
-		"E:/LabViewer/extern",
-		"E:/LabViewer/Apps",
-		"E:/LabViewer/extern/OpenMesh/src",
-		"E:/LabViewer/extern/freeglut/include"
+		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
+		"D:/iGame/LabViewer-sub/include",
+		"D:/iGame/LabViewer-sub/include/rapidjson/include",
+		"D:/iGame/LabViewer-sub/include/spdlog/include",
+		"D:/iGame/LabViewer-sub/extern",
+		"D:/iGame/LabViewer-sub/Apps",
+		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
+		"D:/iGame/LabViewer-sub/extern/freeglut/include",
+		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/inc"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -66,22 +88,23 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 16,
-	"PARSE_CACHE_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel/CMakeFiles/MeshKernel_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Qt/5.12.12/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 10,
+	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel/CMakeFiles/MeshKernel_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
-	"QT_VERSION_MINOR" : 12,
-	"SETTINGS_FILE" : "E:/LabViewer/out/build/x64-Debug/extern/MeshKernel/CMakeFiles/MeshKernel_autogen.dir/AutogenUsed.txt",
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/MeshKernel/CMakeFiles/MeshKernel_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[ "E:/LabViewer/extern/MeshKernel/IO.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/MeshKernel/Mesh.cpp", "MU", null ],
-		[ "E:/LabViewer/extern/MeshKernel/MeshFileIO.cpp", "MU", null ]
+		[ "D:/iGame/LabViewer-sub/extern/MeshKernel/IO.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/MeshKernel/Mesh.cpp", "MU", null ],
+		[ "D:/iGame/LabViewer-sub/extern/MeshKernel/MeshFileIO.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
 	"VERBOSITY" : 0
 }
