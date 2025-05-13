@@ -75,13 +75,13 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
         ui->PoSongBi->setText("0.3");
         ui->PoSongBi->setValidator(validator_2);
 
-		ui->Thermal_alpha->setText("0.5");
+		ui->Thermal_alpha->setText("0.2");
 		ui->Thermal_alpha->setValidator(validator_2);
 
-		ui->Thermal_stepTime->setText("1.0");
+		ui->Thermal_stepTime->setText("0.001");
 		ui->Thermal_stepTime->setValidator(validator_2);
 
-		ui->Thermal_SumTime->setText("100.0");
+		ui->Thermal_SumTime->setText("1.0");
 		ui->Thermal_SumTime->setValidator(validator_2);
 
 		QIntValidator* validator_3 = new QIntValidator();
@@ -2262,27 +2262,52 @@ void iGamePoster::IGA_Thermal() {
 	std::string filename = poster_filename;
 
 	HexV3fMesh* mesh = new HexV3fMesh();
-	BSplineSolid m_solids;
 	FileHandler file(filename);
-	size_t patch_size = ui->openGLWidget->hexMesh->CellSize();
 
 	std::cout << "read2HexMeshObj" << std::endl;
 	file.read2HexMeshObj(mesh, true, true, true);
-	ApproximationCC AppCCSIMP(mesh, nullptr);
-	AppCCSIMP.construct_bss_new();
-	m_solids = AppCCSIMP.bss;
 
-	IsoThermalSolver* ts = new IsoThermalSolver(ui->Thermal_alpha->text().toDouble(), 
-												ui->Thermal_stepTime->text().toDouble(), 
-												ui->Thermal_SumTime->text().toDouble());
+	double dx = 0.0;
+	const auto& d_cell = mesh->cells_[0];
+	const auto& d_v_h = d_cell.vertex_[0];
+	const auto& d_v_e = d_cell.vertex_[4];
 
-	for (const auto& solid : m_solids.Local_V3f) {
+	dx = std::abs(mesh->vertices_[d_v_h].x - mesh->vertices_[d_v_e].x + mesh->vertices_[d_v_h].y - mesh->vertices_[d_v_e].y + mesh->vertices_[d_v_h].z - mesh->vertices_[d_v_e].z) / 3;
+
+	std::cout << "dx:" << dx << std::endl;
+	IsoThermalSolver* ts = new IsoThermalSolver(ui->Thermal_alpha->text().toDouble(),
+		ui->Thermal_stepTime->text().toDouble(),
+		ui->Thermal_SumTime->text().toDouble(),
+		dx);
+
+	for (const auto& cell : mesh->cells_) {
 		CubicBezierSolid cs;
+
 		int Lp_count = 0;
-		for (const auto& Lp : solid) {
-			cs.control_points.push_back(Eigen::Vector4d(Lp.x, Lp.y, Lp.z, Lp_count++));
+		std::vector<VertexHandle> vhs;
+		for (const auto& v_h : cell.vertex_) {
+			vhs.push_back(v_h);
 		}
-		std::cout << Lp_count << std::endl;
+
+		for (int k = 0; k <= 3; k++) {
+			V3f v1 = ((mesh->vertices_[vhs[0]] * k) + (mesh->vertices_[vhs[4]] * (3 - k))) / 3;
+			V3f v2 = ((mesh->vertices_[vhs[1]] * k) + (mesh->vertices_[vhs[5]] * (3 - k))) / 3;
+			V3f v3 = ((mesh->vertices_[vhs[2]] * k) + (mesh->vertices_[vhs[6]] * (3 - k))) / 3;
+			V3f v4 = ((mesh->vertices_[vhs[3]] * k) + (mesh->vertices_[vhs[7]] * (3 - k))) / 3;
+
+			for (int i = 0; i <= 3; i++) {
+				V3f v_s = ((v1 * i) + (v4 * (3 - i))) / 3;
+				V3f v_t = ((v2 * i) + (v3 * (3 - i))) / 3;
+
+				for (int j = 0; j <= 3; j++) {
+					cs.control_points.push_back(Eigen::Vector4d((v_s.x * j + v_t.x * (3 - j)) / 3, (v_s.y * j + v_t.y * (3 - j)) / 3, (v_s.z * j + v_t.z * (3 - j)) / 3, Lp_count++));
+				}
+			}
+
+			//std::cout << v1.x << v1.y << v1.z << std::endl;
+		}
+
+
 		ts->addBezierSolid(cs);
 	}
 
