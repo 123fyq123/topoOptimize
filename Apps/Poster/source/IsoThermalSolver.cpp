@@ -336,10 +336,11 @@ void IsoThermalSolver::outputVTK(int step) const {
         const auto& id = entry.second.global_id;
         file << U_old_(id) << "\n";
     }
+    file.close();
 }
 
 // 主运行流程
-void IsoThermalSolver::run() {
+void IsoThermalSolver::run(std::vector<std::pair<Eigen::Vector4d, double>>& TemperatureField) {
     buildGlobalDOFMap();
     int num_steps = total_time_ / dt_;
 
@@ -354,5 +355,17 @@ void IsoThermalSolver::run() {
         outputVTK(step);
         std::cout << "Running...  " << step + 1 << "/" << num_steps << std::endl;
     }
+
+    size_t max_idx = 0;
+    for (const auto& entry : global_ctrl_pts_) {
+        max_idx = std::max(max_idx, entry.second.global_id);
+    }
+    TemperatureField = std::vector<std::pair<Eigen::Vector4d, double>>(max_idx + 1, {{0,0,0,0}, 0.0});
+    for (const auto& entry : global_ctrl_pts_) {
+        const auto& pt_info = entry.second;
+        size_t id = pt_info.global_id;
+        TemperatureField[id] = std::make_pair(pt_info.coord, U_old_(id));
+    }
+
     std::cout << "done" << std::endl;
 }

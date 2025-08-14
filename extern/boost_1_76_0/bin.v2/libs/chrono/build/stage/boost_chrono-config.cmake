@@ -15,10 +15,10 @@ mark_as_advanced(boost_chrono_DIR)
 get_filename_component(_BOOST_CMAKEDIR "${CMAKE_CURRENT_LIST_DIR}/../" REALPATH)
 
 # If the computed and the original directories are symlink-equivalent, use original
-if(EXISTS "C:/Users/74680/Desktop/SSF/boost_1_76_0/boost_1_76_0/stage/lib/cmake")
-  get_filename_component(_BOOST_CMAKEDIR_ORIGINAL "C:/Users/74680/Desktop/SSF/boost_1_76_0/boost_1_76_0/stage/lib/cmake" REALPATH)
+if(EXISTS "D:/Git_Clone/LabViewer-sub-4.21/extern/boost_1_76_0/stage/lib/cmake")
+  get_filename_component(_BOOST_CMAKEDIR_ORIGINAL "D:/Git_Clone/LabViewer-sub-4.21/extern/boost_1_76_0/stage/lib/cmake" REALPATH)
   if(_BOOST_CMAKEDIR STREQUAL _BOOST_CMAKEDIR_ORIGINAL)
-    set(_BOOST_CMAKEDIR "C:/Users/74680/Desktop/SSF/boost_1_76_0/boost_1_76_0/stage/lib/cmake")
+    set(_BOOST_CMAKEDIR "D:/Git_Clone/LabViewer-sub-4.21/extern/boost_1_76_0/stage/lib/cmake")
   endif()
   unset(_BOOST_CMAKEDIR_ORIGINAL)
 endif()

@@ -19,7 +19,7 @@
 
 #include "Gnuplot.hh"
 #include <stdarg.h>
-#ifdef WIN32
+#ifdef _WIN32
 #  include <io.h>
 #else
 #  include <fcntl.h>  // X_OK
@@ -32,7 +32,7 @@
 #include <list>
 #include <algorithm>
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #  define pclose _pclose
 #  define popen  _popen
 #  define access _access
@@ -45,7 +45,7 @@
 #  define MKTEMP_AND_CHECK_FAILED(name) (mkstemp(name) == -1)
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 
 #include <string.h>
 #else
@@ -99,7 +99,7 @@ stringtok (Container &container, string const &in,
 
 // ----------------------------------------------------------------------------
 
-#ifdef WIN32
+#ifdef _WIN32
   std::string Gnuplot::gnuplot_executable_ = "pgnuplot.exe";
 #else
   std::string Gnuplot::gnuplot_executable_ = "gnuplot";
@@ -353,7 +353,7 @@ void Gnuplot::plot_x(vector<double> d, const string &title)
 {
   ofstream tmp;
   ostringstream cmdstr;
-#ifdef WIN32
+#ifdef _WIN32
   char name[] = "gnuplotiXXXXXX";
 #else
   char name[] = "/tmp/gnuplotiXXXXXX";
@@ -367,7 +367,7 @@ void Gnuplot::plot_x(vector<double> d, const string &title)
   
   //
   //open temporary files for output
-#ifdef WIN32
+#ifdef _WIN32
   if ( _mktemp(name) == nullptr)
 #else
   if ( mkstemp(name) == -1 )
@@ -422,7 +422,7 @@ void Gnuplot::plot_xy(vector<double> x, vector<double> y, const string &title)
 {
   ofstream tmp;
   ostringstream cmdstr;
-#ifdef WIN32
+#ifdef _WIN32
   char name[] = "gnuplotiXXXXXX";
 #else
   char name[] = "/tmp/gnuplotiXXXXXX";

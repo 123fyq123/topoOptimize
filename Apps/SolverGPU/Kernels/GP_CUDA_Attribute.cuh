@@ -1,7 +1,7 @@
 #pragma once
 #include "Kernels/GP_CUDA_Util.cuh"
 #include <cub/block/block_reduce.cuh>
-
+#include "GP_Context.h"
 #include "../Util/GP_Macros.h"
 
 

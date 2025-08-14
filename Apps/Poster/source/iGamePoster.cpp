@@ -27,9 +27,9 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
     ui->btnTestDetFaces->setVisible(false);
     ui->btnTestResample->setVisible(false);
 
-	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
-	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
-	//ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
+	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
+	ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
+    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tab_3));  // 删除Tab，实际效果是隐藏Tab
 
     {
         QDoubleValidator *validator_2 = new QDoubleValidator();
@@ -2272,7 +2272,7 @@ void iGamePoster::IGA_Thermal() {
 	const auto& d_v_h = d_cell.vertex_[0];
 	const auto& d_v_e = d_cell.vertex_[4];
 
-	dx = std::abs(mesh->vertices_[d_v_h].x - mesh->vertices_[d_v_e].x + mesh->vertices_[d_v_h].y - mesh->vertices_[d_v_e].y + mesh->vertices_[d_v_h].z - mesh->vertices_[d_v_e].z) / 3;
+	dx = std::abs(mesh->vertices_[d_v_h].x - mesh->vertices_[d_v_e].x + mesh->vertices_[d_v_h].y - mesh->vertices_[d_v_e].y + mesh->vertices_[d_v_h].z - mesh->vertices_[d_v_e].z);
 
 	std::cout << "dx:" << dx << std::endl;
 	IsoThermalSolver* ts = new IsoThermalSolver(ui->Thermal_alpha->text().toDouble(),
@@ -2284,34 +2284,76 @@ void iGamePoster::IGA_Thermal() {
 		CubicBezierSolid cs;
 
 		int Lp_count = 0;
-		std::vector<VertexHandle> vhs;
-		for (const auto& v_h : cell.vertex_) {
-			vhs.push_back(v_h);
-		}
-
-		for (int k = 0; k <= 3; k++) {
-			V3f v1 = ((mesh->vertices_[vhs[0]] * k) + (mesh->vertices_[vhs[4]] * (3 - k))) / 3;
-			V3f v2 = ((mesh->vertices_[vhs[1]] * k) + (mesh->vertices_[vhs[5]] * (3 - k))) / 3;
-			V3f v3 = ((mesh->vertices_[vhs[2]] * k) + (mesh->vertices_[vhs[6]] * (3 - k))) / 3;
-			V3f v4 = ((mesh->vertices_[vhs[3]] * k) + (mesh->vertices_[vhs[7]] * (3 - k))) / 3;
-
-			for (int i = 0; i <= 3; i++) {
-				V3f v_s = ((v1 * i) + (v4 * (3 - i))) / 3;
-				V3f v_t = ((v2 * i) + (v3 * (3 - i))) / 3;
-
-				for (int j = 0; j <= 3; j++) {
-					cs.control_points.push_back(Eigen::Vector4d((v_s.x * j + v_t.x * (3 - j)) / 3, (v_s.y * j + v_t.y * (3 - j)) / 3, (v_s.z * j + v_t.z * (3 - j)) / 3, Lp_count++));
-				}
-			}
-
-			//std::cout << v1.x << v1.y << v1.z << std::endl;
-		}
-
+//		std::vector<VertexHandle> vhs;
+//		for (const auto& v_h : cell.vertex_) {
+//			vhs.push_back(v_h);
+//		}
+//
+//		for (int k = 0; k <= 3; k++) {
+//			V3f v1 = ((mesh->vertices_[vhs[0]] * k) + (mesh->vertices_[vhs[4]] * (3 - k))) / 3;
+//			V3f v2 = ((mesh->vertices_[vhs[1]] * k) + (mesh->vertices_[vhs[5]] * (3 - k))) / 3;
+//			V3f v3 = ((mesh->vertices_[vhs[2]] * k) + (mesh->vertices_[vhs[6]] * (3 - k))) / 3;
+//			V3f v4 = ((mesh->vertices_[vhs[3]] * k) + (mesh->vertices_[vhs[7]] * (3 - k))) / 3;
+//
+//			for (int i = 0; i <= 3; i++) {
+//				V3f v_s = ((v1 * i) + (v4 * (3 - i))) / 3;
+//				V3f v_t = ((v2 * i) + (v3 * (3 - i))) / 3;
+//
+//				for (int j = 0; j <= 3; j++) {
+//					cs.control_points.push_back(Eigen::Vector4d((v_s.x * j + v_t.x * (3 - j)) / 3, (v_s.y * j + v_t.y * (3 - j)) / 3, (v_s.z * j + v_t.z * (3 - j)) / 3, Lp_count++));
+//				}
+//			}
+//
+//			//std::cout << v1.x << v1.y << v1.z << std::endl;
+//		}
+        for (const auto& v_h : cell.vertex_) {
+            cs.control_points.push_back(Eigen::Vector4d(mesh->vertices_[v_h].x, mesh->vertices_[v_h].y, mesh->vertices_[v_h].z, Lp_count++));
+        }
 
 		ts->addBezierSolid(cs);
 	}
 
-	ts->run();
+    std::vector<std::pair<Eigen::Vector4d, double>> TemperatureField;
+    ts->run(TemperatureField);
+
+    if (ui && ui->openGLWidget) {
+        std::vector<double> sliced_temp(TemperatureField.size(), 0.0);
+
+        for (size_t i = 0; i < TemperatureField.size(); ++i) {
+            const auto& coord = TemperatureField[i].first;
+            const double temp = TemperatureField[i].second;
+
+            double x2 = coord.x();
+            double y2 = coord.y();
+            double z2 = coord.z();
+            for (const auto& cell : mesh->cells_){
+                bool fl = false;
+                for (const auto& v_h : cell.vertex_) {
+                    double x1 = mesh->vertices_[v_h].x;
+                    double y1 = mesh->vertices_[v_h].y;
+                    double z1 = mesh->vertices_[v_h].z;
+                    double dist = std::abs(x1 - x2) + std::abs(y1 - y2) + std::abs(z1 - z2);
+                    if (dist < 1e-4){
+                        sliced_temp[v_h] = temp;
+                        fl = true;
+                        break;
+                    }
+                }
+                if(fl){
+                    break;
+                }
+            }
+        }
+
+        ui->openGLWidget->analysis_data[0] = sliced_temp;
+        ui->openGLWidget->analysis_data[1] = sliced_temp;
+        ui->openGLWidget->analysis_data[2] = sliced_temp;
+        ui->openGLWidget->analysis_flag = true;
+        ui->openGLWidget->analysis_mode = 0;
+        ui->openGLWidget->SetDrawModule(ViewOpenGL::HEXMESH);
+        ui->openGLWidget->updateDrawData();
+        QApplication::processEvents();
+    }
 }
 
 void iGamePoster::IGA_hyperelasticity_simulation() {

@@ -21,7 +21,8 @@ add_executable(${APP_NAME} ${SUB_SOURCE_FILES} ${SOURCE_FILES} ${QRC_FILES} ${UI
         source/nanoflann.h
         source/Topopt_GPU_Version.cpp
         source/Macro_Helper.h
-        source/CoverageAxis.h)
+        source/CoverageAxis.h
+        source/BoostThrowException.cpp)
 
 if(WIN32)
     add_custom_command(TARGET ${APP_NAME}

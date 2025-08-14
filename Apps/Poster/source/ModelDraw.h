@@ -214,7 +214,18 @@ public:
     std::vector<int> fix_f_idx;
     std::vector<int> fix_c_idx;
 
+    //剖切
+    std::vector<V3f> sub_vertices;
+    std::vector<std::array<int, 8>> sub_hexahedra;
+    bool use_sub_hexmesh = false;
 
+    void setSubHexMesh(const std::vector<V3f>& verts, const std::vector<std::array<int, 8>>& cells) {
+        sub_vertices = verts;
+        sub_hexahedra = cells;
+        use_sub_hexmesh = true;
+        updateDrawData_SubHexMesh();
+    }
+    void updateDrawData_SubHexMesh();
 
 	// 选择框数据
 	vector<QVector3D> selected_rectangle;

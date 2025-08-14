@@ -6,7 +6,9 @@ target_compile_definitions(GPU_header_lib
 )
 file(GLOB INCLUDE_FILES *.h)
 target_include_directories(GPU_header_lib
-		INTERFACE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
+		INTERFACE
+		${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
+		"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.4/include"
 		${INCLUDE_FILES}
 )
 
@@ -60,6 +62,7 @@ add_library(${TargetName}
 		GP_Spline_Test.h Eigen_helper.h GP_Spline_Attribute.h GP_Reduce_Handle.h GP_Param.cpp GP_Spline_v0.h GP_BoundaryCPoint.h GP_BoundaryCPoint.cpp
 		Cuda_Linear_Elastic_Solver.h
         Cuda_TopOpt_Pipeline.h
+#		Cuda_TopOpt_MultiRes.h
 		Kernels/GP_Debug.cu)
 
 set(SOURCE_LIST
@@ -75,6 +78,7 @@ set(SOURCE_LIST
 		CPU_TimeIntegrator_Hyperelasticity_Solver.cpp
 		GP_Spline_CPU.cpp
 		GP_IGA_CPU_Kernel.cpp
+#		Cuda_TopOpt_MultiRes.cu
 		)
 
 target_sources(${TargetName}

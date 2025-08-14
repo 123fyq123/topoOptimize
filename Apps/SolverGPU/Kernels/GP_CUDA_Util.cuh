@@ -47,7 +47,7 @@ __device__ __forceinline__ uint16_t atomicAdd(uint16_t* address, uint16_t val)
         newval = static_cast<uint16_t>(val + old_bytes);
         newval = is_32_align ? (old & 0xffff) | (newval << 16) :
                                (old & 0xffff0000) | newval;
-        old    = atomicCAS(address_as_ui, assumed, newval);
+        old    = ::atomicCAS(address_as_ui, assumed, newval);
     } while (assumed != old);
     return (is_32_align) ? uint16_t(old >> 16) : uint16_t(old & 0xffff);
 }
@@ -72,7 +72,7 @@ __device__ __forceinline__ uint8_t atomicAdd(uint8_t* address, uint8_t val)
         // negative signed values with 1's (e.g. signed -1 = unsigned ~0).
         newval = static_cast<uint8_t>(val + old_byte);
         newval = (old & ~(0x000000ff << shift)) | (newval << shift);
-        old    = atomicCAS(address_as_ui, assumed, newval);
+        old    = ::atomicCAS(address_as_ui, assumed, newval);
     } while (assumed != old);
 
     return uint8_t((old >> shift) & 0xff);
@@ -134,7 +134,7 @@ __device__ __forceinline__ unsigned short int atomicCAS(
 __device__ __forceinline__ unsigned dynamic_smem_size()
 {
     unsigned ret;
-    asm volatile("mov.u32 %0, %dynamic_smem_size;" : "=r"(ret));
+    asm volatile("mov.u32 %0, %%dynamic_smem_size;" : "=r"(ret));
     return ret;
 }
 

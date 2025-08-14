@@ -1260,68 +1260,186 @@ void ModelDraw::saveTetMesh(std::string fileName) {
 
 }
 
+void ModelDraw::updateDrawData_SubHexMesh() {
+    vertices_data.clear();
+    tri_cnt = quad_cnt = 0;
+    v_cnt = sub_vertices.size();
 
+    for (const auto& cell : sub_hexahedra) {
+        const int face[6][4] = {
+                {0,1,2,3}, {4,5,6,7}, {0,1,5,4},
+                {2,3,7,6}, {0,3,7,4}, {1,2,6,5}
+        };
+
+        for (int f = 0; f < 6; ++f) {
+            for (int i = 0; i < 4; ++i) {
+                const V3f& pt = sub_vertices[cell[face[f][i]]];
+                vertices_data.push_back(pt.x);
+                vertices_data.push_back(pt.y);
+                vertices_data.push_back(pt.z);
+            }
+            ++quad_cnt;
+        }
+    }
+
+    update();
+}
+
+
+
+//void ModelDraw::drawHexMesh() {
+//	core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
+//	//shaderProgram.setUniformValue("colormode", 606);
+//	glDepthRange(0.01, 1.0);
+//	shaderProgram.setUniformValue("colormode", -1);
+//	glPointSize(9);
+//	core->glDrawArrays(GL_POINTS, quad_cnt * 4, used_last_vcnt);
+//	core->glDrawArrays(GL_QUADS, 0, quad_cnt * 4);
+//
+//
+//	if (drawMeshLine && drawmode != DrawMode::POINTS && drawmode != DrawMode::BOUNDLINE) {
+//		// 绘制线框
+//		glEnable(GL_POLYGON_OFFSET_FILL);
+//		glPolygonOffset(1.0, 1.0);
+//		if (editmodel == EditModel::PICKITEM && pickType == PickType::PickEdge) {
+//			glLineWidth(meshline_width * 2.5f);
+//		}
+//		else {
+//			glLineWidth(meshline_width);
+//		}
+//
+//		shaderProgram.setUniformValue("colormode", 530);
+//		for (int i = 0; i < quad_cnt; ++i) {
+//			core->glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+//		}
+//
+//		{
+//			// 绘制约束
+//			shaderProgram.setUniformValue("colormode", 231);
+//			glDepthRange(0.01, 0.99999);
+//			glPointSize(7);
+//			glBegin(GL_POINTS);
+//			for (auto& fp : spc_id) {
+//				VH vh(fp.first);
+//				if (!hexMesh->isValid(vh)) continue;
+//				auto& v = hexMesh->vertices(vh);
+//				glVertex3d(v.x(), v.y(), v.z());
+//			}
+//			glEnd();
+//
+//			shaderProgram.setUniformValue("colormode", 232);
+//			glBegin(GL_POINTS);
+//			for (auto& fp : force_id) {
+//				VH vh(fp.first);
+//				if (!hexMesh->isValid(vh)) continue;
+//				auto& v = hexMesh->vertices(vh);
+//				glVertex3d(v.x(), v.y(), v.z());
+//			}
+//			glEnd();
+//
+//		}
+//
+//
+//	}
+//	// 请在绘制其他物体后再绘制半透明物体
+//	glDepthRange(0.01, 2.0);
+//	shaderProgram.setUniformValue("colormode", 518);// 半透明
+//	core->glDrawArrays(GL_QUADS, quad_cnt * 4 + used_last_vcnt, translucence_vertices_data.size() / 6);
+//
+//	update();
+//}
 
 void ModelDraw::drawHexMesh() {
-	core->glBindVertexArray(VAO);	// 前面已经记录了VBO和EBO现在只需一步调用即可
-	//shaderProgram.setUniformValue("colormode", 606);
-	glDepthRange(0.01, 1.0);
-	shaderProgram.setUniformValue("colormode", -1);
-	glPointSize(9);
-	core->glDrawArrays(GL_POINTS, quad_cnt * 4, used_last_vcnt);
-	core->glDrawArrays(GL_QUADS, 0, quad_cnt * 4);
+    core->glBindVertexArray(VAO);
+    glDepthRange(0.01, 1.0);
+    shaderProgram.setUniformValue("colormode", -1);
 
+    if (use_sub_hexmesh) {
+        glBegin(GL_QUADS);
 
-	if (drawMeshLine && drawmode != DrawMode::POINTS && drawmode != DrawMode::BOUNDLINE) {
-		// 绘制线框
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0, 1.0);
-		if (editmodel == EditModel::PICKITEM && pickType == PickType::PickEdge) {
-			glLineWidth(meshline_width * 2.5f);
-		}
-		else {
-			glLineWidth(meshline_width);
-		}
+        const int face[6][4] = {
+                {0,1,2,3}, {4,5,6,7}, {0,1,5,4},
+                {2,3,7,6}, {0,3,7,4}, {1,2,6,5}
+        };
 
-		shaderProgram.setUniformValue("colormode", 530);
-		for (int i = 0; i < quad_cnt; ++i) {
-			core->glDrawArrays(GL_LINE_LOOP, i * 4, 4);
-		}
+        for (const auto& cell : sub_hexahedra) {
+            for (int f = 0; f < 6; ++f) {
+                for (int i = 0; i < 4; ++i) {
+                    const V3f& pt = sub_vertices[cell[face[f][i]]];
 
-		{
-			// 绘制约束
-			shaderProgram.setUniformValue("colormode", 231);
-			glDepthRange(0.01, 0.99999);
-			glPointSize(7);
-			glBegin(GL_POINTS);
-			for (auto& fp : spc_id) {
-				VH vh(fp.first);
-				if (!hexMesh->isValid(vh)) continue;
-				auto& v = hexMesh->vertices(vh);
-				glVertex3d(v.x(), v.y(), v.z());
-			}
-			glEnd();
+                    double val = 0.0;
+                    if (!analysis_data[0].empty())
+                        val = analysis_data[0][cell[face[f][i]]];
+                    Vector3d color = getColor(val / 100.0); // 假设最大值100
+                    glColor3d(color[0], color[1], color[2]);
 
-			shaderProgram.setUniformValue("colormode", 232);
-			glBegin(GL_POINTS);
-			for (auto& fp : force_id) {
-				VH vh(fp.first);
-				if (!hexMesh->isValid(vh)) continue;
-				auto& v = hexMesh->vertices(vh);
-				glVertex3d(v.x(), v.y(), v.z());
-			}
-			glEnd();
+                    glVertex3d(pt.x, pt.y, pt.z);
+                }
+            }
+        }
 
-		}
+        glEnd();
 
+        if (drawMeshLine && drawmode != DrawMode::POINTS) {
+            glLineWidth(meshline_width);
+            glColor3f(0.0, 0.0, 0.0); // 黑色线框
+            glBegin(GL_LINES);
+            for (const auto& cell : sub_hexahedra) {
+                for (int f = 0; f < 6; ++f) {
+                    for (int i = 0; i < 4; ++i) {
+                        const V3f& pt1 = sub_vertices[cell[face[f][i]]];
+                        const V3f& pt2 = sub_vertices[cell[face[f][(i + 1) % 4]]];
+                        glVertex3d(pt1.x, pt1.y, pt1.z);
+                        glVertex3d(pt2.x, pt2.y, pt2.z);
+                    }
+                }
+            }
+            glEnd();
+        }
+    }
+    else {
+        glPointSize(9);
+        core->glDrawArrays(GL_POINTS, quad_cnt * 4, used_last_vcnt);
+        core->glDrawArrays(GL_QUADS, 0, quad_cnt * 4);
 
-	}
-	// 请在绘制其他物体后再绘制半透明物体
-	glDepthRange(0.01, 2.0);
-	shaderProgram.setUniformValue("colormode", 518);// 半透明
-	core->glDrawArrays(GL_QUADS, quad_cnt * 4 + used_last_vcnt, translucence_vertices_data.size() / 6);
+        if (drawMeshLine && drawmode != DrawMode::POINTS && drawmode != DrawMode::BOUNDLINE) {
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glPolygonOffset(1.0, 1.0);
+            glLineWidth(meshline_width);
+            shaderProgram.setUniformValue("colormode", 530);
+            for (int i = 0; i < quad_cnt; ++i) {
+                core->glDrawArrays(GL_LINE_LOOP, i * 4, 4);
+            }
+        }
 
-	update();
+        // 约束点绘制（使用 hexMesh）
+        shaderProgram.setUniformValue("colormode", 231);
+        glDepthRange(0.01, 0.99999);
+        glPointSize(7);
+        glBegin(GL_POINTS);
+        for (auto& fp : spc_id) {
+            VH vh(fp.first);
+            if (!hexMesh->isValid(vh)) continue;
+            auto& v = hexMesh->vertices(vh);
+            glVertex3d(v.x(), v.y(), v.z());
+        }
+        glEnd();
+
+        glBegin(GL_POINTS);
+        shaderProgram.setUniformValue("colormode", 232);
+        for (auto& fp : force_id) {
+            VH vh(fp.first);
+            if (!hexMesh->isValid(vh)) continue;
+            auto& v = hexMesh->vertices(vh);
+            glVertex3d(v.x(), v.y(), v.z());
+        }
+        glEnd();
+    }
+
+    glDepthRange(0.01, 2.0);
+    shaderProgram.setUniformValue("colormode", 518);// 半透明
+    core->glDrawArrays(GL_QUADS, quad_cnt * 4 + used_last_vcnt, translucence_vertices_data.size() / 6);
+    update();
 }
 
 void ModelDraw::drawPolyMesh_OPT() {
@@ -5667,7 +5785,7 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 				MeshKernel::iGameCellHandle ch(i);
 				auto& c = hexMesh->cells(ch);
 				
-				if (!hexMesh->isOnBoundary(ch)) continue;
+				//if (!hexMesh->isOnBoundary(ch)) continue;
 				//std::cout << "isOnBoundary ok " << std::endl;
 				auto vhs = c.getVertexHandle();
 				//std::cout << "iGame ch = " << ch << ", vhs: ";
@@ -5697,12 +5815,22 @@ void ModelDraw::updateDrawData_HexMesh_Analysis() {
 
 		unordered_map<int, bool> isDrawed;
 		for (auto& cp : cells) {
-			if (!hexMesh->isOnBoundary(cp.first)) continue;
+			//if (!hexMesh->isOnBoundary(cp.first)) continue;
 			auto fhs = cp.second.getFaceHandle();
 			for (auto& fh : fhs) {
 				if (isDrawed.count(fh)) continue;
 				isDrawed[fh] = true;
 				auto vhs = hexMesh->faces(fh).getVertexHandle();
+
+                bool all_on_left_or_slice = true;
+                for (auto& vh : vhs) {
+                    if (hexMesh->vertices(vh).x() > 0.5 + 1e-4) {
+                        all_on_left_or_slice = false;
+                        break;
+                    }
+                }
+                if (!all_on_left_or_slice) continue;
+
 				for (auto& vh : vhs) {
 					auto& v = hexMesh->vertices(vh);
 					Vector3d color = getColor(vex_val[vh]);

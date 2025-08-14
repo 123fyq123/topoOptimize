@@ -5,6 +5,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include <Common/GeometryKernel.h>
 
 
 // 三次Bezier体定义
@@ -16,7 +17,7 @@ class IsoThermalSolver {
 public:
     IsoThermalSolver(double alpha, double dt, double total_time, double dx);
     void addBezierSolid(const CubicBezierSolid& solid);
-    void run();
+    void run(std::vector<std::pair<Eigen::Vector4d, double>>& TemperatureField);
 
 private:
     // 物理参数
