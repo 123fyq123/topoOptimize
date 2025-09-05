@@ -8,7 +8,7 @@
 #include "CatmullClarkBezierSolver.h"
 #include "Timer.h"
 #include "SolverGPU/Cuda_TopOpt_Pipeline.h"
-//#include "SolverGPU/Cuda_TopOpt_MultiRes.h"
+#include "SolverGPU/Cuda_TopOpt_MultiRes.h"
 
 void TopOpt_GPU_V0(      std::string _filename,
                          IGA::HexBdy& hexbdy,
@@ -96,10 +96,10 @@ void TopOpt_GPU_V0(      std::string _filename,
 
     {
         std::cout <<"protected_cell size = " << pro.size() <<"\n";
-        Cuda_TopOpt_Pipeline(bezier_file, bdy_file, pro, neighbor_info,
-                              target_rate, max_iter, Yangs, Poisson, density, is_need_update_topopt_model);
-//        MultiRes_TopOpt_Pipeline(bezier_file, bdy_file, pro, neighbor_info,
-//                             target_rate, max_iter, Yangs, Poisson, 2, density, is_need_update_topopt_model);
+//        Cuda_TopOpt_Pipeline(bezier_file, bdy_file, pro, neighbor_info,
+//                              target_rate, max_iter, Yangs, Poisson, density, is_need_update_topopt_model);
+        MultiRes_TopOpt_Pipeline(bezier_file, bdy_file, pro, neighbor_info,
+                             target_rate, max_iter, Yangs, Poisson, 2, density, is_need_update_topopt_model);
     }
 
 

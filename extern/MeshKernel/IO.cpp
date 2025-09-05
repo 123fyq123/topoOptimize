@@ -335,35 +335,29 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadIgesFile(const std::string& _InputFi
     IGESControl_Reader aReader_Iges;
     // 设置IGES文件路径
     aReader_Iges.ReadFile(_InputFile.c_str());
-    // 打印读取错误信息（如果有）
+
     IFSelect_PrintCount mode = IFSelect_ItemsByEntity;
     Interface_Static::SetCVal("xstep.cascade.unit", "M");
     aReader_Iges.PrintCheckLoad(Standard_False, mode);
 
-    // 获取IGES模型
     Handle_IGESData_IGESModel model = aReader_Iges.IGESModel();
 
-    // 获取模型中的实体数量
-    //Standard_Integer entityCount = model->NbEntities();
-    Standard_Integer NbRoots = aReader_Iges.NbRootsForTransfer();// 获取可转移根的数量
-    Standard_Integer num = aReader_Iges.TransferRoots();//翻译所有可转换的根，并返回//成功翻译的次数
-
     Standard_Integer modelNum = aReader_Iges.NbShapes();
-    // 遍历模型中的实体
+
     std::vector<iGameVertex> vertices;
     std::vector<std::vector<iGameVertexHandle>> faces;
     Standard_Integer Vertex_size = 0, Face_size = 0;
 
     struct Vertex {
         double x, y, z;
-        size_t id;  // 添加一个成员变量用于存储编号
+        size_t id;
 
-        struct hash {   // 自定义哈希函数
+        struct hash {
             size_t operator()(const Vertex& v) const {
                 return std::hash<float>()(v.x) ^ std::hash<float>()(v.y) ^ std::hash<float>()(v.z);
             }
         };
-        struct equal {  // 自定义相等函数
+        struct equal {
             bool operator()(const Vertex& v1, const Vertex& v2) const {
                 return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
             }
@@ -394,13 +388,11 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadIgesFile(const std::string& _InputFi
         }
     }
 
-    //printf("Vertex_size = %d , Face_size = %d\n", Vertex_size, Face_size);
     Handle(Poly_Triangulation) tempMesh = new Poly_Triangulation(Vertex_size, Face_size, Standard_False);
     Standard_Integer nodeOffset = 0;
     Standard_Integer triangleOffset = 0;
 
     for (Standard_Integer i = 1; i <= modelNum; i++) {
-        //printf("第%d个部件\n", i);
         TopoDS_Shape cur = aReader_Iges.Shape(i);
         for (TopExp_Explorer expIter(cur, TopAbs_FACE); expIter.More(); expIter.Next()) {
             const TopoDS_Shape& curFace = expIter.Current();
@@ -438,7 +430,7 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadIgesFile(const std::string& _InputFi
         auto tmp = tempMesh->Node(id);
         //std::cout << tmp.X() << " " << tmp.Y() << " " << tmp.Z() << std::endl;
         iGameVertex v(tmp.X(), tmp.Y(), tmp.Z());
-        Vertex vex{tmp.X(), tmp.Y(), tmp.Z(), vertexSet.size()};  // 分配编号
+        Vertex vex{tmp.X(), tmp.Y(), tmp.Z(), vertexSet.size()};
         auto result = vertexSet.insert(vex);
         if (result.second) {
             vertices.push_back(v);
@@ -455,7 +447,6 @@ MeshKernel::SurfaceMesh MeshKernel::IO::ReadIgesFile(const std::string& _InputFi
         N3 = vertexSet.find({vertexSum[N3-1].x(), vertexSum[N3-1].y(), vertexSum[N3-1].z(), 0})->id;
         //std::cout << N1 << " " << N2 << " " << N3 << std::endl;
         std::vector<iGameVertexHandle> face = {(iGameVertexHandle)N1, (iGameVertexHandle)N2, (iGameVertexHandle)N3};
-        //从零开始编码
         faces.push_back(face);
     }
 

@@ -27,9 +27,9 @@ iGamePoster::iGamePoster( QWidget *parent ):QMainWindow (parent),ui(new Ui::Main
     ui->btnTestDetFaces->setVisible(false);
     ui->btnTestResample->setVisible(false);
 
-	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
-	ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
-    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tab_3));  // 删除Tab，实际效果是隐藏Tab
+//	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
+//	ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
+//    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tab_3));  // 删除Tab，实际效果是隐藏Tab
 
     {
         QDoubleValidator *validator_2 = new QDoubleValidator();

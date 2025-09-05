@@ -62,8 +62,9 @@ add_library(${TargetName}
 		GP_Spline_Test.h Eigen_helper.h GP_Spline_Attribute.h GP_Reduce_Handle.h GP_Param.cpp GP_Spline_v0.h GP_BoundaryCPoint.h GP_BoundaryCPoint.cpp
 		Cuda_Linear_Elastic_Solver.h
         Cuda_TopOpt_Pipeline.h
-#		Cuda_TopOpt_MultiRes.h
-		Kernels/GP_Debug.cu)
+		Cuda_TopOpt_MultiRes.h
+		Kernels/GP_Debug.cu
+)
 
 set(SOURCE_LIST
 		test.cu
@@ -78,8 +79,8 @@ set(SOURCE_LIST
 		CPU_TimeIntegrator_Hyperelasticity_Solver.cpp
 		GP_Spline_CPU.cpp
 		GP_IGA_CPU_Kernel.cpp
-#		Cuda_TopOpt_MultiRes.cu
-		)
+		Cuda_TopOpt_MultiRes.cu
+)
 
 target_sources(${TargetName}
 		PRIVATE
