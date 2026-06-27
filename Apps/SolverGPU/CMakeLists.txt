@@ -64,7 +64,7 @@ add_library(${TargetName}
         Cuda_TopOpt_Pipeline.h
 		Cuda_TopOpt_MultiRes.h
 		Kernels/GP_Debug.cu
-)
+ "MMASolver.cpp" "MMASolver.h")
 
 set(SOURCE_LIST
 		test.cu

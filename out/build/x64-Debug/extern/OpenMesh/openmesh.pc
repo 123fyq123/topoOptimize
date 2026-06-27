@@ -1,4 +1,4 @@
-prefix=D:/iGame/LabViewer-sub/out/install/x64-Debug
+prefix=D:/labCode/LabViewer-Vsub/out/install/x64-Debug
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include

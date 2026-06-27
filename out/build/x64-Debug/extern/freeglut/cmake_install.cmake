@@ -1,8 +1,8 @@
-# Install script for directory: D:/iGame/LabViewer-sub/extern/freeglut
+# Install script for directory: D:/labCode/LabViewer-Vsub/extern/freeglut
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/labCode/LabViewer-Vsub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,35 +33,35 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/lib/freeglutd.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/lib/freeglutd.lib")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/bin/freeglutd.dll")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/bin/freeglutd.dll")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/lib/freeglut_staticd.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/lib/freeglut_staticd.lib")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/GL" TYPE FILE FILES
-    "D:/iGame/LabViewer-sub/extern/freeglut/include/GL/freeglut.h"
-    "D:/iGame/LabViewer-sub/extern/freeglut/include/GL/freeglut_ucall.h"
-    "D:/iGame/LabViewer-sub/extern/freeglut/include/GL/freeglut_ext.h"
-    "D:/iGame/LabViewer-sub/extern/freeglut/include/GL/freeglut_std.h"
+    "D:/labCode/LabViewer-Vsub/extern/freeglut/include/GL/freeglut.h"
+    "D:/labCode/LabViewer-Vsub/extern/freeglut/include/GL/freeglut_ucall.h"
+    "D:/labCode/LabViewer-Vsub/extern/freeglut/include/GL/freeglut_ext.h"
+    "D:/labCode/LabViewer-Vsub/extern/freeglut/include/GL/freeglut_std.h"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE RENAME "freeglut.pc" FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/freeglut.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE RENAME "freeglut.pc" FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/freeglut.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT/FreeGLUTTargets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT/FreeGLUTTargets.cmake"
-         "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets.cmake")
+         "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT/FreeGLUTTargets-*.cmake")
       if(_cmake_old_config_files)
@@ -74,16 +74,22 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT" TYPE FILE FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT" TYPE FILE FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT" TYPE FILE FILES "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT" TYPE FILE FILES "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/CMakeFiles/Export/6f3d6babffe806515ac5156322d25f7d/FreeGLUTTargets-debug.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/FreeGLUT" TYPE FILE FILES
-    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/FreeGLUT/FreeGLUTConfig.cmake"
-    "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/freeglut/FreeGLUT/FreeGLUTConfigVersion.cmake"
+    "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/FreeGLUT/FreeGLUTConfig.cmake"
+    "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/FreeGLUT/FreeGLUTConfigVersion.cmake"
     )
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/freeglut/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()

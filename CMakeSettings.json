@@ -9,7 +9,34 @@
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "Qt5Gui_DIR",
+          "value": "D:/CG/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Gui",
+          "type": "PATH"
+        },
+        {
+          "name": "Qt5Core_DIR",
+          "value": "D:/CG/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Core",
+          "type": "PATH"
+        },
+        {
+          "name": "Qt5OpenGL_DIR",
+          "value": "D:/CG/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5OpenGL",
+          "type": "PATH"
+        },
+        {
+          "name": "Qt5Widgets_DIR",
+          "value": "D:/CG/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5Widgets",
+          "type": "PATH"
+        },
+        {
+          "name": "DEPLOYQT_EXECUTABLE",
+          "value": "D:/CG/Qt/5.14.2/msvc2017_64/bin/windeployqt.exe",
+          "type": "FILEPATH"
+        }
+      ]
     }
   ]
 }

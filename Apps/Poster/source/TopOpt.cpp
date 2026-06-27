@@ -473,9 +473,6 @@ void SaveCurMesh(const std::vector<double>& Density, HexV3fMesh* NextMesh, std::
 		delete PrintMesh;
 }
 
-
-
-
 //std::string ModelName = "SimpleTestBeam";
 std::string ModelName = "TestModel4";
 //std::string ModelName = "SimpleTestBeam_1";

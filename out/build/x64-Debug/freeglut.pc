@@ -1,5 +1,5 @@
-prefix=D:/iGame/LabViewer-sub/out/install/x64-Debug
-libdir=D:/iGame/LabViewer-sub/out/install/x64-Debug/lib
+prefix=D:/labCode/LabViewer-Vsub/out/install/x64-Debug
+libdir=D:/labCode/LabViewer-Vsub/out/install/x64-Debug/lib
 includedir=${prefix}/include
 
 Name: glut

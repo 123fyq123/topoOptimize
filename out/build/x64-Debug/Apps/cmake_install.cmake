@@ -1,8 +1,8 @@
-# Install script for directory: D:/iGame/LabViewer-sub/Apps
+# Install script for directory: D:/labCode/LabViewer-Vsub/Apps
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/labCode/LabViewer-Vsub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,21 +34,27 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/Apps/Poster/cmake_install.cmake")
+  include("D:/labCode/LabViewer-Vsub/out/build/x64-Debug/Apps/Poster/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/Apps/SolverGPU/cmake_install.cmake")
+  include("D:/labCode/LabViewer-Vsub/out/build/x64-Debug/Apps/SolverGPU/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/Apps/DevGPU/cmake_install.cmake")
+  include("D:/labCode/LabViewer-Vsub/out/build/x64-Debug/Apps/DevGPU/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/Apps/TestApp0/cmake_install.cmake")
+  include("D:/labCode/LabViewer-Vsub/out/build/x64-Debug/Apps/TestApp0/cmake_install.cmake")
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/Apps/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()

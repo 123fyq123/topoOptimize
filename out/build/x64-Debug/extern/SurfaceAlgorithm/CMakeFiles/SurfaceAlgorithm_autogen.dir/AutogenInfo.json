@@ -1,129 +1,129 @@
 {
 	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
-	"BUILD_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen",
-	"CMAKE_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm",
-	"CMAKE_CURRENT_SOURCE_DIR" : "D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm",
-	"CMAKE_EXECUTABLE" : "D:/VisualStudio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : [ "D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/CMakeLists.txt" ],
-	"CMAKE_SOURCE_DIR" : "D:/iGame/LabViewer-sub",
+	"BUILD_DIR" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen",
+	"CMAKE_BINARY_DIR" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm",
+	"CMAKE_EXECUTABLE" : "D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "D:/labCode/LabViewer-Vsub",
 	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Analysis_TriMesh.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Analysis_TriMesh.h",
 			"MU",
 			"EWIEGA46WW/moc_Analysis_TriMesh.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Deformation.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Deformation.h",
 			"MU",
 			"EWIEGA46WW/moc_Deformation.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Denoising_BNF.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Denoising_BNF.h",
 			"MU",
 			"EWIEGA46WW/moc_Denoising_BNF.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/LSCM_Parameterization.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/LSCM_Parameterization.h",
 			"MU",
 			"EWIEGA46WW/moc_LSCM_Parameterization.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/MeshInterpolation_ARAP.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/MeshInterpolation_ARAP.h",
 			"MU",
 			"EWIEGA46WW/moc_MeshInterpolation_ARAP.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/MinimalSurface_Global.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/MinimalSurface_Global.h",
 			"MU",
 			"EWIEGA46WW/moc_MinimalSurface_Global.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.h",
 			"MU",
 			"HEAD3SFZ5S/moc_OpenMesh_Denoising.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.h",
 			"MU",
 			"HEAD3SFZ5S/moc_OpenMesh_Remeshing.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.h",
 			"MU",
 			"HEAD3SFZ5S/moc_OpenMesh_Simplification.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.h",
 			"MU",
 			"HEAD3SFZ5S/moc_OpenMesh_Smoothing.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Typedef.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Typedef.h",
 			"MU",
 			"HEAD3SFZ5S/moc_OpenMesh_Typedef.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Parameterization.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Parameterization.h",
 			"MU",
 			"EWIEGA46WW/moc_Parameterization.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Parameterization_BFF.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Parameterization_BFF.h",
 			"MU",
 			"EWIEGA46WW/moc_Parameterization_BFF.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Remeshing.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Remeshing.h",
 			"MU",
 			"EWIEGA46WW/moc_Remeshing.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Simplification_Powered_QEM.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Simplification_Powered_QEM.h",
 			"MU",
 			"EWIEGA46WW/moc_Simplification_Powered_QEM.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Simplification_QEM.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Simplification_QEM.h",
 			"MU",
 			"EWIEGA46WW/moc_Simplification_QEM.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Subdivision_Loop.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Subdivision_Loop.h",
 			"MU",
 			"EWIEGA46WW/moc_Subdivision_Loop.cpp",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Surface_Algorithm.h",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Surface_Algorithm.h",
 			"MU",
 			"EWIEGA46WW/moc_Surface_Algorithm.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/include",
-	"MOC_COMPILATION_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm/SurfaceAlgorithm_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"NO_DECREMENT_DEPRECATED_WARNINGS",
@@ -140,18 +140,18 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"C:/Program Files (x86)/Intel/oneAPI/mkl/2023.2.0/include",
-		"D:/iGame/LabViewer-sub/extern/boost_1_76_0",
-		"D:/iGame/LabViewer-sub/include",
-		"D:/iGame/LabViewer-sub/include/rapidjson/include",
-		"D:/iGame/LabViewer-sub/include/spdlog/include",
-		"D:/iGame/LabViewer-sub/extern",
-		"D:/iGame/LabViewer-sub/Apps",
-		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
-		"D:/iGame/LabViewer-sub/extern/freeglut/include",
-		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
-		"D:/iGame/LabViewer-sub/extern/OpenMesh/src",
-		"D:/iGame/LabViewer-sub/extern/opencascade/opencascade770-install/inc"
+		"D:/apps/intel-mkl/2023/mkl/2023.2.0/include",
+		"D:/labCode/LabViewer-Vsub/extern/boost_1_76_0",
+		"D:/labCode/LabViewer-Vsub/include",
+		"D:/labCode/LabViewer-Vsub/include/rapidjson/include",
+		"D:/labCode/LabViewer-Vsub/include/spdlog/include",
+		"D:/labCode/LabViewer-Vsub/extern",
+		"D:/labCode/LabViewer-Vsub/Apps",
+		"D:/labCode/LabViewer-Vsub/extern/OpenMesh/src",
+		"D:/labCode/LabViewer-Vsub/extern/freeglut/include",
+		"D:/labCode/LabViewer-Vsub/extern/OpenMesh/src",
+		"D:/labCode/LabViewer-Vsub/extern/OpenMesh/src",
+		"D:/labCode/LabViewer-Vsub/extern/opencascade/opencascade770-install/inc"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -161,87 +161,87 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 10,
-	"PARSE_CACHE_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/ParseCache.txt",
-	"QT_MOC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "D:/Dev/QT/5.14.2/msvc2017_64/bin/uic.exe",
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/CG/Qt/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/CG/Qt/5.14.2/msvc2017_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 5,
 	"QT_VERSION_MINOR" : 14,
-	"SETTINGS_FILE" : "D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/SurfaceAlgorithm/CMakeFiles/SurfaceAlgorithm_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Analysis_TriMesh.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Analysis_TriMesh.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Deformation.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Deformation.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Denoising_BNF.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Denoising_BNF.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/LSCM_Parameterization.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/LSCM_Parameterization.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/MinimalSurface_Global.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/MinimalSurface_Global.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Denoising.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Remeshing.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Simplification.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/OpenMeshAlgorithm/OpenMesh_Smoothing.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Parameterization.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Parameterization.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Parameterization_BFF.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Parameterization_BFF.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Remeshing.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Remeshing.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Simplification_Powered_QEM.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Simplification_Powered_QEM.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Simplification_QEM.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Simplification_QEM.cpp",
 			"MU",
 			null
 		],
 		[
-			"D:/iGame/LabViewer-sub/extern/SurfaceAlgorithm/Subdivision_Loop.cpp",
+			"D:/labCode/LabViewer-Vsub/extern/SurfaceAlgorithm/Subdivision_Loop.cpp",
 			"MU",
 			null
 		]

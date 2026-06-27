@@ -1,0 +1,6 @@
+set(CMAKE_BUILD_TYPE "Release")
+set(DMKL_INTERFACE_FULL "intel_lp64" CACHE STRING "MKL interface")
+set(DMKL_LINK "static" CACHE STRING "MKL link type")
+set(DMKL_DIR "D:\\CG\\Qt\\5.14.2\\msvc2017_64\\lib\\cmake" CACHE PATH "MKL directory")
+set(DQT_CMAKE_PATH "D:\\apps\\intel-mkl\\2023\\mkl\\2023.2.0\\lib\\cmake\\mkl" CACHE PATH "Qt cmake path")
+set(DBUILD_SHARED_LIBS OFF CACHE BOOL "Disable shared libraries")

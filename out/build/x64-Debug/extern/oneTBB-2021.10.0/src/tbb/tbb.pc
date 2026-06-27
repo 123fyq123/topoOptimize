@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-prefix=D:/iGame/LabViewer-sub/out/install/x64-Debug
+prefix=D:/labCode/LabViewer-Vsub/out/install/x64-Debug
 libdir=${prefix}/lib
 includedir=${prefix}/include
 

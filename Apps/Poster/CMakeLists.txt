@@ -22,7 +22,7 @@ add_executable(${APP_NAME} ${SUB_SOURCE_FILES} ${SOURCE_FILES} ${QRC_FILES} ${UI
         source/Topopt_GPU_Version.cpp
         source/Macro_Helper.h
         source/CoverageAxis.h
-        source/BoostThrowException.cpp)
+        source/BoostThrowException.cpp  )
 
 if(WIN32)
     add_custom_command(TARGET ${APP_NAME}
@@ -71,7 +71,7 @@ target_link_libraries(
         PUBLIC Qt5::Core
         PUBLIC Qt5::Gui
         PUBLIC Qt5::OpenGL
-        PUBLIC "${GUROBI_LIB_DIR}\\gurobi110.lib"
+        PUBLIC "${GUROBI_LIB_DIR}\\gurobi120.lib"
         #PUBLIC "${GUROBI_LIB_DIR}\\gurobi_c++mdd2017.lib"
         PUBLIC "${GUROBI_CPP_LIB}"
 )

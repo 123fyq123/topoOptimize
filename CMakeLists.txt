@@ -42,7 +42,7 @@ if (MSVC)
 endif(MSVC)
 
 #Qt
-set(QT_CMAKE_PATH "D:/Dev/QT/5.14.2/msvc2017_64/lib/cmake")
+set(QT_CMAKE_PATH "D:\\CG\\Qt\\5.14.2\\msvc2017_64\\lib\\cmake")
 set(Qt5Core_DIR ${QT_CMAKE_PATH}/Qt5Core)
 set(Qt5Gui_DIR ${QT_CMAKE_PATH}/Qt5Gui)
 set(Qt5OpenGL_DIR ${QT_CMAKE_PATH}/Qt5OpenGL)

@@ -1,8 +1,8 @@
-# Install script for directory: D:/iGame/LabViewer-sub/extern/magic_enum
+# Install script for directory: D:/labCode/LabViewer-Vsub/extern/magic_enum
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "D:/iGame/LabViewer-sub/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "D:/labCode/LabViewer-Vsub/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,6 +34,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/iGame/LabViewer-sub/out/build/x64-Debug/extern/magic_enum/example/cmake_install.cmake")
+  include("D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/magic_enum/example/cmake_install.cmake")
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/magic_enum/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()
