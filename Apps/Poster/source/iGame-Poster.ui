@@ -2779,7 +2779,7 @@ background:#444444;
                 <widget class="QPushButton" name="TopOpt_Run">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>20</x>
                    <y>196</y>
                    <width>111</width>
                    <height>31</height>
@@ -2798,9 +2798,9 @@ background:#444444;
                 <widget class="QPushButton" name="Protect_topopt">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>20</x>
                    <y>160</y>
-                   <width>111</width>
+                   <width>231</width>
                    <height>31</height>
                   </rect>
                  </property>
@@ -2848,7 +2848,7 @@ background:#444444;
                 <widget class="QPushButton" name="fix_topopt_result">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>20</x>
                    <y>370</y>
                    <width>111</width>
                    <height>31</height>
@@ -2867,8 +2867,8 @@ background:#444444;
                 <widget class="QPushButton" name="Poster_Smooth">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
-                   <y>450</y>
+                   <x>140</x>
+                   <y>410</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
@@ -2886,7 +2886,7 @@ background:#444444;
                 <widget class="QPushButton" name="Poster_DeleteElement">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>20</x>
                    <y>410</y>
                    <width>111</width>
                    <height>31</height>
@@ -2905,7 +2905,7 @@ background:#444444;
                 <widget class="QPushButton" name="TopOpt_Run_2">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>20</x>
                    <y>234</y>
                    <width>111</width>
                    <height>31</height>
@@ -2918,7 +2918,7 @@ background:#444444;
                 <widget class="QPushButton" name="TopOpt_Run_3">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
+                   <x>140</x>
                    <y>490</y>
                    <width>111</width>
                    <height>27</height>
@@ -2931,8 +2931,8 @@ background:#444444;
                 <widget class="QPushButton" name="TopOpt_Run_4">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
-                   <y>271</y>
+                   <x>140</x>
+                   <y>196</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
@@ -2941,12 +2941,25 @@ background:#444444;
                   <string>MMC</string>
                  </property>
                 </widget>
+                <widget class="QPushButton" name="TopOpt_Run_Seq">
+                 <property name="geometry">
+                  <rect>
+                   <x>140</x>
+                   <y>234</y>
+                   <width>111</width>
+                   <height>31</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>MMC+SIMP</string>
+                 </property>
+                </widget>
                 <widget class="QLineEdit" name="TopOpt_MMC_type">
                  <property name="geometry">
                   <rect>
-                   <x>80</x>
-                   <y>310</y>
-                   <width>110</width>
+                   <x>140</x>
+                   <y>271</y>
+                   <width>111</width>
                    <height>26</height>
                   </rect>
                  </property>
@@ -2954,9 +2967,9 @@ background:#444444;
                 <widget class="QLabel" name="label_40">
                  <property name="geometry">
                   <rect>
-                   <x>10</x>
-                   <y>310</y>
-                   <width>71</width>
+                   <x>20</x>
+                   <y>272</y>
+                   <width>111</width>
                    <height>21</height>
                   </rect>
                  </property>

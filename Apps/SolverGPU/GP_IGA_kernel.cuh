@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <assert.h>
 #include "GP_Attribute.h"
@@ -1695,6 +1695,101 @@ __global__ static void TopOpt_Assembly_Local_Matrix_MMC(const gpmesh::SplineCont
 				for (uint16_t dj = 0; dj < 3; ++dj) {
 					atomicAdd(&localMats[(j + di * GS_D) + 192 * (k + dj * GS_D)],
 						weight * materialTangent1[di][dj] * top_extra_mul);
+				}
+			}
+		}
+	}
+}
+
+template<typename T, size_t blockThreads>
+__global__ static void TopOpt_Assembly_Local_Matrix_CellScale(const gpmesh::SplineContext context,
+	const gpmesh::GaussianIntegralContext integral_context,
+	const gpmesh::PhysicContext physic_context,
+	const gpmesh::AssemblyContext assembly_context,
+	double* cell_scale) {
+	using namespace gpmesh;
+
+	if (blockIdx.x >= context.get_num_geometry() || blockIdx.y >= 64) {
+		return;
+	}
+
+	uint32_t geometry_id = blockIdx.x;
+	uint16_t gs_point_id = blockIdx.y;
+	GeometryInfo& m_geometry_info = context.get_geometry_info()[geometry_id];
+	extern __shared__ double shrd_coefs[];
+
+	detail::load_async<double, uint16_t>(m_geometry_info.coefs,
+		m_geometry_info.num_CPoints * 3,
+		shrd_coefs,
+		true);
+
+	uint16_t gs_kkjjii[3];
+	get_gs_3d_id(gs_kkjjii, gs_point_id);
+
+	double lambda = 576.92307692307691;
+	double mu = 384.61538461538458;
+	double e = 1000.0;
+	double pr = 0.3;
+	lambda = e * pr / ((1. + pr) * (1. - 2. * pr));
+	mu = e / (2. * (1. + pr));
+
+	Eigen::Matrix<double, 3, 3> identity = Eigen::Matrix<double, 3, 3>::Identity();
+	Eigen::Matrix<double, 64, 3>* disp_block_geo = physic_context.get_cpoints_displacement(geometry_id);
+	Eigen::Matrix<double, 192, 64>* basisValue1_matrix = integral_context.get_basis_value_1_matrix();
+	Eigen::Vector<double, 192> basis_value = basisValue1_matrix->col(gs_point_id);
+
+	Eigen::Matrix<double, 3, 3> jacGeo, jacDis;
+	get_jacobi_u<double>(basis_value, *disp_block_geo, shrd_coefs, jacGeo, jacDis);
+
+	double weight = integral_context.get_weights_u()[gs_kkjjii[2]] * integral_context.get_weights_v()[gs_kkjjii[1]] *
+		integral_context.get_weights_w()[gs_kkjjii[0]] * fabs(jacGeo.determinant());
+
+	Eigen::Matrix<double, 3, 64> physGrad;
+	transform_gradients<double>(jacGeo, basis_value, physGrad, 3);
+
+	Eigen::Matrix<double, 3, 3> phyDispJac = jacDis.transpose() * (jacGeo.transpose().inverse());
+	Eigen::Matrix<double, 3, 3> F = identity + phyDispJac;
+	Eigen::Matrix<double, 3, 3> RCG = F.transpose() * F;
+	Eigen::Matrix<double, 3, 3> E = 0.5 * (RCG - identity);
+	Eigen::Matrix<double, 3, 3> S = lambda * E.trace() * identity + 2 * mu * E;
+
+	double* localMats = assembly_context.get_assembly_info()[geometry_id].local_mats;
+	Eigen::Matrix<double, 6, 6>& C = *physic_context.get_C();
+	double B_i[3][6], B_j[6][3];
+	constexpr uint16_t N_D = 4;
+	uint16_t base_j = N_D * threadIdx.x;
+	uint16_t base_k = N_D * threadIdx.y;
+	constexpr uint16_t GS_D = 64;
+
+	for (uint16_t local_j = 0; local_j < N_D; ++local_j) {
+		uint16_t j = base_j + local_j;
+		setBT<double>(B_i, F, physGrad.col(j));
+
+		double materialTangentTemp1[3][6];
+		double CD[6][6];
+		double materialTangent1[3][3];
+		setC<6>(CD, identity, lambda, mu);
+		matMutly<3, 6, 6>(B_i, CD, materialTangentTemp1);
+
+		for (uint16_t local_k = 0; local_k < N_D; ++local_k) {
+			uint16_t k = base_k + local_k;
+			setB<double>(B_j, F, physGrad.col(k));
+			matMutly<3, 6, 3>(materialTangentTemp1, B_j, materialTangent1);
+
+			Eigen::Matrix<double, 3, 1> geometricTangentTemp = S * physGrad.col(j);
+			double geometricTangent = geometricTangentTemp.transpose() * physGrad.col(k);
+
+			for (uint16_t d = 0; d < 3; ++d) {
+				materialTangent1[d][d] += geometricTangent;
+			}
+
+			double scale = cell_scale[geometry_id];
+#pragma unroll
+			for (uint16_t di = 0; di < 3; ++di) {
+#pragma unroll
+				for (uint16_t dj = 0; dj < 3; ++dj) {
+					atomicAdd(&localMats[(j + di * GS_D) + 192 * (k + dj * GS_D)],
+						weight * materialTangent1[di][dj] * scale);
 				}
 			}
 		}

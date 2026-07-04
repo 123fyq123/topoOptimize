@@ -1,0 +1,1476 @@
+[1/103] Automatic MOC and UIC for target Geom
+[2/101] Automatic MOC and UIC for target OpenMeshCore
+[3/99] Automatic MOC and UIC for target MeshKernel
+[4/97] Automatic MOC and UIC for target tinyXML
+[5/95] Automatic MOC and UIC for target nlopt
+[6/93] Automatic MOC and UIC for target CommonLib
+[7/91] Automatic MOC and UIC for target json
+[8/89] Automatic MOC and UIC for target tetgen
+[9/87] Automatic MOC and UIC for target freeglut
+[10/85] Automatic MOC and UIC for target tbb
+[11/83] Automatic MOC and UIC for target freeglut_static
+[12/81] Automatic MOC and UIC for target tbbmalloc
+[13/79] Automatic MOC and UIC for target magic_num_example
+[14/77] Automatic MOC and UIC for target magic_num_enum_flag_example
+[15/75] Automatic MOC and UIC for target magic_num_example_containers_array
+[16/73] Automatic MOC and UIC for target magic_num_example_containers_bitset
+[17/71] Automatic MOC and UIC for target magic_num_example_containers_set
+[18/69] Automatic MOC and UIC for target magic_num_example_custom_name
+[19/67] Automatic MOC and UIC for target magic_num_example_switch
+[20/65] Automatic MOC and UIC for target IsogeometryAssemblylib
+[21/63] Automatic MOC and UIC for target OpenMeshTools
+[22/61] Automatic MOC and UIC for target Tools
+[23/59] Automatic MOC and UIC for target Hyperelasticity
+[24/57] Automatic MOC and UIC for target SkeletalPipeline
+[25/55] Automatic MOC and UIC for target BSpline3D
+[26/53] Automatic MOC and UIC for target BMesh
+[27/51] Automatic MOC and UIC for target SkeletalMesh
+[28/49] Automatic MOC and UIC for target SurfaceAlgorithm
+[29/47] Automatic MOC and UIC for target VolumeAlgorithm
+[30/45] Automatic MOC and UIC for target SolverGPU
+[31/44] Building CUDA object Apps\SolverGPU\CMakeFiles\SolverGPU.dir\Cuda_TopOpt_MultiMaterial_SIMP.cu.obj
+nvcc warning : Resource usage is not shown as the final resource allocation is not done.
+Cuda_TopOpt_MultiMaterial_SIMP.cu
+Cuda_TopOpt_MultiMaterial_SIMP.cu
+D:\apps\cuda\exe\include\cuda.h(22256): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\apps\cuda\exe\include\cuda.h(22946): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/Half.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/BFloat16.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/GPU/PacketMath.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/GenericPacketMathFunctions.h(666): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\apps\cuda\exe\include\cub/warp/specializations/warp_exchange_shfl.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(1856): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel_optimized.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity\stiffAssembler.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(1869): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+Cuda_TopOpt_MultiMaterial_SIMP.cu
+D:\apps\cuda\exe\include\cuda.h(22256): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\apps\cuda\exe\include\cuda.h(22946): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/Half.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/BFloat16.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/GPU/PacketMath.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/arch/Default/GenericPacketMathFunctions.h(666): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\apps\cuda\exe\include\cub/warp/specializations/warp_exchange_shfl.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(1856): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel_optimized.cuh(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity\stiffAssembler.h(1): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(1869): warning C4819: ���ļ����������ڵ�ǰ����ҳ(936)�б�ʾ���ַ����뽫���ļ�����Ϊ Unicode ��ʽ�Է�ֹ���ݶ�ʧ
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(223): warning #20012-D: __host__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(const DenseStorage&) = default;
+                 ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(223): warning #20012-D: __device__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(const DenseStorage&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(233): warning #20012-D: __host__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(const DenseStorage&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(233): warning #20012-D: __device__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(const DenseStorage&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(248): warning #20012-D: __host__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(DenseStorage&&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(248): warning #20012-D: __device__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(DenseStorage&&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(249): warning #20012-D: __host__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(DenseStorage&&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(249): warning #20012-D: __device__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(DenseStorage&&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog\fmt\bundled\format-inl.h(217): warning #2810-D: ignoring return value type with "nodiscard" attribute
+    base = std::runtime_error(to_string(buffer));
+         ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Geometry_info.h(144): warning #69-D: integer conversion resulted in truncation
+          uint32_t geometry_id = 0xFFFFFFFFFFFFFFFFu;
+                                 ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Geometry_info.h(169): warning #69-D: integer conversion resulted in truncation
+          uint32_t geometry_id = 0xFFFFFFFFFFFFFFFFu;
+                                 ^
+
+D:\labCode\LabViewer-Vsub\extern\Geom/CBezierSurface.h(60): warning #997-D: function "CGeomSurface::getPoint(CGeomPoint &)" is hidden by "CBezierSurface::getPoint" -- virtual function override intended?
+  	CPoint getPoint(const int Uindex, const int Vindex)const;
+  	       ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(409): warning #68-D: integer conversion resulted in a change of sign
+          uint32_t  m_num_attributes = -1;
+                                       ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(1154): warning #128-D: loop is not reachable
+          for (size_t i = 0; i < m_attr_container.size(); ++i) {
+          ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(1177): warning #128-D: loop is not reachable
+          for (auto it = m_attr_container.begin(); it != m_attr_container.end();
+          ^
+
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity\ToolFunc.h(214): warning #815-D: type qualifier on return type is meaningless
+      const double operator()(size_t i, size_t j)const { return _Matrix[j][i]; }
+      ^
+
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity/TimeIntegrator.h(36): warning #997-D: function "assembler::assemble()" is hidden by "timeIntegrator::assemble" -- virtual function override intended?
+      void assemble(const Eigen::VectorXd& solution, bool isAssemblerMatrix = true) override;
+           ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(223): warning #20012-D: __host__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(const DenseStorage&) = default;
+                 ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(223): warning #20012-D: __device__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(const DenseStorage&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(233): warning #20012-D: __host__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(const DenseStorage&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(233): warning #20012-D: __device__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(const DenseStorage&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(248): warning #20012-D: __host__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(DenseStorage&&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(248): warning #20012-D: __device__ annotation is ignored on a function("DenseStorage") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage(DenseStorage&&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(249): warning #20012-D: __host__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(DenseStorage&&) = default;
+                 ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/DenseStorage.h(249): warning #20012-D: __device__ annotation is ignored on a function("operator=") that is explicitly defaulted on its first declaration
+      __declspec(__host__) __declspec(__device__) DenseStorage& operator=(DenseStorage&&) = default;
+                                      ^
+
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog\fmt\bundled\format-inl.h(217): warning #2810-D: ignoring return value type with "nodiscard" attribute
+    base = std::runtime_error(to_string(buffer));
+         ^
+
+D:\labCode\LabViewer-Vsub\extern\Geom/CBezierSurface.h(60): warning #997-D: function "CGeomSurface::getPoint(CGeomPoint &)" is hidden by "CBezierSurface::getPoint" -- virtual function override intended?
+  	CPoint getPoint(const int Uindex, const int Vindex)const;
+  	       ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(1154): warning #128-D: loop is not reachable
+          for (size_t i = 0; i < m_attr_container.size(); ++i) {
+          ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(1177): warning #128-D: loop is not reachable
+          for (auto it = m_attr_container.begin(); it != m_attr_container.end();
+          ^
+
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity\ToolFunc.h(214): warning #815-D: type qualifier on return type is meaningless
+      const double operator()(size_t i, size_t j)const { return _Matrix[j][i]; }
+      ^
+
+D:\labCode\LabViewer-Vsub\extern\Hyperelasticity/TimeIntegrator.h(36): warning #997-D: function "assembler::assemble()" is hidden by "timeIntegrator::assemble" -- virtual function override intended?
+      void assemble(const Eigen::VectorXd& solution, bool isAssemblerMatrix = true) override;
+           ^
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(2571): warning #550-D: variable "lambda" was set but never used
+  	double lambda = 576.92307692307691;
+  	       ^
+          detected during:
+            instantiation of "void IGA_mass_assembly_debug_kernel_v0<T,blockThreads>(gpmesh::SplineContext, gpmesh::GaussianIntegralContext, gpmesh::PhysicContext, gpmesh::MassContext, double) [with T=double, blockThreads=64ULL]" at line 2414 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+            instantiation of "void gpmesh::GPSplineSolidV0::debug_mass_matrix_assembly(T) [with T=double]" at line 182 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_IGA_kernel.cuh(2572): warning #550-D: variable "mu" was set but never used
+  	double mu = 384.61538461538458;
+  	       ^
+          detected during:
+            instantiation of "void IGA_mass_assembly_debug_kernel_v0<T,blockThreads>(gpmesh::SplineContext, gpmesh::GaussianIntegralContext, gpmesh::PhysicContext, gpmesh::MassContext, double) [with T=double, blockThreads=64ULL]" at line 2414 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+            instantiation of "void gpmesh::GPSplineSolidV0::debug_mass_matrix_assembly(T) [with T=double]" at line 182 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(50): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template <typename T> __declspec(__host__) __declspec(__device__) inline friend const CwiseBinaryOp<internal::scalar_product_op<typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type>::type, const Derived> (operator*)(const T& scalar, const StorageBaseType& matrix) { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<PromotedT,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,PromotedT>::type, const Derived>( typename internal::plain_constant_type<Derived,PromotedT>::type(matrix.derived().rows(), matrix.derived().cols(), internal::scalar_constant_op<PromotedT>(scalar)), matrix.derived()); } template <typename T> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>, const Derived, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>::type> (operator*)(const T& scalar) const { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,PromotedT>, const Derived, const typename internal::plain_constant_type<Derived,PromotedT>::type>(derived(), typename internal::plain_constant_type<Derived,PromotedT>::type(derived().rows(), derived().cols(), internal::scalar_constant_op<PromotedT>(scalar))); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type, Eigen::internal::traits<Eigen::SparseMatrix<double, 0, int>>::Scalar>, const Eigen::internal::plain_constant_type<Eigen::SparseMatrix<double, 0, int>, Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type>::type, const Eigen::SparseMatrix<double, 0, int>> Eigen::operator*(const T &, const Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::StorageBaseType &) [with T=double]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(50): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template <typename T> __declspec(__host__) __declspec(__device__) inline friend const CwiseBinaryOp<internal::scalar_product_op<typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type>::type, const Derived> (operator*)(const T& scalar, const StorageBaseType& matrix) { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<PromotedT,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,PromotedT>::type, const Derived>( typename internal::plain_constant_type<Derived,PromotedT>::type(matrix.derived().rows(), matrix.derived().cols(), internal::scalar_constant_op<PromotedT>(scalar)), matrix.derived()); } template <typename T> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>, const Derived, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>::type> (operator*)(const T& scalar) const { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,PromotedT>, const Derived, const typename internal::plain_constant_type<Derived,PromotedT>::type>(derived(), typename internal::plain_constant_type<Derived,PromotedT>::type(derived().rows(), derived().cols(), internal::scalar_constant_op<PromotedT>(scalar))); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type, Eigen::internal::traits<Eigen::SparseMatrix<double, 0, int>>::Scalar>, const Eigen::internal::plain_constant_type<Eigen::SparseMatrix<double, 0, int>, Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type>::type, const Eigen::SparseMatrix<double, 0, int>> Eigen::operator*(const T &, const Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::StorageBaseType &) [with T=double]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(50): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template <typename T> __declspec(__host__) __declspec(__device__) inline friend const CwiseBinaryOp<internal::scalar_product_op<typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type>::type, const Derived> (operator*)(const T& scalar, const StorageBaseType& matrix) { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<PromotedT,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,PromotedT>::type, const Derived>( typename internal::plain_constant_type<Derived,PromotedT>::type(matrix.derived().rows(), matrix.derived().cols(), internal::scalar_constant_op<PromotedT>(scalar)), matrix.derived()); } template <typename T> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>, const Derived, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>::type> (operator*)(const T& scalar) const { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,PromotedT>, const Derived, const typename internal::plain_constant_type<Derived,PromotedT>::type>(derived(), typename internal::plain_constant_type<Derived,PromotedT>::type(derived().rows(), derived().cols(), internal::scalar_constant_op<PromotedT>(scalar))); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type, Eigen::internal::traits<Eigen::SparseMatrix<double, 0, int>>::Scalar>, const Eigen::internal::plain_constant_type<Eigen::SparseMatrix<double, 0, int>, Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type>::type, const Eigen::SparseMatrix<double, 0, int>> Eigen::operator*(const T &, const Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::StorageBaseType &) [with T=double]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(50): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template <typename T> __declspec(__host__) __declspec(__device__) inline friend const CwiseBinaryOp<internal::scalar_product_op<typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type>::type, const Derived> (operator*)(const T& scalar, const StorageBaseType& matrix) { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<PromotedT,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,PromotedT>::type, const Derived>( typename internal::plain_constant_type<Derived,PromotedT>::type(matrix.derived().rows(), matrix.derived().cols(), internal::scalar_constant_op<PromotedT>(scalar)), matrix.derived()); } template <typename T> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>, const Derived, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>::type> (operator*)(const T& scalar) const { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,PromotedT>, const Derived, const typename internal::plain_constant_type<Derived,PromotedT>::type>(derived(), typename internal::plain_constant_type<Derived,PromotedT>::type(derived().rows(), derived().cols(), internal::scalar_constant_op<PromotedT>(scalar))); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type, Eigen::internal::traits<Eigen::SparseMatrix<double, 0, int>>::Scalar>, const Eigen::internal::plain_constant_type<Eigen::SparseMatrix<double, 0, int>, Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type>::type, const Eigen::SparseMatrix<double, 0, int>> Eigen::operator*(const T &, const Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::StorageBaseType &) [with T=double]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(50): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template <typename T> __declspec(__host__) __declspec(__device__) inline friend const CwiseBinaryOp<internal::scalar_product_op<typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type>::type, const Derived> (operator*)(const T& scalar, const StorageBaseType& matrix) { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T,Scalar,Eigen::internal::scalar_product_op<T,Scalar> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<PromotedT,typename internal::traits<Derived>::Scalar>, const typename internal::plain_constant_type<Derived,PromotedT>::type, const Derived>( typename internal::plain_constant_type<Derived,PromotedT>::type(matrix.derived().rows(), matrix.derived().cols(), internal::scalar_constant_op<PromotedT>(scalar)), matrix.derived()); } template <typename T> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>, const Derived, const typename internal::plain_constant_type<Derived,typename internal::promote_scalar_arg<Scalar , T , (Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type>::type> (operator*)(const T& scalar) const { typedef typename internal::promote_scalar_arg<Scalar,T,(Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<Scalar,T,Eigen::internal::scalar_product_op<Scalar,T> > >::value)>::type PromotedT; return CwiseBinaryOp<internal::scalar_product_op<typename internal::traits<Derived>::Scalar,PromotedT>, const Derived, const typename internal::plain_constant_type<Derived,PromotedT>::type>(derived(), typename internal::plain_constant_type<Derived,PromotedT>::type(derived().rows(), derived().cols(), internal::scalar_constant_op<PromotedT>(scalar))); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type, Eigen::internal::traits<Eigen::SparseMatrix<double, 0, int>>::Scalar>, const Eigen::internal::plain_constant_type<Eigen::SparseMatrix<double, 0, int>, Eigen::internal::promote_scalar_arg<Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, T, Eigen::internal::has_ReturnType<Eigen::ScalarBinaryOpTraits<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar, Eigen::internal::scalar_product_op<T, Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::Scalar>>>::value>::type>::type, const Eigen::SparseMatrix<double, 0, int>> Eigen::operator*(const T &, const Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int>>::StorageBaseType &) [with T=double]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(27): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template<typename OtherDerived> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp< internal::scalar_sum_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived > (operator+)(const Eigen::SparseMatrixBase<OtherDerived> &other) const { return CwiseBinaryOp< internal::scalar_sum_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived >(derived(), other.derived()); }
+                                                                                                                                                                                                                                                                                                                                              ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<Eigen::internal::traits<Derived>::Scalar, Eigen::internal::traits<OtherDerived>::Scalar>, const Derived, const OtherDerived> Eigen::SparseMatrixBase<Derived>::operator+(const Eigen::SparseMatrixBase<OtherDerived> &) const [with Derived=Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, -1, -1, 0, -1, -1>>, const Eigen::SparseMatrix<double, 0, int>>, OtherDerived=Eigen::SparseMatrix<double, 0, int>]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(27): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template<typename OtherDerived> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp< internal::scalar_sum_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived > (operator+)(const Eigen::SparseMatrixBase<OtherDerived> &other) const { return CwiseBinaryOp< internal::scalar_sum_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived >(derived(), other.derived()); }
+                                                                                                                                                                                                                                                                                                                                              ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<Eigen::internal::traits<Derived>::Scalar, Eigen::internal::traits<OtherDerived>::Scalar>, const Derived, const OtherDerived> Eigen::SparseMatrixBase<Derived>::operator+(const Eigen::SparseMatrixBase<OtherDerived> &) const [with Derived=Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, -1, -1, 0, -1, -1>>, const Eigen::SparseMatrix<double, 0, int>>, OtherDerived=Eigen::SparseMatrix<double, 0, int>]" at line 188 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_Attribute.h(409): warning #68-D: integer conversion resulted in a change of sign
+          uint32_t  m_num_attributes = -1;
+                                       ^
+          detected during:
+            instantiation of "gpmesh::SplineAttributeGlobal<T>::SplineAttributeGlobal(const char *) [with T=double]" at line 476 of D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility
+            instantiation of "void std::_Construct_in_place(_Ty &, _Types &&...) [with _Ty=gpmesh::SplineAttributeGlobal<double>, _Types=<const char *&>]" at line 2100 of D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\memory
+            instantiation of "std::_Ref_count_obj2<_Ty>::_Ref_count_obj2(_Types &&...) [with _Ty=gpmesh::SplineAttributeGlobal<double>, _Types=<const char *&>]" at line 2913 of D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\memory
+            instantiation of "std::shared_ptr<_Ty> std::make_shared<_Ty,_Types...>(_Types &&...) [with _Ty=gpmesh::SplineAttributeGlobal<double>, _Types=<const char *&>]" at line 1133
+            instantiation of "std::shared_ptr<gpmesh::SplineAttributeGlobal<T>> gpmesh::SplineAttributeContainer::add_global_attr<T>(const char *, uint32_t, uint16_t, uint32_t, uint32_t, gpmesh::locationT, gpmesh::layoutT) [with T=double]" at line 1787 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+            instantiation of "std::shared_ptr<gpmesh::SplineAttributeGlobal<T>> gpmesh::GPSplineSolidV0::add_spline_cpoint_attribute_global(const std::vector<std::vector<std::vector<T, std::allocator<T>>, std::allocator<std::vector<T, std::allocator<T>>>>, std::allocator<std::vector<std::vector<T, std::allocator<T>>, std::allocator<std::vector<T, std::allocator<T>>>>>> &, const std::string &, gpmesh::layoutT) [with T=double]" at line 1175 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(19): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template<typename OtherDerived> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp< internal::scalar_difference_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived > (operator-)(const Eigen::SparseMatrixBase<OtherDerived> &other) const { return CwiseBinaryOp< internal::scalar_difference_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived >(derived(), other.derived()); }
+                                                                                                                                                                                                                                                                                                                                                     ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<Eigen::internal::traits<Derived>::Scalar, Eigen::internal::traits<OtherDerived>::Scalar>, const Derived, const OtherDerived> Eigen::SparseMatrixBase<Derived>::operator-(const Eigen::SparseMatrixBase<OtherDerived> &) const [with Derived=Eigen::SparseMatrix<double, 0, int>, OtherDerived=Eigen::SparseMatrix<double, 0, int>]" at line 2894 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/CommonCwiseBinaryOps.h(19): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  template<typename OtherDerived> __declspec(__host__) __declspec(__device__) inline const CwiseBinaryOp< internal::scalar_difference_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived > (operator-)(const Eigen::SparseMatrixBase<OtherDerived> &other) const { return CwiseBinaryOp< internal::scalar_difference_op< typename internal::traits<Derived>::Scalar, typename internal::traits<OtherDerived>::Scalar >, const Derived, const OtherDerived >(derived(), other.derived()); }
+                                                                                                                                                                                                                                                                                                                                                     ^
+          detected during instantiation of "const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<Eigen::internal::traits<Derived>::Scalar, Eigen::internal::traits<OtherDerived>::Scalar>, const Derived, const OtherDerived> Eigen::SparseMatrixBase<Derived>::operator-(const Eigen::SparseMatrixBase<OtherDerived> &) const [with Derived=Eigen::SparseMatrix<double, 0, int>, OtherDerived=Eigen::SparseMatrix<double, 0, int>]" at line 2894 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src\SparseCore\../plugins/MatrixCwiseUnaryOps.h(46): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  cwiseAbs2() const { return CwiseAbs2ReturnType(derived()); }
+                      ^
+          detected during:
+            instantiation of "const Eigen::SparseMatrixBase<Derived>::CwiseAbs2ReturnType Eigen::SparseMatrixBase<Derived>::cwiseAbs2() const [with Derived=Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>, const Eigen::SparseMatrix<double, 0, int>, const Eigen::SparseMatrix<double, 0, int>>]" at line 79 of D:\labCode\LabViewer-Vsub\include\Eigen\src/SparseCore/SparseDot.h
+            instantiation of "Eigen::SparseMatrixBase<Derived>::RealScalar Eigen::SparseMatrixBase<Derived>::squaredNorm() const [with Derived=Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>, const Eigen::SparseMatrix<double, 0, int>, const Eigen::SparseMatrix<double, 0, int>>]" at line 87 of D:\labCode\LabViewer-Vsub\include\Eigen\src/SparseCore/SparseDot.h
+            instantiation of "Eigen::SparseMatrixBase<Derived>::RealScalar Eigen::SparseMatrixBase<Derived>::norm() const [with Derived=Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>, const Eigen::SparseMatrix<double, 0, int>, const Eigen::SparseMatrix<double, 0, int>>]" at line 2894 of D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/Solve.h(72): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+    __declspec(__host__) __declspec(__device__) constexpr Index rows() const noexcept { return m_dec.cols(); }
+                                                                                        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(122): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::RowsAtCompileTime==Dynamic ? m_rhs.rows() : m_lhs.rows();
+        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(122): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::RowsAtCompileTime==Dynamic ? m_rhs.rows() : m_lhs.rows();
+        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(127): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::ColsAtCompileTime==Dynamic ? m_rhs.cols() : m_lhs.cols();
+        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(127): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::ColsAtCompileTime==Dynamic ? m_rhs.cols() : m_lhs.cols();
+        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/Product.h(102): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+      Index rows() const noexcept { return m_lhs.rows(); }
+                                    ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/Product.h(102): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+      Index rows() const noexcept { return m_lhs.rows(); }
+                                    ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(122): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::RowsAtCompileTime==Dynamic ? m_rhs.rows() : m_lhs.rows();
+        ^
+
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/CwiseBinaryOp.h(127): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+        return internal::traits<typename internal::remove_all<LhsNested>::type>::ColsAtCompileTime==Dynamic ? m_rhs.cols() : m_lhs.cols();
+        ^
+
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z33IGA_mass_assembly_debug_kernel_v0IdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_11MassContextEd', 328 bytes spill stores, 328 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z38TopOpt_Assembly_Local_Matrix_CellScaleIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd', 856 bytes spill stores, 864 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32TopOpt_Assembly_Local_Matrix_MMCIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd', 856 bytes spill stores, 864 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z28TopOpt_Assembly_Local_MatrixIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd', 856 bytes spill stores, 864 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32Assembly_Local_Matrix_With_YangsIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPdS5_', 2420 bytes spill stores, 2676 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z50IGA_hyperelasticity_assembly_debug_kernel_v2_debugIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextE', 840 bytes spill stores, 848 bytes spill loads
+ptxas info    : 1607 bytes gmem
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__ZN6gpmesh15get_cude_arch_kEPi' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__ZN6gpmesh15get_cude_arch_kEPi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, 360 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z44IGA_kernel_convert_preconditioner_reciprocalIdEvN6gpmesh21SplineAttributeGlobalIT_EEj' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z44IGA_kernel_convert_preconditioner_reciprocalIdEvN6gpmesh21SplineAttributeGlobalIT_EEj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 444 bytes cmem[0], 8 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z50IGA_kernel_build_preconditioner_from_system_matrixIdEvN6gpmesh21SplineAttributeGlobalIT_EENS0_15AssemblyContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z50IGA_kernel_build_preconditioner_from_system_matrixIdEvN6gpmesh21SplineAttributeGlobalIT_EENS0_15AssemblyContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 448 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z48IGA_update_physics_context_by_spline_attr_globalIdEvN6gpmesh21SplineAttributeGlobalIT_EENS0_13PhysicContextENS0_35SplineAttributeGlobalMappingContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z48IGA_update_physics_context_by_spline_attr_globalIdEvN6gpmesh21SplineAttributeGlobalIT_EENS0_13PhysicContextENS0_35SplineAttributeGlobalMappingContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 472 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z35IGA_add_mass_matrix_to_stiff_matrixIdLy256EEvN6gpmesh15AssemblyContextENS0_11MassContextEd' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z35IGA_add_mass_matrix_to_stiff_matrixIdLy256EEvN6gpmesh15AssemblyContextENS0_11MassContextEd
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 28 registers, 376 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z33IGA_mass_assembly_debug_kernel_v0IdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_11MassContextEd' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z33IGA_mass_assembly_debug_kernel_v0IdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_11MassContextEd
+    34160 bytes stack frame, 328 bytes spill stores, 328 bytes spill loads
+ptxas info    : Used 255 registers, 520 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_kernel_CWise_operation_dotIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_S3_j' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_kernel_CWise_operation_dotIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_S3_j
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, 620 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_kernel_CWise_operation_dotIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_j' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_kernel_CWise_operation_dotIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_j
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, 532 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v2IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v2IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, 512 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v1IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v1IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, 1536 bytes smem, 512 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z27IGA_debug_matvec_A_MultiplyIdLt64EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z27IGA_debug_matvec_A_MultiplyIdLt64EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_19SplineAttributeBaseIT_EES5_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 56 registers, 512 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z7init_PRIdEvPT_S1_S1_S1_j' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z7init_PRIdEvPT_S1_S1_S1_j
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, 388 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v1IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_21SplineAttributeGlobalIT_EES5_' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z24IGA_matvec_A_multiply_v1IdLt192EEvN6gpmesh13SplineContextENS0_15AssemblyContextENS0_21SplineAttributeGlobalIT_EES5_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, 1536 bytes smem, 560 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z38TopOpt_Assembly_Local_Matrix_CellScaleIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z38TopOpt_Assembly_Local_Matrix_CellScaleIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd
+    4032 bytes stack frame, 856 bytes spill stores, 864 bytes spill loads
+ptxas info    : Used 255 registers, 520 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32TopOpt_Assembly_Local_Matrix_MMCIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32TopOpt_Assembly_Local_Matrix_MMCIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd
+    4032 bytes stack frame, 856 bytes spill stores, 864 bytes spill loads
+ptxas info    : Used 255 registers, 520 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z28TopOpt_Assembly_Local_MatrixIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z28TopOpt_Assembly_Local_MatrixIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPd
+    4032 bytes stack frame, 856 bytes spill stores, 864 bytes spill loads
+ptxas info    : Used 255 registers, 520 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32Assembly_Local_Matrix_With_YangsIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPdS5_' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z32Assembly_Local_Matrix_With_YangsIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextEPdS5_
+    4720 bytes stack frame, 2420 bytes spill stores, 2676 bytes spill loads
+ptxas info    : Used 255 registers, 528 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z35IGA_he_assembly_kernel_optimized_v0IdEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z35IGA_he_assembly_kernel_optimized_v0IdEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextE
+    72 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 124 registers, 4752 bytes smem, 512 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z50IGA_hyperelasticity_assembly_debug_kernel_v2_debugIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z50IGA_hyperelasticity_assembly_debug_kernel_v2_debugIdLy64EEvN6gpmesh13SplineContextENS0_23GaussianIntegralContextENS0_13PhysicContextENS0_15AssemblyContextE
+    4016 bytes stack frame, 840 bytes spill stores, 848 bytes spill loads
+ptxas info    : Used 255 registers, 512 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_clear_physics_displacementN6gpmesh13PhysicContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z30IGA_clear_physics_displacementN6gpmesh13PhysicContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, 376 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z42IGA_add_dirichlet_point_to_mass_local_matsN6gpmesh13SplineContextENS_11MassContextENS_21DirichletPointContextEj' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z42IGA_add_dirichlet_point_to_mass_local_matsN6gpmesh13SplineContextENS_11MassContextENS_21DirichletPointContextEj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 404 bytes cmem[0], 8 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z36IGA_add_dirichlet_to_mass_local_matsN6gpmesh13SplineContextENS_11MassContextENS_16DirichletContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z36IGA_add_dirichlet_to_mass_local_matsN6gpmesh13SplineContextENS_11MassContextENS_16DirichletContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 27 registers, 400 bytes cmem[0], 64 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z26IGA_clear_assembly_contextN6gpmesh15AssemblyContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z26IGA_clear_assembly_contextN6gpmesh15AssemblyContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 78 registers, 360 bytes cmem[0]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z42IGA_add_dirichlet_point_info_to_local_matsN6gpmesh13SplineContextENS_15AssemblyContextENS_21DirichletPointContextEj' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z42IGA_add_dirichlet_point_info_to_local_matsN6gpmesh13SplineContextENS_15AssemblyContextENS_21DirichletPointContextEj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 404 bytes cmem[0], 8 bytes cmem[2]
+ptxas info    : Compiling entry function '__nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z31IGA_add_dirichlet_to_local_matsN6gpmesh13SplineContextENS_15AssemblyContextENS_16DirichletContextE' for 'sm_89'
+ptxas info    : Function properties for __nv_static_61__aae1189e_33_Cuda_TopOpt_MultiMaterial_SIMP_cu_4114a2c7_18604__Z31IGA_add_dirichlet_to_local_matsN6gpmesh13SplineContextENS_15AssemblyContextENS_16DirichletContextE
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 27 registers, 400 bytes cmem[0], 64 bytes cmem[2]
+ptxas info    : Compiling entry function '_ZN3cub17CUB_200400_890_NS28DeviceReduceSingleTileKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdSA_iS7_ddNS5_10__identityEEEvT0_T1_T2_T3_T4_T6_' for 'sm_89'
+ptxas info    : Function properties for _ZN3cub17CUB_200400_890_NS28DeviceReduceSingleTileKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdSA_iS7_ddNS5_10__identityEEEvT0_T1_T2_T3_T4_T6_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 50 registers, 385 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN3cub17CUB_200400_890_NS18DeviceReduceKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdjS7_dNS5_10__identityEEEvT0_PT3_T1_NS0_13GridEvenShareISF_EET2_T4_' for 'sm_89'
+ptxas info    : Function properties for _ZN3cub17CUB_200400_890_NS18DeviceReduceKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdjS7_dNS5_10__identityEEEvT0_PT3_T1_NS0_13GridEvenShareISF_EET2_T4_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 45 registers, 414 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN3cub17CUB_200400_890_NS28DeviceReduceSingleTileKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdSA_jS7_ddNS5_10__identityEEEvT0_T1_T2_T3_T4_T6_' for 'sm_89'
+ptxas info    : Function properties for _ZN3cub17CUB_200400_890_NS28DeviceReduceSingleTileKernelINS0_18DeviceReducePolicyIdjN4cuda3std3__44plusIvEEE9Policy600EPdSA_jS7_ddNS5_10__identityEEEvT0_T1_T2_T3_T4_T6_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 44 registers, 385 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN3cub17CUB_200400_890_NS11EmptyKernelIvEEvv' for 'sm_89'
+ptxas info    : Function properties for _ZN3cub17CUB_200400_890_NS11EmptyKernelIvEEvv
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 4 registers, 352 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail34dot_kernel_spline_attribute_globalIdLj256EEEvNS_21SplineAttributeGlobalIT_EES4_jPS3_' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail34dot_kernel_spline_attribute_globalIdLj256EEEvNS_21SplineAttributeGlobalIT_EES4_jPS3_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 27 registers, 544 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail42squaredNorm_kernel_spline_attribute_globalIdLj256EEEvNS_21SplineAttributeGlobalIT_EEjPS3_' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail42squaredNorm_kernel_spline_attribute_globalIdLj256EEEvNS_21SplineAttributeGlobalIT_EEjPS3_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 456 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail23memset_spline_attributeIdEEvNS_19SplineAttributeBaseIT_EES3_tjj' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail23memset_spline_attributeIdEEvNS_19SplineAttributeBaseIT_EES3_tjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 436 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail23memset_spline_attributeIdEEvNS_21SplineAttributeGlobalIT_EES3_tjj' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail23memset_spline_attributeIdEEvNS_21SplineAttributeGlobalIT_EES3_tjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 460 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail35memset_spline_attribute_global_partIdEEvNS_21SplineAttributeGlobalIT_EES3_j' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail35memset_spline_attribute_global_partIdEEvNS_21SplineAttributeGlobalIT_EES3_j
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, 452 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail27spline_attr_global_to_localIdEEvPT_PS3_NS_35SplineAttributeGlobalMappingContextEj' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail27spline_attr_global_to_localIdEEvPT_PS3_NS_35SplineAttributeGlobalMappingContextEj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 380 bytes cmem[0]
+ptxas info    : Compiling entry function '_ZN6gpmesh6detail27spline_attr_local_to_globalIdEEvPT_PS3_NS_35SplineAttributeGlobalMappingContextEj' for 'sm_89'
+ptxas info    : Function properties for _ZN6gpmesh6detail27spline_attr_local_to_globalIdEEvPT_PS3_NS_35SplineAttributeGlobalMappingContextEj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 380 bytes cmem[0]
+ptxas info    : Compiling entry function '_Z4axpyIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_S2_S2_jP11CUstream_st' for 'sm_89'
+ptxas info    : Function properties for _Z4axpyIdEvN6gpmesh21SplineAttributeGlobalIT_EES3_S2_S2_jP11CUstream_st
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 560 bytes cmem[0]
+tmpxft_00017114_00000000-10_Cuda_TopOpt_MultiMaterial_SIMP.cudafe1.cpp
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(77): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(79): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(81): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(83): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(85): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(86): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(87): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(88): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(89): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(90): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(91): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(92): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(93): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(94): warning C4068: 未知的杂注“diag_suppress”
+D:\labCode\LabViewer-Vsub\include\Eigen\src/Core/util/DisableStupidWarnings.h(95): warning C4068: 未知的杂注“diag_suppress”
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog\fmt\bundled\format-inl.h(1319): note: 查看对正在编译的函数 模板 实例化“_OutIt std::copy<const T*,stdext::checked_array_iterator<T *>>(_InIt,_InIt,_OutIt)”的引用
+        with
+        [
+            _OutIt=stdext::checked_array_iterator<unsigned int *>,
+            T=unsigned int,
+            _InIt=const unsigned int *
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(4864): note: 查看对正在编译的函数 模板 实例化“decltype(auto) std::_Get_unwrapped_n<stdext::checked_array_iterator<T *>,__int64>(_Iter &&,const _Diff)”的引用
+        with
+        [
+            T=unsigned int,
+            _Iter=stdext::checked_array_iterator<unsigned int *>,
+            _Diff=__int64
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1446): note: 查看指向正在编译的变量模板“const bool _Unwrappable_for_offset_v<stdext::checked_array_iterator<unsigned int *> >”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1440): note: 查看指向正在编译的变量模板“const bool _Unwrappable_v<stdext::checked_array_iterator<unsigned int *>,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1367): note: 查看指向正在编译的变量模板“const bool _Allow_inheriting_unwrap_v<stdext::checked_array_iterator<unsigned int *>,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>::_Prevent_inheriting_unwrap': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): note: 模板实例化上下文(最早的实例化上下文)为
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1436): note: 查看对正在编译的 别名 模板 实例化“std::_Iter_diff_t<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<unsigned int *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1244): note: 查看对正在编译的 类 模板 实例化“std::iterator_traits<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<unsigned int *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(496): note: 查看对正在编译的 类 模板 实例化“std::_Iterator_traits_base<_Iter,void>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<unsigned int *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>::iterator_category': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>::value_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>::difference_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>::pointer': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>::reference': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1456): warning C4996: 'stdext::checked_array_iterator<T *>::_Verify_offset': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1457): warning C4996: 'stdext::checked_array_iterator<T *>::_Unwrapped': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(3229): warning C4477: “fprintf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“size_t”
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(3229): note: 请考虑在格式字符串中使用“%zd”
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(3229): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\Apps\SolverGPU\GP_Spline_v0.h(593): note: 查看对正在编译的函数 模板 实例化“void gpmesh::GPSplineSolidV0::helper_output_matrix<double>(std::string &,Eigen::MatrixXd)”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1479): warning C4996: 'stdext::checked_array_iterator<T *>::_Seek_to': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=unsigned int
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1479): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog\fmt\bundled\format-inl.h(1319): note: 查看对正在编译的函数 模板 实例化“_OutIt std::copy<const T*,stdext::checked_array_iterator<T *>>(_InIt,_InIt,_OutIt)”的引用
+        with
+        [
+            _OutIt=stdext::checked_array_iterator<unsigned int *>,
+            T=unsigned int,
+            _InIt=const unsigned int *
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(4865): note: 查看对正在编译的函数 模板 实例化“void std::_Seek_wrapped<_OutIt,unsigned int*>(_Iter &,_UIter &&)”的引用
+        with
+        [
+            _OutIt=stdext::checked_array_iterator<unsigned int *>,
+            _Iter=stdext::checked_array_iterator<unsigned int *>,
+            _UIter=unsigned int *
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/details/fmt_helper.h(23): note: 查看对正在编译的函数 模板 实例化“void fmt::v7::detail::buffer<char>::append<Char>(const U *,const U *)”的引用
+        with
+        [
+            Char=char,
+            U=char
+        ]
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/details/fmt_helper.h(23): note: 请参阅 "spdlog::details::fmt_helper::append_string_view" 中对 "fmt::v7::detail::buffer<char>::append" 的第一个引用
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/fmt/bundled/format.h(606): note: 查看对正在编译的函数 模板 实例化“_NoThrowFwdIt std::uninitialized_copy_n<const U*,unsigned __int64,stdext::checked_array_iterator<T *>>(const _InIt,const _Diff,_NoThrowFwdIt)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<char *>,
+            U=char,
+            T=char,
+            _InIt=const char *,
+            _Diff=unsigned __int64
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\memory(144): note: 查看对正在编译的函数 模板 实例化“decltype(auto) std::_Get_unwrapped_n<_NoThrowFwdIt&,unsigned __int64>(_Iter,const _Diff)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<char *>,
+            _Iter=stdext::checked_array_iterator<char *> &,
+            _Diff=unsigned __int64
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1446): note: 查看指向正在编译的变量模板“const bool _Unwrappable_for_offset_v<stdext::checked_array_iterator<char *> &>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1440): note: 查看指向正在编译的变量模板“const bool _Unwrappable_v<stdext::checked_array_iterator<char *> &,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1367): note: 查看指向正在编译的变量模板“const bool _Allow_inheriting_unwrap_v<stdext::checked_array_iterator<char *>,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>::_Prevent_inheriting_unwrap': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): note: 模板实例化上下文(最早的实例化上下文)为
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1436): note: 查看对正在编译的 别名 模板 实例化“std::_Iter_diff_t<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<char *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1244): note: 查看对正在编译的 类 模板 实例化“std::iterator_traits<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<char *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(496): note: 查看对正在编译的 类 模板 实例化“std::_Iterator_traits_base<_Iter,void>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<char *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>::iterator_category': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>::value_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>::difference_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>::pointer': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>::reference': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1456): warning C4996: 'stdext::checked_array_iterator<T *>::_Verify_offset': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1457): warning C4996: 'stdext::checked_array_iterator<T *>::_Unwrapped': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/fmt/bundled/format.h(1132): note: 查看对正在编译的 类 模板 实例化“fmt::v7::basic_memory_buffer<wchar_t,500,std::allocator<wchar_t>>”的引用
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/fmt/bundled/format.h(741): note: 在编译 类 模板 成员函数“void fmt::v7::basic_memory_buffer<wchar_t,500,std::allocator<wchar_t>>::grow(size_t)”时
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/fmt/bundled/format.h(752): note: 查看对正在编译的函数 模板 实例化“_NoThrowFwdIt std::uninitialized_copy<T*,stdext::checked_array_iterator<T *>>(const _InIt,const _InIt,_NoThrowFwdIt)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<wchar_t *>,
+            T=wchar_t,
+            _InIt=wchar_t *
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(1970): note: 查看对正在编译的函数 模板 实例化“decltype(auto) std::_Get_unwrapped_n<_NoThrowFwdIt&,__int64>(_Iter,const _Diff)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<wchar_t *>,
+            _Iter=stdext::checked_array_iterator<wchar_t *> &,
+            _Diff=__int64
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1446): note: 查看指向正在编译的变量模板“const bool _Unwrappable_for_offset_v<stdext::checked_array_iterator<wchar_t *> &>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1440): note: 查看指向正在编译的变量模板“const bool _Unwrappable_v<stdext::checked_array_iterator<wchar_t *> &,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1367): note: 查看指向正在编译的变量模板“const bool _Allow_inheriting_unwrap_v<stdext::checked_array_iterator<wchar_t *>,void>”的引用
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1340): warning C4996: 'stdext::checked_array_iterator<T *>::_Prevent_inheriting_unwrap': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): note: 模板实例化上下文(最早的实例化上下文)为
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1436): note: 查看对正在编译的 别名 模板 实例化“std::_Iter_diff_t<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<wchar_t *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1244): note: 查看对正在编译的 类 模板 实例化“std::iterator_traits<_Iter>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<wchar_t *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(496): note: 查看对正在编译的 类 模板 实例化“std::_Iterator_traits_base<_Iter,void>”的引用
+        with
+        [
+            _Iter=stdext::checked_array_iterator<wchar_t *>
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(476): warning C4996: 'stdext::checked_array_iterator<T *>::iterator_category': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(477): warning C4996: 'stdext::checked_array_iterator<T *>::value_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(478): warning C4996: 'stdext::checked_array_iterator<T *>::difference_type': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(479): warning C4996: 'stdext::checked_array_iterator<T *>::pointer': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\iterator(1483): note: 参见“stdext::checked_array_iterator”的声明
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\__msvc_iter_core.hpp(480): warning C4996: 'stdext::checked_array_iterator<T *>::reference': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1456): warning C4996: 'stdext::checked_array_iterator<T *>::_Verify_offset': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1457): warning C4996: 'stdext::checked_array_iterator<T *>::_Unwrapped': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=wchar_t
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1479): warning C4996: 'stdext::checked_array_iterator<T *>::_Seek_to': warning STL4043: stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
+        with
+        [
+            T=char
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\xutility(1479): note: 模板实例化上下文(最早的实例化上下文)为
+D:\labCode\LabViewer-Vsub\include\spdlog\include\spdlog/fmt/bundled/format.h(606): note: 查看对正在编译的函数 模板 实例化“_NoThrowFwdIt std::uninitialized_copy_n<const U*,unsigned __int64,stdext::checked_array_iterator<T *>>(const _InIt,const _Diff,_NoThrowFwdIt)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<char *>,
+            U=char,
+            T=char,
+            _InIt=const char *,
+            _Diff=unsigned __int64
+        ]
+D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\include\memory(157): note: 查看对正在编译的函数 模板 实例化“void std::_Seek_wrapped<_NoThrowFwdIt,_Ptr&>(_Iter &,_UIter)”的引用
+        with
+        [
+            _NoThrowFwdIt=stdext::checked_array_iterator<char *>,
+            _Ptr=char *,
+            _Iter=stdext::checked_array_iterator<char *>,
+            _UIter=char *&
+        ]
+[32/44] Linking CXX static library Apps\SolverGPU\SolverGPU.lib
+[33/44] Automatic MOC and UIC for target iGamePoster
+[34/43] Automatic MOC and UIC for target TestApp0
+[35/42] Automatic MOC and UIC for target DevGPU
+[36/41] Linking CXX executable CMakeFiles\iGamePoster.dir\cmake_device_link.obj
+mocs_compilation.cpp.obj
+Analysis.cpp.obj
+Analysis_GPU_Version.cpp.obj
+Bdy.cpp.obj
+BezierSolid.cpp.obj
+BoostThrowException.cpp.obj
+BuildUI.cpp.obj
+CBSplineSolid.cpp.obj
+CatmullClarkBezierSolver.cpp.obj
+CoordinateAxis.cpp.obj
+CoverageAxis.cpp.obj
+FileHandler.cpp.obj
+FunctionBSpline.cpp.obj
+GenHexSkel.cpp.obj
+Hyperelastic.cpp.obj
+IGA_CC_Helper.cpp.obj
+IsoThermalSolver.cpp.obj
+ModelDraw.cpp.obj
+PIA.cpp.obj
+PrintInfo.cpp.obj
+SingalFather.cpp.obj
+SingalSlot.cpp.obj
+SparseSystem.cpp.obj
+Subdivision.cpp.obj
+Subdivision_supplement.cpp.obj
+SurfaceFitter.cpp.obj
+TimeIntegrator.cpp.obj
+ToolFunc.cpp.obj
+TopOpt.cpp.obj
+Topopt_GPU_Version.cpp.obj
+Transform.cpp.obj
+ViewOpenGL.cpp.obj
+aboutDialog.cpp.obj
+assembler.cpp.obj
+edge_subdivision.cpp.obj
+helpDoc.cpp.obj
+iGamePoster.cpp.obj
+massAssembler.cpp.obj
+nrbNurbs.cpp.obj
+solutionSkel.cpp.obj
+stiffAssembler.cpp.obj
+main.cpp.obj
+qrc_Poster.cpp.obj
+SolverGPU.lib
+CommonLib.lib
+MeshKernel.lib
+json.lib
+Tools.lib
+OpenMeshCored.lib
+OpenMeshToolsd.lib
+SkeletalMesh.lib
+tinyXML.lib
+BSpline3D.lib
+BMesh.lib
+VolumeAlgorithm.lib
+SurfaceAlgorithm.lib
+SkeletalPipeline.lib
+gurobi120.lib
+gurobi_c++mdd2017.lib
+Hyperelasticity.lib
+tbb12_debug.lib
+mkl_intel_lp64.lib
+mkl_intel_thread.lib
+mkl_core.lib
+libiomp5md.lib
+opengl32.lib
+winmm.lib
+gdi32.lib
+tetgen.lib
+Geom.lib
+advapi32.lib
+user32.lib
+wsock32.lib
+psapi.lib
+TKG2d.lib
+TKG3d.lib
+TKGeomBase.lib
+TKBRep.lib
+TKGeomAlgo.lib
+TKTopAlgo.lib
+TKPrim.lib
+TKBO.lib
+TKShHealing.lib
+TKBool.lib
+TKHLR.lib
+TKFillet.lib
+TKOffset.lib
+TKFeat.lib
+TKMesh.lib
+TKXMesh.lib
+TKService.lib
+TKV3d.lib
+TKOpenGl.lib
+TKMeshVS.lib
+TKCDF.lib
+TKLCAF.lib
+TKCAF.lib
+TKBinL.lib
+TKXmlL.lib
+TKBin.lib
+TKXml.lib
+TKStdL.lib
+TKStd.lib
+TKTObj.lib
+TKBinTObj.lib
+TKXmlTObj.lib
+TKVCAF.lib
+TKXDE.lib
+TKXSBase.lib
+TKSTEPBase.lib
+TKSTEPAttr.lib
+TKSTEP209.lib
+TKSTEP.lib
+TKIGES.lib
+TKXCAF.lib
+TKXDEIGES.lib
+TKXDESTEP.lib
+TKSTL.lib
+TKVRML.lib
+TKRWMesh.lib
+TKXmlXCAF.lib
+TKBinXCAF.lib
+TKXDECascade.lib
+TKExpress.lib
+TKDraw.lib
+TKTopTest.lib
+TKOpenGlTest.lib
+TKViewerTest.lib
+TKXSDRAW.lib
+TKDCAF.lib
+TKXDEDRAW.lib
+TKTObjDRAW.lib
+TKQADraw.lib
+nlopt.lib
+cudadevrt.lib
+cudart_static.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+winspool.lib
+shell32.lib
+ole32.lib
+oleaut32.lib
+uuid.lib
+comdlg32.lib
+advapi32.lib
+[37/41] Linking CXX executable CMakeFiles\TestApp0.dir\cmake_device_link.obj
+mocs_compilation.cpp.obj
+test.cu.obj
+SolverGPU.lib
+MeshKernel.lib
+Hyperelasticity.lib
+tinyXML.lib
+tbb12_debug.lib
+mkl_intel_lp64.lib
+mkl_intel_thread.lib
+mkl_core.lib
+libiomp5md.lib
+Geom.lib
+TKG2d.lib
+TKG3d.lib
+TKGeomBase.lib
+TKBRep.lib
+TKGeomAlgo.lib
+TKTopAlgo.lib
+TKPrim.lib
+TKBO.lib
+TKShHealing.lib
+TKBool.lib
+TKHLR.lib
+TKFillet.lib
+TKOffset.lib
+TKFeat.lib
+TKMesh.lib
+TKXMesh.lib
+TKService.lib
+TKV3d.lib
+TKOpenGl.lib
+TKMeshVS.lib
+TKCDF.lib
+TKLCAF.lib
+TKCAF.lib
+TKBinL.lib
+TKXmlL.lib
+TKBin.lib
+TKXml.lib
+TKStdL.lib
+TKStd.lib
+TKTObj.lib
+TKBinTObj.lib
+TKXmlTObj.lib
+TKVCAF.lib
+TKXDE.lib
+TKXSBase.lib
+TKSTEPBase.lib
+TKSTEPAttr.lib
+TKSTEP209.lib
+TKSTEP.lib
+TKIGES.lib
+TKXCAF.lib
+TKXDEIGES.lib
+TKXDESTEP.lib
+TKSTL.lib
+TKVRML.lib
+TKRWMesh.lib
+TKXmlXCAF.lib
+TKBinXCAF.lib
+TKXDECascade.lib
+TKExpress.lib
+TKDraw.lib
+TKTopTest.lib
+TKOpenGlTest.lib
+TKViewerTest.lib
+TKXSDRAW.lib
+TKDCAF.lib
+TKXDEDRAW.lib
+TKTObjDRAW.lib
+TKQADraw.lib
+advapi32.lib
+gdi32.lib
+user32.lib
+wsock32.lib
+psapi.lib
+CommonLib.lib
+cudadevrt.lib
+cudart_static.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+winspool.lib
+shell32.lib
+ole32.lib
+oleaut32.lib
+uuid.lib
+comdlg32.lib
+advapi32.lib
+[38/41] Linking CXX executable CMakeFiles\DevGPU.dir\cmake_device_link.obj
+mocs_compilation.cpp.obj
+test.cu.obj
+SolverGPU.lib
+MeshKernel.lib
+Hyperelasticity.lib
+tinyXML.lib
+tbb12_debug.lib
+mkl_intel_lp64.lib
+mkl_intel_thread.lib
+mkl_core.lib
+libiomp5md.lib
+Geom.lib
+TKG2d.lib
+TKG3d.lib
+TKGeomBase.lib
+TKBRep.lib
+TKGeomAlgo.lib
+TKTopAlgo.lib
+TKPrim.lib
+TKBO.lib
+TKShHealing.lib
+TKBool.lib
+TKHLR.lib
+TKFillet.lib
+TKOffset.lib
+TKFeat.lib
+TKMesh.lib
+TKXMesh.lib
+TKService.lib
+TKV3d.lib
+TKOpenGl.lib
+TKMeshVS.lib
+TKCDF.lib
+TKLCAF.lib
+TKCAF.lib
+TKBinL.lib
+TKXmlL.lib
+TKBin.lib
+TKXml.lib
+TKStdL.lib
+TKStd.lib
+TKTObj.lib
+TKBinTObj.lib
+TKXmlTObj.lib
+TKVCAF.lib
+TKXDE.lib
+TKXSBase.lib
+TKSTEPBase.lib
+TKSTEPAttr.lib
+TKSTEP209.lib
+TKSTEP.lib
+TKIGES.lib
+TKXCAF.lib
+TKXDEIGES.lib
+TKXDESTEP.lib
+TKSTL.lib
+TKVRML.lib
+TKRWMesh.lib
+TKXmlXCAF.lib
+TKBinXCAF.lib
+TKXDECascade.lib
+TKExpress.lib
+TKDraw.lib
+TKTopTest.lib
+TKOpenGlTest.lib
+TKViewerTest.lib
+TKXSDRAW.lib
+TKDCAF.lib
+TKXDEDRAW.lib
+TKTObjDRAW.lib
+TKQADraw.lib
+advapi32.lib
+gdi32.lib
+user32.lib
+wsock32.lib
+psapi.lib
+CommonLib.lib
+cudadevrt.lib
+cudart_static.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+winspool.lib
+shell32.lib
+ole32.lib
+oleaut32.lib
+uuid.lib
+comdlg32.lib
+advapi32.lib
+[39/41] Linking CXX executable D:\labCode\LabViewer-Vsub\out\build\bin\DevGPU.exe
+[40/41] Linking CXX executable D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe
+D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe 64 bit, debug executable
+Adding Qt5Svg for qsvgicond.dll
+Direct dependencies: Qt5Core Qt5Gui Qt5Widgets
+All dependencies   : Qt5Core Qt5Gui Qt5Widgets
+To be deployed     : Qt5Core Qt5Gui Qt5Svg Qt5Widgets
+Qt5Cored.dll is up to date.
+Qt5Guid.dll is up to date.
+Qt5Svgd.dll is up to date.
+Qt5Widgetsd.dll is up to date.
+libGLESv2d.dll is up to date.
+libEGLd.dll is up to date.
+d3dcompiler_47.dll is up to date.
+opengl32sw.dll is up to date.
+concrt140d.dll is up to date.
+msvcp140_1d.dll is up to date.
+msvcp140_2d.dll is up to date.
+msvcp140d.dll is up to date.
+msvcp140d_atomic_wait.dll is up to date.
+msvcp140d_codecvt_ids.dll is up to date.
+vccorlib140d.dll is up to date.
+vcruntime140_1d.dll is up to date.
+vcruntime140_threadsd.dll is up to date.
+vcruntime140d.dll is up to date.
+qsvgicond.dll is up to date.
+qgifd.dll is up to date.
+qicnsd.dll is up to date.
+qicod.dll is up to date.
+qjpegd.dll is up to date.
+qsvgd.dll is up to date.
+qtgad.dll is up to date.
+qtiffd.dll is up to date.
+qwbmpd.dll is up to date.
+qwebpd.dll is up to date.
+qwindowsd.dll is up to date.
+qwindowsvistastyled.dll is up to date.
+Creating qt_ar.qm...
+Creating qt_bg.qm...
+Creating qt_ca.qm...
+Creating qt_cs.qm...
+Creating qt_da.qm...
+Creating qt_de.qm...
+Creating qt_en.qm...
+Creating qt_es.qm...
+Creating qt_fi.qm...
+Creating qt_fr.qm...
+Creating qt_gd.qm...
+Creating qt_he.qm...
+Creating qt_hu.qm...
+Creating qt_it.qm...
+Creating qt_ja.qm...
+Creating qt_ko.qm...
+Creating qt_lv.qm...
+Creating qt_pl.qm...
+Creating qt_ru.qm...
+Creating qt_sk.qm...
+Creating qt_uk.qm...
+Creating qt_zh_TW.qm...
+[41/41] Linking CXX executable D:\labCode\LabViewer-Vsub\out\build\bin\TestApp0.exe

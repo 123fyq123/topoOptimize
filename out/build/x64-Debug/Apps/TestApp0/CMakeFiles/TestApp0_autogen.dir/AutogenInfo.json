@@ -52,6 +52,8 @@
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/CatmullClarkBezierSolver.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_Hyperelasticity_Solver.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_Linear_Elastic_Solver.h",
+		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MMC_SIMP_Sequential.h",
+		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MultiMaterial_SIMP.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MultiRes.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_Pipeline.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Eigen_helper.h",

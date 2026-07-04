@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by XieJin on 10/27/2023.
 //
 #include "Cuda_TopOpt_Pipeline.h"
@@ -1179,6 +1179,14 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 						l1, l2, l3,
 						-alp_tmp, bet_tmp, gam_tmp);
 					comps.push_back(c2);
+					MMC_Component c3(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c3);
+					MMC_Component c4(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c4);
 					//}
 				}
 				else

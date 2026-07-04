@@ -35,6 +35,7 @@ private:
 	Ui::MainWindow *ui;
 	BuildUI* build_ui_;
 	SingalSlot* singal_slot_;
+	QTimer* topopt_refresh_timer_ = nullptr;
 
     QButtonGroup buttonGroup_forPick;
 
@@ -152,6 +153,7 @@ public slots:
 	void TopOpt_Run();
     void TopOpt_Run_2();
 	void TopOpt_Run_4();
+	void TopOpt_Run_Seq();
 	void Protect_topopt();
 
 	bool UpdateTopoptDensity();

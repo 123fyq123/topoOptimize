@@ -24,6 +24,12 @@ add_executable(${APP_NAME} ${SUB_SOURCE_FILES} ${SOURCE_FILES} ${QRC_FILES} ${UI
         source/CoverageAxis.h
         source/BoostThrowException.cpp  )
 
+if(MSVC)
+    # Debug 版主程序链接的 PDB 很容易接近 4GB，导致 LNK1201 写入失败。
+    # FASTLINK 保留调试能力，同时避免把所有依赖符号完整合并进 iGamePoster.pdb。
+    target_link_options(${APP_NAME} PRIVATE "$<$<CONFIG:Debug>:/DEBUG:FASTLINK>")
+endif()
+
 if(WIN32)
     add_custom_command(TARGET ${APP_NAME}
             POST_BUILD

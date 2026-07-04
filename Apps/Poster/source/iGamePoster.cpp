@@ -15,6 +15,15 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 	ui->setupUi(this);
 	build_ui_ = new BuildUI(ui);
 	singal_slot_ = new SingalSlot(ui);
+	topopt_refresh_timer_ = new QTimer(this);
+	topopt_refresh_timer_->setInterval(80);
+	connect(topopt_refresh_timer_, &QTimer::timeout, this, [this]() {
+		if (ui == nullptr || ui->openGLWidget == nullptr) return;
+		if (ui->openGLWidget->is_need_update_topopt_model) {
+			ui->openGLWidget->update();
+		}
+		});
+	topopt_refresh_timer_->start();
 	ui->tabWidget->removeTab(5);
 	buttonGroup_forPick.setExclusive(true);
 	buttonGroup_forPick.addButton(ui->ckbEnablePick);
@@ -1125,6 +1134,7 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 	connect(ui->TopOpt_Run, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run()));
 	connect(ui->TopOpt_Run_2, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_2()));
 	connect(ui->TopOpt_Run_4, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_4()));
+	connect(ui->TopOpt_Run_Seq, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_Seq()));
 	connect(ui->fix_topopt_result, SIGNAL(clicked(bool)), this, SLOT(SetFinalTopOptMesh()));
 	// connect(ui->Protect_topopt, SIGNAL(clicked(bool)), this, SLOT(Protect_topopt()));
 
@@ -2098,7 +2108,27 @@ void iGamePoster::TopOpt_Run_4() {
 			ui->TopOpt_Rate_2->text().toDouble(),
 			ui->TopOpt_Iters_2->text().toDouble(),
 			//ui->openGLWidget->YoungsModulus,
+			1,
+			ui->openGLWidget->PoissonsRatio,
+			ui->openGLWidget->hex_density,
+			ui->openGLWidget->is_need_update_topopt_model);
+		});
+}
+
+void iGamePoster::TopOpt_Run_Seq() {
+
+	QtConcurrent::run([&]() {
+		ui->openGLWidget->analysis_flag = false;
+		TopOpt_GPU_MMC_SIMP_Sequential(poster_filename,
+			ui->openGLWidget->hexbdy,
+			ui->openGLWidget->topopt_pro,
+			ui->TopOpt_MMC_type->text().toInt(),
+			ui->TopOpt_Rate_2->text().toDouble(),
+			ui->TopOpt_Iters_2->text().toDouble(),
+			1.5,
+			ui->TopOpt_Iters_2->text().toDouble(),
 			1.0,
+			2.0,
 			ui->openGLWidget->PoissonsRatio,
 			ui->openGLWidget->hex_density,
 			ui->openGLWidget->is_need_update_topopt_model);

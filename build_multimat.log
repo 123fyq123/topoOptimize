@@ -1,0 +1,27 @@
+[1/64] Automatic MOC and UIC for target Geom
+[2/62] Automatic MOC and UIC for target OpenMeshCore
+[3/60] Automatic MOC and UIC for target MeshKernel
+[4/58] Automatic MOC and UIC for target tinyXML
+[5/56] Automatic MOC and UIC for target nlopt
+[6/54] Automatic MOC and UIC for target CommonLib
+[7/52] Automatic MOC and UIC for target json
+[8/50] Automatic MOC and UIC for target tetgen
+[9/48] Automatic MOC and UIC for target freeglut
+[10/46] Automatic MOC and UIC for target tbb
+[11/44] Automatic MOC and UIC for target OpenMeshTools
+[12/42] Automatic MOC and UIC for target Tools
+[13/40] Automatic MOC and UIC for target Hyperelasticity
+[14/38] Automatic MOC and UIC for target SkeletalPipeline
+[15/36] Automatic MOC and UIC for target BSpline3D
+[16/34] Automatic MOC and UIC for target BMesh
+[17/32] Automatic MOC and UIC for target SkeletalMesh
+[18/30] Automatic MOC and UIC for target SurfaceAlgorithm
+[19/28] Automatic MOC and UIC for target VolumeAlgorithm
+[20/26] Automatic MOC and UIC for target SolverGPU
+[21/24] Automatic MOC and UIC for target iGamePoster
+[22/22] Linking CXX executable D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe
+FAILED: D:/labCode/LabViewer-Vsub/out/build/bin/iGamePoster.exe 
+C:\WINDOWS\system32\cmd.exe /C "cd . && D:\apps\VS\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=Apps\Poster\CMakeFiles\iGamePoster.dir --rc=D:\WINDOW~1\10\bin\100261~1.0\x64\rc.exe --mt=D:\WINDOW~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\iGamePoster.rsp  /out:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe /implib:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.lib /pdb:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console && Apps\Poster\CMakeFiles\iGamePoster.dir\post-build.bat 27e76be1e7716cf6"
+LINK Pass 1: command "D:\apps\VS\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\iGamePoster.rsp /out:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe /implib:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.lib /pdb:D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console /MANIFEST /MANIFESTFILE:Apps\Poster\CMakeFiles\iGamePoster.dir/intermediate.manifest Apps\Poster\CMakeFiles\iGamePoster.dir/manifest.res" failed (exit code 1168) with the following output:
+LINK : fatal error LNK1168: 无法打开 D:\labCode\LabViewer-Vsub\out\build\bin\iGamePoster.exe 进行写入
+ninja: build stopped: subcommand failed.

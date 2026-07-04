@@ -8,6 +8,7 @@
 #include "CatmullClarkBezierSolver.h"
 #include "Timer.h"
 #include "SolverGPU/Cuda_TopOpt_Pipeline.h"
+#include "SolverGPU/Cuda_TopOpt_MMC_SIMP_Sequential.h"
 #include "SolverGPU/Cuda_TopOpt_MultiRes.h"
 
 void TopOpt_GPU_V0(std::string _filename,
@@ -318,4 +319,87 @@ void TopOpt_GPU_Discrete(std::string _filename,
 	}
 	All.out("Cuda_TopOpt_Discrete end");
 	std::cout << _filename << "\n";
+}
+
+void TopOpt_GPU_MMC_SIMP_Sequential(std::string _filename,
+	IGA::HexBdy& hexbdy,
+	std::vector<int>& pro,
+	int mmcType,
+	double mmc_target_rate,
+	double mmc_max_iter,
+	double material_ratio_f,
+	double simp_max_iter,
+	double E1,
+	double E2,
+	double Poisson,
+	std::vector<double>& density,
+	std::atomic_bool& is_need_update_topopt_model) {
+	if (hexbdy.empty()) {
+		std::cerr << "No Boundary Condition!" << std::endl;
+		return;
+	}
+
+	BSplineSolid m_solids;
+	FileHandler file(_filename);
+	std::string model_name = IGA_CC_Helper::get_model_name(_filename);
+	HexV3fMesh* mesh = new HexV3fMesh();
+	file.read2HexMeshObj(mesh, true, true, true);
+	ApproximationCC AppCCSIMP(mesh, nullptr);
+	AppCCSIMP.construct_bss_new();
+	m_solids = AppCCSIMP.bss;
+
+	std::filesystem::path temp_path("./temp/");
+	if (!std::filesystem::exists(temp_path)) std::filesystem::create_directory(temp_path);
+
+	std::string bezier_file = "./temp/" + model_name + ".xml";
+	std::string bdy_file = "./temp/" + model_name + ".bdy";
+	IGA_CC_Helper::write2Bezier(bezier_file, m_solids);
+
+	IGA::CCBezierBdy ccbdy;
+	IGA::BdyConvert_V2(_filename, hexbdy, ccbdy, AppCCSIMP);
+	IGA_CC_Helper::write2bdy(bdy_file, ccbdy, m_solids);
+
+	std::vector<std::vector<std::pair<int, double>>> neighbor_info;
+	std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>> cell2V;
+	std::map<int, Eigen::Vector3d> allVertex;
+	for (int i = 0; i < static_cast<int>(mesh->vertices_.size()); ++i) {
+		auto v = mesh->vertices_[i];
+		allVertex[i] = Eigen::Vector3d{ v.x, v.y, v.z };
+	}
+	for (int i = 0; i < static_cast<int>(mesh->cells_.size()); ++i) {
+		cell2V[i].resize(8);
+		auto cellV = mesh->cells_[i].vertex_;
+		for (int j = 0; j < 8; ++j) {
+			int idx = cellV[j].idx();
+			auto v = mesh->vertices_[idx];
+			cell2V[i][j] = std::make_pair(idx, Eigen::Vector3d{ v.x, v.y, v.z });
+		}
+	}
+
+	for (int i = 0; i < static_cast<int>(m_solids.Local_V3f.size()); ++i) {
+		std::vector<CellHandle> temp_aroundcell;
+		std::vector<double> temp_aroundcell_weight;
+		double rmin = std::numeric_limits<float>::max();
+		std::set<CellHandle> c_c = mesh->neighbor_c_c(CellHandle(i));
+		for (auto c_c_it = c_c.begin(); c_c_it != c_c.end(); ++c_c_it) {
+			rmin = fmin(rmin, distance(mesh->cell_center[i], mesh->cell_center[*c_c_it]));
+		}
+		rmin = rmin * 1.5;
+		for (int k = 0; k < static_cast<int>(mesh->cells_.size()); ++k) {
+			double rdis = distance(mesh->cell_center[i], mesh->cell_center[k]);
+			if (rdis <= rmin) {
+				temp_aroundcell.push_back(CellHandle(k));
+				temp_aroundcell_weight.push_back(rmin - rdis);
+			}
+		}
+		std::vector<std::pair<int, double>> temp_neighbor_info;
+		for (int j = 0; j < static_cast<int>(temp_aroundcell.size()); ++j) {
+			temp_neighbor_info.emplace_back(std::pair<int, double>{temp_aroundcell[j], temp_aroundcell_weight[j]});
+		}
+		neighbor_info.emplace_back(temp_neighbor_info);
+	}
+
+	Cuda_TopOpt_MMC_SIMP_Sequential(allVertex, cell2V, bezier_file, bdy_file, pro, neighbor_info,
+		mmc_target_rate, mmc_max_iter, material_ratio_f, simp_max_iter, E1, E2, Poisson,
+		density, is_need_update_topopt_model, mmcType);
 }
