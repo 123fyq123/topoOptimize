@@ -1,13 +1,79 @@
-#include "iGamePoster.h"
+﻿#include "iGamePoster.h"
 #include "Analysis.h"
 #include<fstream>
 #include<sstream>
 #include<iostream>
 #include <atomic>
 #include <magic_enum.hpp>
-//#pragma execution_character_set("utf-8")
+#include <QMessageBox>
+#pragma execution_character_set("utf-8")
 #include <filesystem>
 #include "IGA_CC_Helper.h"
+
+namespace {
+
+#define IGAME_STRINGIFY_IMPL(x) #x
+#define IGAME_STRINGIFY(x) IGAME_STRINGIFY_IMPL(x)
+
+bool WriteRegularHexMeshFile(const std::filesystem::path& output_path, int nx, int ny, int nz)
+{
+	if (nx <= 0 || ny <= 0 || nz <= 0) {
+		return false;
+	}
+
+	std::ofstream out(output_path, std::ios::out);
+	if (!out.good()) {
+		return false;
+	}
+
+	const int vertex_count = (nx + 1) * (ny + 1) * (nz + 1);
+	const int cell_count = nx * ny * nz;
+	const double half_x = static_cast<double>(nx) / 2.0;
+	const double half_y = static_cast<double>(ny) / 2.0;
+	const double half_z = static_cast<double>(nz) / 2.0;
+	out << "MeshVersionFormatted 1\n";
+	out << "Dimension 3\n";
+	out << "Vertices\n";
+	out << vertex_count << "\n";
+	for (int k = 0; k <= nz; ++k) {
+		const double z = half_z - static_cast<double>(k);
+		for (int j = 0; j <= ny; ++j) {
+			const double y = -half_y + static_cast<double>(j);
+			for (int i = 0; i <= nx; ++i) {
+				const double x = -half_x + static_cast<double>(i);
+				out << x << " " << y << " " << z << " -1\n";
+			}
+		}
+	}
+
+	auto vertex_id = [nx, ny](int i, int j, int k) {
+		return k * (ny + 1) * (nx + 1) + j * (nx + 1) + i + 1;
+	};
+
+	out << "Hexahedra\n";
+	out << cell_count << "\n";
+	for (int k = 0; k < nz; ++k) {
+		for (int j = 0; j < ny; ++j) {
+			for (int i = 0; i < nx; ++i) {
+				const int v1 = vertex_id(i, j, k);
+				const int v2 = vertex_id(i + 1, j, k);
+				const int v3 = vertex_id(i + 1, j + 1, k);
+				const int v4 = vertex_id(i, j + 1, k);
+				const int v5 = vertex_id(i, j, k + 1);
+				const int v6 = vertex_id(i + 1, j, k + 1);
+				const int v7 = vertex_id(i + 1, j + 1, k + 1);
+				const int v8 = vertex_id(i, j + 1, k + 1);
+				out << v1 << " " << v2 << " " << v3 << " " << v4 << " "
+					<< v5 << " " << v6 << " " << v7 << " " << v8 << " 1\n";
+			}
+		}
+	}
+	out << "End\n";
+
+	return out.good();
+}
+
+}
 
 iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -35,6 +101,13 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 	ui->toolBox_4->setVisible(true);
 	ui->btnTestDetFaces->setVisible(false);
 	ui->btnTestResample->setVisible(false);
+
+	{
+		QWidget* topopt_page = ui->TopOpt_MMC_type->parentWidget();
+		btn_generate_hex_mesh_ = new QPushButton("Generate Mesh", topopt_page);
+		btn_generate_hex_mesh_->setObjectName("btnGenerateHexMesh");
+		btn_generate_hex_mesh_->setGeometry(20, 305, 231, 27);
+	}
 
 	//	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
 	//	ui->tabWidget->removeTab(1);  // 删除Tab，实际效果是隐藏Tab
@@ -1135,6 +1208,7 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 	connect(ui->TopOpt_Run_2, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_2()));
 	connect(ui->TopOpt_Run_4, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_4()));
 	connect(ui->TopOpt_Run_Seq, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_Seq()));
+	connect(btn_generate_hex_mesh_, SIGNAL(clicked(bool)), this, SLOT(GenerateRegularHexMesh()));
 	connect(ui->fix_topopt_result, SIGNAL(clicked(bool)), this, SLOT(SetFinalTopOptMesh()));
 	// connect(ui->Protect_topopt, SIGNAL(clicked(bool)), this, SLOT(Protect_topopt()));
 
@@ -2135,6 +2209,58 @@ void iGamePoster::TopOpt_Run_Seq() {
 		});
 }
 
+void iGamePoster::GenerateRegularHexMesh() {
+	QDialog dialog(this);
+	dialog.setWindowTitle("Generate regular hex mesh");
+
+	QFormLayout form(&dialog);
+	QSpinBox x_cells(&dialog);
+	QSpinBox y_cells(&dialog);
+	QSpinBox z_cells(&dialog);
+	for (QSpinBox* spin_box : { &x_cells, &y_cells, &z_cells }) {
+		spin_box->setRange(1, 10000);
+		spin_box->setSingleStep(1);
+	}
+	x_cells.setValue(64);
+	y_cells.setValue(32);
+	z_cells.setValue(4);
+	form.addRow("X cells:", &x_cells);
+	form.addRow("Y cells:", &y_cells);
+	form.addRow("Z cells:", &z_cells);
+
+	QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+	form.addRow(&buttons);
+	connect(&buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+	connect(&buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+	if (dialog.exec() != QDialog::Accepted) {
+		return;
+	}
+
+	const int nx = x_cells.value();
+	const int ny = y_cells.value();
+	const int nz = z_cells.value();
+
+	const std::filesystem::path output_dir = std::filesystem::path(IGAME_STRINGIFY(INPUT_DIR)) / "topopt";
+	std::error_code ec;
+	std::filesystem::create_directories(output_dir, ec);
+	if (ec) {
+		QMessageBox::warning(this, "Mesh generation failed",
+			"Could not create the output directory.");
+		return;
+	}
+
+	const std::string filename = "hex_mesh_" + std::to_string(nx) + "_" +
+		std::to_string(ny) + "_" + std::to_string(nz) + ".mesh";
+	const std::filesystem::path output_path = output_dir / filename;
+	if (!WriteRegularHexMeshFile(output_path, nx, ny, nz)) {
+		QMessageBox::warning(this, "Mesh generation failed",
+			"Could not write the mesh file.");
+		return;
+	}
+
+	QMessageBox::information(this, "Mesh generated",
+		QString::fromStdString("Generated: " + output_path.string()));
+}
 void iGamePoster::Protect_topopt() {
 	vv = ui->openGLWidget->selected_c_indices;
 	ui->openGLWidget->selected_c_indices.clear();

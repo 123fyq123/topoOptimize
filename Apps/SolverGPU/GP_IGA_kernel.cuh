@@ -1538,6 +1538,9 @@ __global__ static void TopOpt_Assembly_Local_Matrix(const gpmesh::SplineContext 
 	}
 }
 
+
+
+
 template<typename T, size_t blockThreads>
 __global__ static void TopOpt_Assembly_Local_Matrix_MMC(const gpmesh::SplineContext context,
 	const gpmesh::GaussianIntegralContext integral_context,

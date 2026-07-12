@@ -1618,7 +1618,7 @@ void ModelDraw::updateDrawData_Topopt() {
 
         bool drawFlag = false;
         auto vhs = cp.second.getVertexHandle();
-        if (hex_density[cp.first.idx()] >= 0.69) drawFlag = true;
+        if (hex_density[cp.first.idx()] >= topopt_density) drawFlag = true;
 
         if (drawFlag) {
             auto fhs = cp.second.getFaceHandle();

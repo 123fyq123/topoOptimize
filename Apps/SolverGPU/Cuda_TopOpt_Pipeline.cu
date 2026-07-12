@@ -1130,7 +1130,7 @@ double Heaviside(double phi, double alpha, double epsilon) {
 // xInt: x杆件放置间隔
 std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 	double xInt, double yInt, double zInt,
-	const std::vector<double>& vInt, int type = -1)
+	const std::vector<double>& vInt, int type)
 {
 	std::vector<MMC_Component> comps;
 	if (vInt.size() < 6) return comps;
@@ -1166,7 +1166,28 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 	for (size_t iz = 0; iz < zs.size(); ++iz) {
 		for (size_t iy = 0; iy < ys.size(); ++iy) {
 			for (size_t ix = 0; ix < xs.size(); ++ix) {
-				if (type != -1) {
+				if (type == 5 || type == 6 || type == 7) {
+					double x0 = xs[ix];
+					double y0 = ys[iy];
+					double z0 = zs[iz];
+					MMC_Component c1(x0, y0, z0,
+						l1, l2, l3,
+						alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c1);
+					MMC_Component c2(x0, y0, z0,
+						l1, l2, l3,
+						alp_tmp, -bet_tmp, gam_tmp);
+					comps.push_back(c2);
+					MMC_Component c3(x0, y0, z0,
+						l1, l2, l3,
+						alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c3);
+					MMC_Component c4(x0, y0, z0,
+						l1, l2, l3,
+						alp_tmp, -bet_tmp, gam_tmp);
+					comps.push_back(c4);
+				}
+				else if (type != -1) {
 					double x0 = xs[ix];
 					double y0 = ys[iy];
 					double z0 = zs[iz];
@@ -1187,6 +1208,24 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 						l1, l2, l3,
 						-alp_tmp, bet_tmp, gam_tmp);
 					comps.push_back(c4);
+
+					MMC_Component c5(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c5);
+					MMC_Component c6(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c6);
+
+					MMC_Component c7(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c7);
+					MMC_Component c8(x0, y0, z0,
+						l1, l2, l3,
+						-alp_tmp, bet_tmp, gam_tmp);
+					comps.push_back(c8);
 					//}
 				}
 				else
@@ -1691,8 +1730,26 @@ void Cuda_TopOpt_MMC_Node(
 		// 2021教育论文组件参数
 		// 1 * 128 * 64
 		BaseComponent = { 24, 5, 0.6, 0, atan(1.0), 0 };
-		mmcComponents = init(xyzRange, 16, 0.5, 16, BaseComponent);
-		mmcComponents = init(xyzRange, 16, 0.5, 16, BaseComponent);
+		mmcComponents = init(xyzRange, 16, 0.5, 16, BaseComponent, mmcType);
+	}
+	else if (mmcType == 5) {
+		// 32 * 4 * 16
+		BaseComponent = { 6, 1.25, 1, 0, atan(1.0), 0 };
+		// y 方向厚度为 2，对称设计域应把组件中心放在 y = 0，
+		// 这里的 yInt 是“起始偏移/半间距”，不是“排数”。
+		mmcComponents = init(xyzRange, 4, 2, 4, BaseComponent, mmcType);
+	}
+	else if (mmcType == 6) {
+		// 64 * 4 * 32
+		BaseComponent = { 12, 2.5, 2, 0, atan(1.0), 0 };
+		// y 方向厚度为 4，对称设计域应把组件中心放在 y = 0，
+		// 当前 init 的采样规则是从 ymin + yInt 开始，步长 2 * yInt。
+		mmcComponents = init(xyzRange, 8, 2, 8, BaseComponent, mmcType);
+	}
+	else if (mmcType == 7) {
+		// 64 * 1 * 32
+		BaseComponent = { 12, 2.5, 2, 0, atan(1.0), 0 };
+		mmcComponents = init(xyzRange, 8, 0.5, 8, BaseComponent, mmcType);
 	}
 	else {
 		BaseComponent = { 0.6, 8, 1, atan(1.0), 0, 0 };

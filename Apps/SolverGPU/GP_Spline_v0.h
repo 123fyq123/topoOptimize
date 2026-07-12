@@ -909,7 +909,7 @@ namespace gpmesh {
 
 		void Solver_With_Density_MMC(std::vector<boundary_point>& neumann_points,
 			std::vector<boundary_point>& dirichlet_points,
-			std::vector<double>& topopt_density,
+			const std::vector<double>& topopt_density,
 			Eigen::MatrixXd& U) {
 			double timeSpan = 1;
 			double timeStep = 0.1;
@@ -971,60 +971,11 @@ namespace gpmesh {
 			cudaFree(device_density);
 		}
 
-		void Solver_With_MultiMaterial_Density(std::vector<boundary_point>& neumann_points,
-			std::vector<boundary_point>& dirichlet_points,
-			const std::vector<double>& stiffness_coeff,
-			Eigen::MatrixXd& U) {
-			(void)neumann_points;
-			(void)dirichlet_points;
-			dim3 num_blocks_clear(m_num_geometry, 1, 1);
-			dim3 num_blocks(m_num_geometry, 64, 1);
-			dim3 threads_per_blocks(16, 16, 1);
-			constexpr uint32_t gaussianPointNum = 64;
-
-			double* device_scale = nullptr;
-			int scale_size = static_cast<int>(stiffness_coeff.size());
-			cudaMalloc((void**)&device_scale, scale_size * sizeof(double));
-			cudaMemcpy(device_scale, stiffness_coeff.data(), scale_size * sizeof(double), cudaMemcpyHostToDevice);
-
-			IGA_clear_assembly_context << <num_blocks_clear, threads_per_blocks >> > (m_assembly_context);
-			IGA_clear_physics_displacement << <m_num_geometry, 192 >> > (get_physic_context());
-
-			size_t smem_bytes_dyn_hyper = calc_shared_memory(
-				(void*)
-				TopOpt_Assembly_Local_Matrix_CellScale<double,
-				gaussianPointNum>);
-
-			TopOpt_Assembly_Local_Matrix_CellScale<double, gaussianPointNum>
-				<< <num_blocks, threads_per_blocks, smem_bytes_dyn_hyper >> > (
-					get_spline_context(),
-					get_gaussian_integral_context(),
-					get_physic_context(),
-					get_assembly_context(),
-					device_scale);
-
-			CUDA_ERROR(cudaDeviceSynchronize());
-			CUDA_ERROR(cudaGetLastError());
-
-			const uint32_t Dirichlet_Point_Num = m_dirichlet_point_context.m_num_dirichlet_point;
-			IGA_add_dirichlet_point_info_to_local_mats << <DIVIDE_UP(Dirichlet_Point_Num, 256), 256 >> >
-				(get_spline_context(),
-					get_assembly_context(),
-					get_dirichelt_point_context(),
-					Dirichlet_Point_Num);
-
-			Eigen::MatrixXd gpu_pcg_result;
-			float gpu_pcg_time = 0.0;
-			debug_frame_process_PCG_jacobiPrecondition(gpu_pcg_result, gpu_pcg_time);
-			U = gpu_pcg_result;
-			cudaFree(device_scale);
-		}
-
 		void Solver_With_CellScale(std::vector<boundary_point>& neumann_points,
 			std::vector<boundary_point>& dirichlet_points,
 			const std::vector<double>& cell_scale,
 			Eigen::MatrixXd& U) {
-			Solver_With_MultiMaterial_Density(neumann_points, dirichlet_points, cell_scale, U);
+			Solver_With_Density_MMC(neumann_points, dirichlet_points, cell_scale, U);
 		}
 
 

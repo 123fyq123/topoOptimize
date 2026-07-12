@@ -17,6 +17,9 @@ struct MultiMaterialSIMPParams {
 	double rho_min = 1e-3;
 	double move_limit = 0.2;
 	double change_tolerance = 0.01;
+	bool enable_finite_difference_check = true;
+	int finite_difference_sample_count = 6;
+	double finite_difference_step = 1e-3;
 	int max_iter = 100;
 };
 

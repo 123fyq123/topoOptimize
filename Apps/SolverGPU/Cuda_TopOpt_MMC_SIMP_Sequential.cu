@@ -77,13 +77,12 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 		mmc_target_rate, mmc_max_iter, E1, Poissons, density, is_need_update_model, mmcType);
 	std::vector<double> mmc_density = density;
 
-	// MATLAB 参考代码中为 Ei = find(denk > alpha^2)。
-	// 当前 3D MMC 输出的 mmc_density 已经是单元节点 Heaviside 值的平均值，
-	// 没有再平方，因此这里用 alpha 作为 SIMP 第二阶段有效设计域阈值。
-	const double alpha = 1e-3;
+	// MMC 阶段结束后，只截取实体占有率足够高的单元作为 SIMP 第二阶段设计域。
+	// 当前 3D MMC 输出的 mmc_density 是八节点 Heaviside 平均值，因此这里直接按密度阈值筛选。
+	const double mmc_active_density_threshold = 0.3;
 	std::vector<int> active_indices;
 	for (int i = 0; i < static_cast<int>(mmc_density.size()); ++i) {
-		if (mmc_density[i] > alpha) {
+		if (mmc_density[i] > mmc_active_density_threshold) {
 			active_indices.push_back(i);
 		}
 	}
@@ -168,11 +167,13 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 
 	MultiMaterialSIMPParams params;
 	params.material_ratio_f = material_ratio_f;
+	// Paper comparison case: E1 is the basic/soft material and E2 is the reinforced/hard material.
+	E1 = 1;
+	E2 = 100;
 	params.E1 = E1;
 	params.E2 = E2;
-	// 对应论文 / MATLAB 初始化：Svariable(1:nn, 1) = volfrac。
-	// 第二阶段材料选择变量 rho_e 从 MMC 体积分数开始。
-	params.initial_rho = mmc_target_rate;
+	// MATLAB convention: rho represents E1, so its feasible fraction is V1/(V1+V2).
+	params.initial_rho = 1.0 / (1.0 + material_ratio_f);
 	params.max_iter = static_cast<int>(simp_max_iter);
 
 	RunMultiMaterialSIMPStage(spline, neumann_points, dirichlet_points, neighbor_info, allVertex, cell2V,

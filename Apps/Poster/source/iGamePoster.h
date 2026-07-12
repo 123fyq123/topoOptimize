@@ -35,6 +35,7 @@ private:
 	Ui::MainWindow *ui;
 	BuildUI* build_ui_;
 	SingalSlot* singal_slot_;
+	QPushButton* btn_generate_hex_mesh_ = nullptr;
 	QTimer* topopt_refresh_timer_ = nullptr;
 
     QButtonGroup buttonGroup_forPick;
@@ -154,6 +155,7 @@ public slots:
     void TopOpt_Run_2();
 	void TopOpt_Run_4();
 	void TopOpt_Run_Seq();
+	void GenerateRegularHexMesh();
 	void Protect_topopt();
 
 	bool UpdateTopoptDensity();
