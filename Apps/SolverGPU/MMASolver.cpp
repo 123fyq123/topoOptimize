@@ -44,7 +44,7 @@ MMASolver::MMASolver(int nn, int mm, double ai, double ci, double di)
 	//, asymdec(0.1) // 0.65;
 	//, asyminc(0.8) // 1.08;
 	// MMC参数
-	, move(0.8)
+	, move(0.5)
 	, albefa(0.8)
 	, asyminit(0.05)
 	, asymdec(0.8)

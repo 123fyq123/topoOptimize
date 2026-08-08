@@ -1152,9 +1152,12 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 	// bet signs:  [ 1 -1  1 -1  1 -1  1 -1 ] * vInt[4]
 	// gam signs:  [ 1  1 -1 -1  1  1 -1 -1 ] * vInt[5]
 	const int patternN = 8;
-	const double alphaSigns[patternN] = { 1.0,  1.0, 1.0, 1.0,  -1.0,  -1.0, -1.0, -1.0 };
-	const double betSigns[patternN] = { 1.0, -1.0,  1.0, -1.0,  1.0, -1.0,  1.0, -1.0 };
-	const double gamSigns[patternN] = { 1.0,  1.0, -1.0, -1.0,  1.0,  1.0, -1.0, -1.0 };
+	const double alphaSigns[patternN] = { 1.0,  1.0, 1.0, 1.0,  -1.0,  -1.0, -1.0, -1.0};
+	const double betSigns[patternN] = { 1.0, -1.0,  1.0, -1.0,  1.0, -1.0,  1.0, -1.0};
+	const double gamSigns[patternN] = { 1.0,  1.0, -1.0, -1.0,  1.0,  1.0, -1.0, -1.0};
+	//const double alphaSigns[patternN] = { 1.0,  1.0, 1.0, 1.0, 1.0, 0, 0};
+	//const double betSigns[patternN] = { 1.0, 1.0,  -1.0, -1.0, 0, 1.0, 0};
+	//const double gamSigns[patternN] = { 1.0,  -1.0, 1.0, -1.0, 0, 0, 1.0};
 	// 读取 vInt：l1,l2,l3, alpha, beta_amp, gamma_amp
 	double l1 = vInt[0];
 	double l2 = vInt[1];
@@ -1166,7 +1169,7 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 	for (size_t iz = 0; iz < zs.size(); ++iz) {
 		for (size_t iy = 0; iy < ys.size(); ++iy) {
 			for (size_t ix = 0; ix < xs.size(); ++ix) {
-				if (type == 5 || type == 6 || type == 7) {
+				if (type == 5 || type == 6 || type == 7 || type == 8 || type == 9) {
 					double x0 = xs[ix];
 					double y0 = ys[iy];
 					double z0 = zs[iz];
@@ -1186,6 +1189,45 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 						l1, l2, l3,
 						alp_tmp, -bet_tmp, gam_tmp);
 					comps.push_back(c4);
+				}
+				else if (type == 10 || type == 11) {
+					// 四个斜的
+					for (int i = 0; i < patternN; ++i) {
+						// 每个位置放置几次
+						for (int j = 0; j < 2; ++j) {
+							double x0 = xs[ix];
+							double y0 = ys[iy];
+							double z0 = zs[iz];
+							auto alp = alp_tmp * alphaSigns[i];
+							double bet = bet_tmp * betSigns[i];
+							double gam = gam_tmp * gamSigns[i];
+							MMC_Component c(x0, y0, z0,
+								l1, l2, l3,
+								alp, bet, gam);
+							comps.push_back(c);
+						}
+					}
+					// 三个轴
+					//double pi = 2 * asin(1.0);
+					//for (int i = 0; i < 3; ++i) {
+					//	double x0 = xs[ix];
+					//	double y0 = ys[iy];
+					//	double z0 = zs[iz];
+					//	MMC_Component c1(x0, y0, z0,
+					//		l1, l2, l3,
+					//		0, 0, 0);
+					//	comps.push_back(c1);
+
+					//	MMC_Component c2(x0, y0, z0,
+					//		l1, l2, l3,
+					//		0, 0, pi / 2.0);
+					//	comps.push_back(c2);
+
+					//	MMC_Component c3(x0, y0, z0,
+					//		l1, l2, l3,
+					//		0, -pi / 2.0, 0);
+					//	comps.push_back(c3);
+					//}
 				}
 				else if (type != -1) {
 					double x0 = xs[ix];
@@ -1241,6 +1283,10 @@ std::vector<MMC_Component> init(const std::vector<double> xyzRange,
 							l1, l2, l3,
 							alp, bet, gam);
 						comps.push_back(c);
+						MMC_Component c2(x0, y0, z0,
+							l1, l2, l3,
+							alp, bet, gam);
+						comps.push_back(c2);
 					}
 				}
 			}
@@ -1750,6 +1796,26 @@ void Cuda_TopOpt_MMC_Node(
 		// 64 * 1 * 32
 		BaseComponent = { 12, 2.5, 2, 0, atan(1.0), 0 };
 		mmcComponents = init(xyzRange, 8, 0.5, 8, BaseComponent, mmcType);
+	}
+	else if (mmcType == 8) {
+		// L型
+		BaseComponent = { 16, 3.5, 3, 0, atan(1.0), 0 };
+		mmcComponents = init(xyzRange, 10, 0.5, 10, BaseComponent, mmcType);
+	}
+	else if (mmcType == 9) {
+		// 64 * 1 * 64
+		BaseComponent = { 24, 5, 4, 0, atan(1.0), 0 };
+		mmcComponents = init(xyzRange, 16, 0.5, 16, BaseComponent, mmcType);
+	}
+	else if (mmcType == 10) {
+		// 64 * 32 * 32
+		BaseComponent = { 12, 2, 2, atan(1.0), atan(1.0), atan(1.0)};
+		mmcComponents = init(xyzRange, 8, 8, 8, BaseComponent, mmcType);
+	}
+	else if (mmcType == 11) {
+		// 24 * 24 * 24
+		BaseComponent = { 9, 2, 2, atan(1.0), atan(1.0), atan(1.0) };
+		mmcComponents = init(xyzRange, 6, 6, 6, BaseComponent, mmcType);
 	}
 	else {
 		BaseComponent = { 0.6, 8, 1, atan(1.0), 0, 0 };
