@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /*
 主窗口类，实现有关界面UI和信号&槽的连接
 */
@@ -155,6 +155,7 @@ public slots:
     void TopOpt_Run_2();
 	void TopOpt_Run_4();
 	void TopOpt_Run_Seq();
+	void TopOpt_Run_Simultaneous();
 	void GenerateRegularHexMesh();
 	void Protect_topopt();
 

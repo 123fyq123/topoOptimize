@@ -1,0 +1,1958 @@
+#include "Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h"
+
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <numeric>
+#include <set>
+#include <stdexcept>
+#include <utility>
+
+#include <Eigen/Dense>
+
+#include "GP_Spline_v0.h"
+#include "MMASolver.h"
+#include "Poster/source/Timer.h"
+#include "Poster/source/nanoflann.h"
+#include "Util/GP_Log.h"
+#include "Util/GP_Macros.h"
+
+namespace mmc_multimaterial_simultaneous {
+
+constexpr int kVariablesPerComponent = 9;
+constexpr int kTdfPower = 6;
+constexpr double kTiny = 1e-12;
+constexpr double kPi = 3.141592653589793238462643383279502884;
+
+struct MMCComponent {
+	double x0 = 0.0;
+	double y0 = 0.0;
+	double z0 = 0.0;
+	double l1 = 0.0;
+	double l2 = 0.0;
+	double l3 = 0.0;
+	double alpha = 0.0;
+	double beta = 0.0;
+	double gamma = 0.0;
+
+	MMCComponent() = default;
+
+	MMCComponent(
+		double x,
+		double y,
+		double z,
+		double length1,
+		double length2,
+		double length3,
+		double rotation_alpha,
+		double rotation_beta,
+		double rotation_gamma)
+		: x0(x)
+		, y0(y)
+		, z0(z)
+		, l1(length1)
+		, l2(length2)
+		, l3(length3)
+		, alpha(rotation_alpha)
+		, beta(rotation_beta)
+		, gamma(rotation_gamma) {
+	}
+};
+
+struct Point {
+	double x = 0.0;
+	double y = 0.0;
+	double z = 0.0;
+};
+
+template <typename T>
+struct PointCloud {
+	using coord_t = T;
+	std::vector<Point> pts;
+
+	inline size_t kdtree_get_point_count() const { return pts.size(); }
+
+	inline T kdtree_get_pt(size_t index, size_t dimension) const {
+		if (dimension == 0) return static_cast<T>(pts[index].x);
+		if (dimension == 1) return static_cast<T>(pts[index].y);
+		return static_cast<T>(pts[index].z);
+	}
+
+	template <class BBOX>
+	bool kdtree_get_bbox(BBOX&) const {
+		return false;
+	}
+};
+
+using KDTree = nanoflann::KDTreeSingleIndexAdaptor<
+	nanoflann::L2_Simple_Adaptor<double, PointCloud<double>>,
+	PointCloud<double>,
+	3>;
+
+struct GeometryEvaluation {
+	std::vector<std::vector<double>> component_phi;
+	std::vector<std::vector<std::vector<double>>> component_phi_derivative;
+	std::vector<double> global_phi;
+	std::vector<std::vector<double>> ks_derivative;
+	std::vector<double> vertex_heaviside;
+	std::vector<double> heaviside_derivative;
+	std::vector<double> occupancy;
+};
+
+struct JointEvaluation {
+	GeometryEvaluation geometry;
+	Eigen::MatrixXd displacement;
+	std::vector<double> material_modulus;
+	std::vector<double> material_modulus_derivative;
+	std::vector<double> effective_stiffness;
+	std::vector<double> element_energy;
+	std::vector<double> mmc_objective_gradient;
+	std::vector<double> material_objective_gradient;
+	std::vector<double> geometry_constraint_gradient;
+	std::vector<double> ratio_constraint_mmc_gradient;
+	std::vector<double> ratio_constraint_material_gradient;
+	std::vector<double> mmc_contribution_max_abs;
+	std::vector<double> mmc_contribution_sum_abs;
+	double compliance = 0.0;
+	double compliance_from_load = 0.0;
+	double compliance_relative_mismatch = 0.0;
+	double mmc_volume = 0.0;
+	double V1 = 0.0;
+	double V2 = 0.0;
+	double ratio_residual = 0.0;
+	double geometry_constraint = 0.0;
+	double positive_ratio_constraint = 0.0;
+	double negative_ratio_constraint = 0.0;
+	double uniform_material_gradient_relative_error = 0.0;
+};
+
+bool IsFiniteVector(const std::vector<double>& values) {
+	return std::all_of(values.begin(), values.end(), [](double value) {
+		return std::isfinite(value);
+	});
+}
+
+double L2Norm(const std::vector<double>& values) {
+	double squared_norm = 0.0;
+	for (double value : values) squared_norm += value * value;
+	return std::sqrt(squared_norm);
+}
+
+void SetFailure(MMCMultiMaterialSimultaneousResult& result, const std::string& message) {
+	result.success = false;
+	result.converged = false;
+	result.message = message;
+	std::cerr << "[MMC-MultiMaterial-Simultaneous] " << message << std::endl;
+}
+
+bool ValidateInputs(
+	const std::map<int, Eigen::Vector3d>& all_vertex,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+	const std::string& input_model_file,
+	const std::string& boundary_file,
+	const std::vector<int>& protected_cell_ids,
+	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
+	const MMCMultiMaterialSimultaneousParams& params,
+	const std::vector<double>& density,
+	std::string& error) {
+	const int vertex_count = static_cast<int>(all_vertex.size());
+	const int cell_count = static_cast<int>(cell_to_vertex.size());
+	if (vertex_count == 0 || cell_count == 0) {
+		error = "The design mesh is empty.";
+		return false;
+	}
+	if (!std::filesystem::exists(input_model_file) || !std::filesystem::exists(boundary_file)) {
+		error = "The Bezier model file or boundary-condition file does not exist.";
+		return false;
+	}
+	if (static_cast<int>(density.size()) != cell_count) {
+		error = "The density count does not match the fixed-grid cell count.";
+		return false;
+	}
+	if (!neighbor_info.empty() && static_cast<int>(neighbor_info.size()) != cell_count) {
+		error = "The neighbor_info count does not match the fixed-grid cell count.";
+		return false;
+	}
+	for (int vertex_id = 0; vertex_id < vertex_count; ++vertex_id) {
+		if (all_vertex.find(vertex_id) == all_vertex.end()) {
+			error = "MMC vertex ids must be contiguous and start at zero.";
+			return false;
+		}
+	}
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		auto cell_it = cell_to_vertex.find(cell_id);
+		if (cell_it == cell_to_vertex.end() || cell_it->second.size() != 8) {
+			error = "Fixed-grid cell ids must be contiguous and each cell must have eight vertices.";
+			return false;
+		}
+		for (const auto& vertex : cell_it->second) {
+			if (vertex.first < 0 || vertex.first >= vertex_count) {
+				error = "A cell contains an invalid vertex id.";
+				return false;
+			}
+		}
+	}
+	for (int cell_id : protected_cell_ids) {
+		if (cell_id < 0 || cell_id >= cell_count) {
+			error = "A protected cell id is out of range.";
+			return false;
+		}
+	}
+	if (!(params.mmc_target_rate > 0.0 && params.mmc_target_rate <= 1.0)) {
+		error = "The MMC target volume fraction must be in (0, 1].";
+		return false;
+	}
+	if (params.max_iterations <= 0) {
+		error = "The maximum iteration count must be positive.";
+		return false;
+	}
+	if (!(params.E1 > 0.0) || !(params.E2 > 0.0) ||
+		!std::isfinite(params.E1) || !std::isfinite(params.E2)) {
+		error = "Both material moduli must be finite and positive.";
+		return false;
+	}
+	if (!(params.material_penalty >= 1.0) || !std::isfinite(params.material_penalty)) {
+		error = "The material penalty must be finite and at least one.";
+		return false;
+	}
+	if (!(params.material_ratio_f >= 0.0) || !std::isfinite(params.material_ratio_f)) {
+		error = "The material ratio f must be finite and nonnegative.";
+		return false;
+	}
+	if (1.0 / (1.0 + params.material_ratio_f) < params.eta_min) {
+		error =
+			"The requested material ratio is infeasible for the configured eta_min.";
+		return false;
+	}
+	if (!(params.eta_min > 0.0 && params.eta_min < 1.0)) {
+		error = "eta_min must be in (0, 1).";
+		return false;
+	}
+	if (!(params.Poissons > -1.0 && params.Poissons < 0.5)) {
+		error = "Poisson's ratio must be in (-1, 0.5).";
+		return false;
+	}
+	if (!(params.heaviside_alpha >= 0.0 && params.heaviside_alpha < 1.0) ||
+		!std::isfinite(params.heaviside_alpha)) {
+		error = "Heaviside alpha must be finite and in [0, 1).";
+		return false;
+	}
+	if (!(params.heaviside_epsilon > 0.0) ||
+		!(params.ks_lambda > 0.0) ||
+		!std::isfinite(params.heaviside_epsilon) ||
+		!std::isfinite(params.ks_lambda)) {
+		error = "Heaviside epsilon and KS lambda must be positive.";
+		return false;
+	}
+	if (!(params.geometry_move_limit > 0.0) ||
+		!(params.material_move_limit > 0.0) ||
+		!std::isfinite(params.geometry_move_limit) ||
+		!std::isfinite(params.material_move_limit)) {
+		error = "Both variable-block move limits must be positive.";
+		return false;
+	}
+	if (!(params.geometry_change_tolerance >= 0.0) ||
+		!(params.material_change_tolerance >= 0.0) ||
+		!(params.constraint_tolerance >= 0.0) ||
+		!(params.material_ratio_tolerance >= 0.0) ||
+		!std::isfinite(params.geometry_change_tolerance) ||
+		!std::isfinite(params.material_change_tolerance) ||
+		!std::isfinite(params.constraint_tolerance) ||
+		!std::isfinite(params.material_ratio_tolerance)) {
+		error = "All convergence and constraint tolerances must be finite and nonnegative.";
+		return false;
+	}
+	return true;
+}
+
+void GetNearestIds(
+	const std::vector<Point>& source_points,
+	const std::vector<Point>& target_points,
+	std::vector<int>& nearest_ids) {
+	if (source_points.empty() || target_points.empty()) {
+		throw std::runtime_error("The boundary-point or control-point set is empty.");
+	}
+	PointCloud<double> cloud;
+	cloud.pts = target_points;
+	KDTree index(3, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+	index.buildIndex();
+
+	nearest_ids.resize(source_points.size());
+	for (size_t source_id = 0; source_id < source_points.size(); ++source_id) {
+		size_t nearest_id = 0;
+		double squared_distance = 0.0;
+		nanoflann::KNNResultSet<double> result_set(1);
+		result_set.init(&nearest_id, &squared_distance);
+		index.findNeighbors(result_set, &source_points[source_id].x);
+		nearest_ids[source_id] = static_cast<int>(nearest_id);
+	}
+}
+
+double Heaviside(double phi, double alpha, double epsilon) {
+	if (phi > epsilon) return 1.0;
+	if (phi < -epsilon) return alpha;
+	return 3.0 * (1.0 - alpha) / 4.0
+		* (phi / epsilon - std::pow(phi, 3.0) / (3.0 * std::pow(epsilon, 3.0)))
+		+ (1.0 + alpha) / 2.0;
+}
+
+double HeavisideDerivative(double phi, double alpha, double epsilon) {
+	if (std::abs(phi) > epsilon) return 0.0;
+	return 3.0 * (1.0 - alpha) / (4.0 * epsilon)
+		* (1.0 - phi * phi / (epsilon * epsilon));
+}
+
+double InterpolateMaterialModulus(
+	double eta,
+	const MMCMultiMaterialSimultaneousParams& params) {
+	const double eta_power = std::pow(eta, params.material_penalty);
+	return eta_power * params.E1 + (1.0 - eta_power) * params.E2;
+}
+
+double InterpolateMaterialModulusDerivative(
+	double eta,
+	const MMCMultiMaterialSimultaneousParams& params) {
+	return params.material_penalty
+		* std::pow(eta, params.material_penalty - 1.0)
+		* (params.E1 - params.E2);
+}
+
+std::vector<MMCComponent> MakeInitialComponents(
+	const std::vector<double>& xyz_range,
+	double x_interval,
+	double y_interval,
+	double z_interval,
+	const std::vector<double>& base_component,
+	int type) {
+	std::vector<MMCComponent> components;
+	if (xyz_range.size() < 6 || base_component.size() < 6 ||
+		x_interval <= 0.0 || y_interval <= 0.0 || z_interval <= 0.0) {
+		return components;
+	}
+
+	std::vector<double> x_samples;
+	std::vector<double> y_samples;
+	std::vector<double> z_samples;
+	const int first_x = static_cast<int>(xyz_range[0] + x_interval);
+	const int first_y = static_cast<int>(xyz_range[2] + y_interval);
+	const int first_z = static_cast<int>(xyz_range[4] + z_interval);
+	for (double x = first_x; x <= xyz_range[1]; x += 2.0 * x_interval) x_samples.push_back(x);
+	for (double y = first_y; y <= xyz_range[3]; y += 2.0 * y_interval) y_samples.push_back(y);
+	for (double z = first_z; z <= xyz_range[5]; z += 2.0 * z_interval) z_samples.push_back(z);
+
+	constexpr int pattern_count = 8;
+	const double alpha_signs[pattern_count] = {
+		1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0
+	};
+	const double beta_signs[pattern_count] = {
+		1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0
+	};
+	const double gamma_signs[pattern_count] = {
+		1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0
+	};
+
+	const double l1 = base_component[0];
+	const double l2 = base_component[1];
+	const double l3 = base_component[2];
+	const double alpha = base_component[3];
+	const double beta = base_component[4];
+	const double gamma = base_component[5];
+
+	for (double z0 : z_samples) {
+		for (double y0 : y_samples) {
+			for (double x0 : x_samples) {
+				if (type >= 5 && type <= 9) {
+					components.emplace_back(x0, y0, z0, l1, l2, l3, alpha, beta, gamma);
+					components.emplace_back(x0, y0, z0, l1, l2, l3, alpha, -beta, gamma);
+					components.emplace_back(x0, y0, z0, l1, l2, l3, alpha, beta, gamma);
+					components.emplace_back(x0, y0, z0, l1, l2, l3, alpha, -beta, gamma);
+				}
+				else if (type == 10 || type == 11) {
+					for (int pattern = 0; pattern < pattern_count; ++pattern) {
+						for (int duplicate = 0; duplicate < 2; ++duplicate) {
+							(void)duplicate;
+							components.emplace_back(
+								x0,
+								y0,
+								z0,
+								l1,
+								l2,
+								l3,
+								alpha * alpha_signs[pattern],
+								beta * beta_signs[pattern],
+								gamma * gamma_signs[pattern]);
+						}
+					}
+				}
+				else if (type != -1) {
+					components.emplace_back(x0, y0, z0, l1, l2, l3, alpha, beta, gamma);
+					for (int duplicate = 1; duplicate < 8; ++duplicate) {
+						(void)duplicate;
+						components.emplace_back(x0, y0, z0, l1, l2, l3, -alpha, beta, gamma);
+					}
+				}
+				else {
+					for (int pattern = 0; pattern < pattern_count; ++pattern) {
+						for (int duplicate = 0; duplicate < 2; ++duplicate) {
+							(void)duplicate;
+							components.emplace_back(
+								x0,
+								y0,
+								z0,
+								l1,
+								l2,
+								l3,
+								alpha * alpha_signs[pattern],
+								beta * beta_signs[pattern],
+								gamma * gamma_signs[pattern]);
+						}
+					}
+				}
+			}
+		}
+	}
+	return components;
+}
+
+std::vector<MMCComponent> InitializeComponentsForType(
+	const std::vector<double>& xyz_range,
+	int mmc_type) {
+	std::vector<double> base_component;
+	double x_interval = 0.0;
+	double y_interval = 0.0;
+	double z_interval = 0.0;
+	int initialization_type = mmc_type;
+
+	switch (mmc_type) {
+	case 1:
+		base_component = { 0.6, 7.0, 0.8, std::atan(1.0), 0.0, 0.0 };
+		x_interval = 0.5;
+		y_interval = 5.0;
+		z_interval = 5.0;
+		break;
+	case 2:
+		base_component = { 0.6, 15.0, 1.0, std::atan(0.5), 0.0, 0.0 };
+		x_interval = 0.5;
+		y_interval = 10.0;
+		z_interval = 5.0;
+		break;
+	case 3:
+		base_component = { 0.6, 15.0, 1.0, std::atan(1.0), 0.0, 0.0 };
+		x_interval = 0.5;
+		y_interval = 10.0;
+		z_interval = 10.0;
+		break;
+	case 4:
+		base_component = { 24.0, 5.0, 0.6, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 16.0;
+		y_interval = 0.5;
+		z_interval = 16.0;
+		break;
+	case 5:
+		base_component = { 6.0, 1.25, 1.0, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 4.0;
+		y_interval = 2.0;
+		z_interval = 4.0;
+		break;
+	case 6:
+		base_component = { 12.0, 2.5, 2.0, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 8.0;
+		y_interval = 2.0;
+		z_interval = 8.0;
+		break;
+	case 7:
+		base_component = { 12.0, 2.5, 2.0, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 8.0;
+		y_interval = 0.5;
+		z_interval = 8.0;
+		break;
+	case 8:
+		base_component = { 16.0, 3.5, 3.0, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 10.0;
+		y_interval = 0.5;
+		z_interval = 10.0;
+		break;
+	case 9:
+		base_component = { 24.0, 5.0, 4.0, 0.0, std::atan(1.0), 0.0 };
+		x_interval = 16.0;
+		y_interval = 0.5;
+		z_interval = 16.0;
+		break;
+	case 10:
+		base_component = { 12.0, 2.0, 2.0, std::atan(1.0), std::atan(1.0), std::atan(1.0) };
+		x_interval = 8.0;
+		y_interval = 8.0;
+		z_interval = 8.0;
+		break;
+	case 11:
+		base_component = { 9.0, 2.0, 2.0, std::atan(1.0), std::atan(1.0), std::atan(1.0) };
+		x_interval = 6.0;
+		y_interval = 6.0;
+		z_interval = 6.0;
+		break;
+	default:
+		base_component = { 0.6, 8.0, 1.0, std::atan(1.0), 0.0, 0.0 };
+		x_interval = 0.5;
+		y_interval = 5.0;
+		z_interval = 5.0;
+		initialization_type = -1;
+		break;
+	}
+
+	return MakeInitialComponents(
+		xyz_range,
+		x_interval,
+		y_interval,
+		z_interval,
+		base_component,
+		initialization_type);
+}
+
+void CalculateComponentPhi(
+	const std::map<int, Eigen::Vector3d>& all_vertex,
+	const std::vector<MMCComponent>& components,
+	int component_index,
+	std::vector<double>& component_phi,
+	std::vector<std::vector<double>>& component_phi_derivative) {
+	const int vertex_count = static_cast<int>(all_vertex.size());
+	component_phi.assign(vertex_count, 0.0);
+	component_phi_derivative.assign(
+		vertex_count,
+		std::vector<double>(kVariablesPerComponent, 0.0));
+
+	const MMCComponent& component = components[component_index];
+	const double x0 = component.x0;
+	const double y0 = component.y0;
+	const double z0 = component.z0;
+	const double l1 = component.l1 + std::numeric_limits<double>::epsilon();
+	const double l2 = component.l2 + std::numeric_limits<double>::epsilon();
+	const double l3 = component.l3 + std::numeric_limits<double>::epsilon();
+	const double alpha = component.alpha;
+	const double beta = component.beta;
+	const double gamma = component.gamma;
+
+	const double sin_alpha = std::sin(alpha);
+	const double cos_alpha = std::cos(alpha);
+	const double sin_beta = std::sin(beta);
+	const double cos_beta = std::cos(beta);
+	const double sin_gamma = std::sin(gamma);
+	const double cos_gamma = std::cos(gamma);
+
+	Eigen::Matrix3d rotation;
+	rotation <<
+		cos_beta * cos_gamma, cos_beta * sin_gamma, -sin_beta,
+		sin_alpha * sin_beta * cos_gamma - cos_alpha * sin_gamma,
+		sin_alpha * sin_beta * sin_gamma + cos_alpha * cos_gamma,
+		sin_alpha * cos_beta,
+		cos_alpha * sin_beta * cos_gamma + sin_alpha * sin_gamma,
+		cos_alpha * sin_beta * sin_gamma - sin_alpha * cos_gamma,
+		cos_alpha * cos_beta;
+
+	std::vector<Eigen::Vector3d> local_coordinates(vertex_count);
+	std::vector<double> x1_values(vertex_count, 0.0);
+	std::vector<double> y1_values(vertex_count, 0.0);
+	std::vector<double> z1_values(vertex_count, 0.0);
+	std::vector<double> temp_values(vertex_count, 0.0);
+
+	for (const auto& vertex : all_vertex) {
+		const int vertex_id = vertex.first;
+		const Eigen::Vector3d local =
+			vertex.second - Eigen::Vector3d(x0, y0, z0);
+		const Eigen::Vector3d rotated = rotation * local;
+		const double x1 = rotated.x() + kTiny;
+		const double y1 = rotated.y() + kTiny;
+		const double z1 = rotated.z() + kTiny;
+		const double temp =
+			std::pow(x1 / l1, kTdfPower)
+			+ std::pow(y1 / l2, kTdfPower)
+			+ std::pow(z1 / l3, kTdfPower);
+
+		local_coordinates[vertex_id] = local;
+		x1_values[vertex_id] = x1;
+		y1_values[vertex_id] = y1;
+		z1_values[vertex_id] = z1;
+		temp_values[vertex_id] = temp;
+		component_phi[vertex_id] =
+			1.0 - std::pow(temp, 1.0 / static_cast<double>(kTdfPower));
+	}
+
+	Eigen::Matrix3d rotation_alpha;
+	Eigen::Matrix3d rotation_beta;
+	Eigen::Matrix3d rotation_gamma;
+	rotation_alpha <<
+		0.0, 0.0, 0.0,
+		rotation(2, 0), rotation(2, 1), rotation(2, 2),
+		-rotation(1, 0), -rotation(1, 1), -rotation(1, 2);
+	rotation_beta <<
+		-sin_beta * cos_gamma, -sin_beta * sin_gamma, -cos_beta,
+		sin_alpha * cos_beta * cos_gamma,
+		sin_alpha * cos_beta * sin_gamma,
+		-sin_alpha * sin_beta,
+		cos_alpha * cos_beta * cos_gamma,
+		cos_alpha * cos_beta * sin_gamma,
+		-cos_alpha * sin_beta;
+	rotation_gamma <<
+		-cos_beta * sin_gamma, cos_beta * cos_gamma, 0.0,
+		-sin_alpha * sin_beta * sin_gamma - cos_alpha * cos_gamma,
+		sin_alpha * sin_beta * cos_gamma - cos_alpha * sin_gamma,
+		0.0,
+		-cos_alpha * sin_beta * sin_gamma + sin_alpha * cos_gamma,
+		cos_alpha * sin_beta * cos_gamma + sin_alpha * sin_gamma,
+		0.0;
+
+	for (const auto& vertex : all_vertex) {
+		const int vertex_id = vertex.first;
+		const double x1 = x1_values[vertex_id];
+		const double y1 = y1_values[vertex_id];
+		const double z1 = z1_values[vertex_id];
+		const double temp = temp_values[vertex_id];
+		const Eigen::Vector3d& local = local_coordinates[vertex_id];
+
+		const double common_power =
+			std::pow(temp, 1.0 / static_cast<double>(kTdfPower) - 1.0);
+		const double temp1 =
+			common_power * std::pow(x1 / l1, kTdfPower - 1);
+		const double temp2 =
+			common_power * std::pow(y1 / l2, kTdfPower - 1);
+		const double temp3 =
+			common_power * std::pow(z1 / l3, kTdfPower - 1);
+
+		const double dphi_dx1 = temp1 / l1;
+		const double dphi_dy1 = temp2 / l2;
+		const double dphi_dz1 = temp3 / l3;
+		const double dphi_dl1 = temp1 * x1 / (l1 * l1);
+		const double dphi_dl2 = temp2 * y1 / (l2 * l2);
+		const double dphi_dl3 = temp3 * z1 / (l3 * l3);
+
+		const double dx1_dalpha = (rotation_alpha.row(0) * local)(0);
+		const double dy1_dalpha = (rotation_alpha.row(1) * local)(0);
+		const double dz1_dalpha = (rotation_alpha.row(2) * local)(0);
+		const double dx1_dbeta = (rotation_beta.row(0) * local)(0);
+		const double dy1_dbeta = (rotation_beta.row(1) * local)(0);
+		const double dz1_dbeta = (rotation_beta.row(2) * local)(0);
+		const double dx1_dgamma = (rotation_gamma.row(0) * local)(0);
+		const double dy1_dgamma = (rotation_gamma.row(1) * local)(0);
+		const double dz1_dgamma = (rotation_gamma.row(2) * local)(0);
+
+		std::vector<double>& derivative = component_phi_derivative[vertex_id];
+		derivative[0] =
+			dphi_dx1 * rotation(0, 0)
+			+ dphi_dy1 * rotation(1, 0)
+			+ dphi_dz1 * rotation(2, 0);
+		derivative[1] =
+			dphi_dx1 * rotation(0, 1)
+			+ dphi_dy1 * rotation(1, 1)
+			+ dphi_dz1 * rotation(2, 1);
+		derivative[2] =
+			dphi_dx1 * rotation(0, 2)
+			+ dphi_dy1 * rotation(1, 2)
+			+ dphi_dz1 * rotation(2, 2);
+		derivative[3] = dphi_dl1;
+		derivative[4] = dphi_dl2;
+		derivative[5] = dphi_dl3;
+		derivative[6] = -(
+			dphi_dx1 * dx1_dalpha
+			+ dphi_dy1 * dy1_dalpha
+			+ dphi_dz1 * dz1_dalpha);
+		derivative[7] = -(
+			dphi_dx1 * dx1_dbeta
+			+ dphi_dy1 * dy1_dbeta
+			+ dphi_dz1 * dz1_dbeta);
+		derivative[8] = -(
+			dphi_dx1 * dx1_dgamma
+			+ dphi_dy1 * dy1_dgamma
+			+ dphi_dz1 * dz1_dgamma);
+	}
+}
+
+void ComputeGlobalTdf(
+	const std::vector<std::vector<double>>& component_phi,
+	double lambda,
+	std::vector<double>& global_phi,
+	std::vector<std::vector<double>>& ks_derivative) {
+	const int component_count = static_cast<int>(component_phi.size());
+	if (component_count == 0) {
+		throw std::runtime_error("The MMC component set is empty.");
+	}
+	const int vertex_count = static_cast<int>(component_phi.front().size());
+	global_phi.assign(vertex_count, 0.0);
+	ks_derivative.assign(
+		vertex_count,
+		std::vector<double>(component_count, 0.0));
+
+	for (int vertex_id = 0; vertex_id < vertex_count; ++vertex_id) {
+		std::vector<double> exponential_values(component_count, 0.0);
+		double exponential_sum = 0.0;
+		for (int component_id = 0; component_id < component_count; ++component_id) {
+			exponential_values[component_id] =
+				std::exp(lambda * component_phi[component_id][vertex_id]);
+			exponential_sum += exponential_values[component_id];
+		}
+		global_phi[vertex_id] =
+			std::max(-1e3, std::log(exponential_sum) / lambda);
+		for (int component_id = 0; component_id < component_count; ++component_id) {
+			ks_derivative[vertex_id][component_id] =
+				exponential_values[component_id] / (exponential_sum + 1e-9);
+		}
+	}
+}
+
+GeometryEvaluation EvaluateGeometry(
+	const std::map<int, Eigen::Vector3d>& all_vertex,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+	const std::vector<MMCComponent>& components,
+	const MMCMultiMaterialSimultaneousParams& params) {
+	GeometryEvaluation evaluation;
+	const int component_count = static_cast<int>(components.size());
+	const int vertex_count = static_cast<int>(all_vertex.size());
+	const int cell_count = static_cast<int>(cell_to_vertex.size());
+
+	evaluation.component_phi.resize(component_count);
+	evaluation.component_phi_derivative.resize(component_count);
+	for (int component_id = 0; component_id < component_count; ++component_id) {
+		CalculateComponentPhi(
+			all_vertex,
+			components,
+			component_id,
+			evaluation.component_phi[component_id],
+			evaluation.component_phi_derivative[component_id]);
+	}
+
+	ComputeGlobalTdf(
+		evaluation.component_phi,
+		params.ks_lambda,
+		evaluation.global_phi,
+		evaluation.ks_derivative);
+
+	evaluation.vertex_heaviside.resize(vertex_count, 0.0);
+	evaluation.heaviside_derivative.resize(vertex_count, 0.0);
+	for (int vertex_id = 0; vertex_id < vertex_count; ++vertex_id) {
+		evaluation.vertex_heaviside[vertex_id] = Heaviside(
+			evaluation.global_phi[vertex_id],
+			params.heaviside_alpha,
+			params.heaviside_epsilon);
+		evaluation.heaviside_derivative[vertex_id] = HeavisideDerivative(
+			evaluation.global_phi[vertex_id],
+			params.heaviside_alpha,
+			params.heaviside_epsilon);
+	}
+
+	evaluation.occupancy.assign(cell_count, 0.0);
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		for (const auto& vertex : cell_to_vertex.at(cell_id)) {
+			evaluation.occupancy[cell_id] +=
+				evaluation.vertex_heaviside[vertex.first] / 8.0;
+		}
+	}
+	if (!IsFiniteVector(evaluation.global_phi) ||
+		!IsFiniteVector(evaluation.vertex_heaviside) ||
+		!IsFiniteVector(evaluation.occupancy)) {
+		throw std::runtime_error("MMC TDF, Heaviside, or cell occupancy contains a non-finite value.");
+	}
+	return evaluation;
+}
+
+std::vector<double> ComputeDomainRange(
+	const std::map<int, Eigen::Vector3d>& all_vertex) {
+	double xmin = std::numeric_limits<double>::max();
+	double xmax = std::numeric_limits<double>::lowest();
+	double ymin = std::numeric_limits<double>::max();
+	double ymax = std::numeric_limits<double>::lowest();
+	double zmin = std::numeric_limits<double>::max();
+	double zmax = std::numeric_limits<double>::lowest();
+	for (const auto& vertex : all_vertex) {
+		xmin = std::min(xmin, vertex.second.x());
+		xmax = std::max(xmax, vertex.second.x());
+		ymin = std::min(ymin, vertex.second.y());
+		ymax = std::max(ymax, vertex.second.y());
+		zmin = std::min(zmin, vertex.second.z());
+		zmax = std::max(zmax, vertex.second.z());
+	}
+	if (!(xmax > xmin) || !(ymax > ymin) || !(zmax > zmin)) {
+		throw std::runtime_error("All three MMC design-domain dimensions must be positive.");
+	}
+	return { xmin, xmax, ymin, ymax, zmin, zmax };
+}
+
+void BuildPhysicalComponentBounds(
+	const std::vector<double>& xyz_range,
+	int component_count,
+	std::vector<double>& lower_bounds,
+	std::vector<double>& upper_bounds) {
+	const double dx = xyz_range[1] - xyz_range[0];
+	const double dy = xyz_range[3] - xyz_range[2];
+	const double dz = xyz_range[5] - xyz_range[4];
+	const double maximum_length =
+		0.5 * std::sqrt(dx * dx + dy * dy + dz * dz);
+	const std::vector<double> single_lower = {
+		xyz_range[0], xyz_range[2], xyz_range[4],
+		0.0, 0.0, 0.0,
+		-kPi, -kPi, -kPi
+	};
+	const std::vector<double> single_upper = {
+		xyz_range[1], xyz_range[3], xyz_range[5],
+		maximum_length, maximum_length, maximum_length,
+		kPi, kPi, kPi
+	};
+	lower_bounds.resize(component_count * kVariablesPerComponent);
+	upper_bounds.resize(component_count * kVariablesPerComponent);
+	for (int component_id = 0; component_id < component_count; ++component_id) {
+		std::copy(
+			single_lower.begin(),
+			single_lower.end(),
+			lower_bounds.begin() + component_id * kVariablesPerComponent);
+		std::copy(
+			single_upper.begin(),
+			single_upper.end(),
+			upper_bounds.begin() + component_id * kVariablesPerComponent);
+	}
+}
+
+void FlattenPhysicalComponents(
+	const std::vector<MMCComponent>& components,
+	std::vector<double>& physical_variables) {
+	physical_variables.clear();
+	physical_variables.reserve(components.size() * kVariablesPerComponent);
+	for (const MMCComponent& component : components) {
+		physical_variables.push_back(component.x0);
+		physical_variables.push_back(component.y0);
+		physical_variables.push_back(component.z0);
+		physical_variables.push_back(component.l1);
+		physical_variables.push_back(component.l2);
+		physical_variables.push_back(component.l3);
+		physical_variables.push_back(component.alpha);
+		physical_variables.push_back(component.beta);
+		physical_variables.push_back(component.gamma);
+	}
+}
+
+std::vector<double> NormalizeComponents(
+	const std::vector<MMCComponent>& components,
+	const std::vector<double>& physical_lower,
+	const std::vector<double>& physical_upper) {
+	std::vector<double> physical_variables;
+	FlattenPhysicalComponents(components, physical_variables);
+	std::vector<double> normalized(physical_variables.size(), 0.0);
+	for (size_t variable = 0; variable < physical_variables.size(); ++variable) {
+		const double range = physical_upper[variable] - physical_lower[variable];
+		if (!(range > 0.0)) {
+			throw std::runtime_error("An MMC design-variable bound is invalid.");
+		}
+		normalized[variable] = std::clamp(
+			(physical_variables[variable] - physical_lower[variable]) / range,
+			0.0,
+			1.0);
+	}
+	return normalized;
+}
+
+void UpdateComponentsFromNormalized(
+	std::vector<MMCComponent>& components,
+	const std::vector<double>& normalized,
+	const std::vector<double>& physical_lower,
+	const std::vector<double>& physical_upper) {
+	int variable = 0;
+	for (MMCComponent& component : components) {
+		double physical[kVariablesPerComponent] = {};
+		for (int local_variable = 0;
+			local_variable < kVariablesPerComponent;
+			++local_variable, ++variable) {
+			const double range = physical_upper[variable] - physical_lower[variable];
+			physical[local_variable] =
+				physical_lower[variable]
+				+ std::clamp(normalized[variable], 0.0, 1.0) * range;
+		}
+		component.x0 = physical[0];
+		component.y0 = physical[1];
+		component.z0 = physical[2];
+		component.l1 = physical[3];
+		component.l2 = physical[4];
+		component.l3 = physical[5];
+		component.alpha = physical[6];
+		component.beta = physical[7];
+		component.gamma = physical[8];
+	}
+}
+
+void ComputeMmcDerivativeFromElementWeights(
+	const GeometryEvaluation& geometry,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+	const std::vector<double>& element_weights,
+	std::vector<double>& gradient,
+	std::vector<double>* maximum_absolute_contribution = nullptr,
+	std::vector<double>* sum_absolute_contribution = nullptr) {
+	const int component_count =
+		static_cast<int>(geometry.component_phi_derivative.size());
+	const int vertex_count =
+		static_cast<int>(geometry.vertex_heaviside.size());
+	const int cell_count = static_cast<int>(cell_to_vertex.size());
+	if (static_cast<int>(element_weights.size()) != cell_count) {
+		throw std::runtime_error("The element-weight count does not match the MMC grid.");
+	}
+
+	std::vector<double> vertex_weights(vertex_count, 0.0);
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		for (const auto& vertex : cell_to_vertex.at(cell_id)) {
+			vertex_weights[vertex.first] += element_weights[cell_id] / 8.0;
+		}
+	}
+
+	const int variable_count = component_count * kVariablesPerComponent;
+	gradient.assign(variable_count, 0.0);
+	if (maximum_absolute_contribution != nullptr) {
+		maximum_absolute_contribution->assign(variable_count, 0.0);
+	}
+	if (sum_absolute_contribution != nullptr) {
+		sum_absolute_contribution->assign(variable_count, 0.0);
+	}
+
+	for (int component_id = 0; component_id < component_count; ++component_id) {
+		for (int local_variable = 0;
+			local_variable < kVariablesPerComponent;
+			++local_variable) {
+			const int variable =
+				component_id * kVariablesPerComponent + local_variable;
+			double derivative = 0.0;
+			double max_abs = 0.0;
+			double sum_abs = 0.0;
+			for (int vertex_id = 0; vertex_id < vertex_count; ++vertex_id) {
+				const double contribution =
+					vertex_weights[vertex_id]
+					* geometry.heaviside_derivative[vertex_id]
+					* geometry.ks_derivative[vertex_id][component_id]
+					* geometry.component_phi_derivative[component_id][vertex_id][local_variable];
+				derivative += contribution;
+				max_abs = std::max(max_abs, std::abs(contribution));
+				sum_abs += std::abs(contribution);
+			}
+			gradient[variable] = derivative;
+			if (maximum_absolute_contribution != nullptr) {
+				(*maximum_absolute_contribution)[variable] = max_abs;
+			}
+			if (sum_absolute_contribution != nullptr) {
+				(*sum_absolute_contribution)[variable] = sum_abs;
+			}
+		}
+	}
+	if (!IsFiniteVector(gradient)) {
+		throw std::runtime_error("An analytical MMC sensitivity is non-finite.");
+	}
+}
+
+void ReadBoundaryFile(
+	const std::string& boundary_file,
+	std::vector<CPoint>& boundary_points,
+	std::vector<int>& boundary_types,
+	std::vector<CVector>& boundary_values) {
+	std::ifstream input(boundary_file);
+	if (!input.good()) {
+		throw std::runtime_error("Cannot open the boundary-condition file.");
+	}
+	int boundary_count = 0;
+	input >> boundary_count;
+	if (!input.good() || boundary_count <= 0) {
+		throw std::runtime_error("The boundary-condition file is empty or invalid.");
+	}
+	boundary_points.reserve(boundary_count);
+	boundary_types.reserve(boundary_count);
+	boundary_values.reserve(boundary_count);
+	for (int boundary_id = 0; boundary_id < boundary_count; ++boundary_id) {
+		double x = 0.0;
+		double y = 0.0;
+		double z = 0.0;
+		int type = 0;
+		double value_x = 0.0;
+		double value_y = 0.0;
+		double value_z = 0.0;
+		input >> x >> y >> z >> type >> value_x >> value_y >> value_z;
+		if (!input.good()) {
+			throw std::runtime_error("A boundary-condition record is incomplete.");
+		}
+		boundary_points.emplace_back(x, y, z);
+		boundary_types.push_back(type);
+		boundary_values.emplace_back(value_x, value_y, value_z);
+	}
+}
+
+void BuildAnalysisBoundaryConditions(
+	const std::vector<CBSplineSolid>& patch,
+	gpmesh::GPSplineSolidV0& spline,
+	const std::vector<CPoint>& boundary_points,
+	const std::vector<int>& boundary_types,
+	const std::vector<CVector>& boundary_values,
+	std::vector<boundary_point>& neumann_points,
+	std::vector<boundary_point>& dirichlet_points) {
+	std::vector<Point> source_points;
+	std::vector<Point> target_points;
+	source_points.reserve(boundary_points.size());
+	for (const CPoint& point : boundary_points) {
+		source_points.push_back(Point{ point.getX(), point.getY(), point.getZ() });
+	}
+	for (const CBSplineSolid& solid : patch) {
+		for (const CPoint& point : solid.coefs()) {
+			target_points.push_back(Point{ point.getX(), point.getY(), point.getZ() });
+		}
+	}
+
+	std::vector<int> nearest_ids;
+	GetNearestIds(source_points, target_points, nearest_ids);
+	const auto& local_to_global = spline.m_sparse_system.get_l2g_map();
+	for (int boundary_id = 0;
+		boundary_id < static_cast<int>(boundary_points.size());
+		++boundary_id) {
+		const int patch_id = nearest_ids[boundary_id] / 64;
+		const int local_id = nearest_ids[boundary_id] % 64;
+		if (patch_id < 0 || patch_id >= static_cast<int>(local_to_global.size()) ||
+			local_id < 0 || local_id >= static_cast<int>(local_to_global[patch_id].size())) {
+			throw std::runtime_error("A boundary point cannot be mapped to a valid control point.");
+		}
+		const int global_id = local_to_global[patch_id][local_id];
+		if (global_id < 0) {
+			std::cerr
+				<< "[MMC-MultiMaterial-Simultaneous] Skipping an unmapped boundary control point."
+				<< std::endl;
+			continue;
+		}
+		if (boundary_types[boundary_id] == 2) {
+			neumann_points.emplace_back(
+				condition_type::neumann,
+				boundary_values[boundary_id],
+				global_id);
+		}
+		else if (boundary_types[boundary_id] == 1) {
+			dirichlet_points.emplace_back(
+				condition_type::dirichlet,
+				CVector(0.0, 0.0, 0.0),
+				global_id);
+		}
+	}
+	if (neumann_points.empty() || dirichlet_points.empty()) {
+		throw std::runtime_error("Simultaneous optimization requires at least one load point and one constrained point.");
+	}
+}
+
+void BuildDisplacementByPatch(
+	const gpmesh::GPSplineSolidV0& spline,
+	const Eigen::MatrixXd& displacement,
+	Eigen::MatrixXd& displacement_by_patch) {
+	const int patch_count = spline.m_num_geometry;
+	if (displacement.cols() != 1 ||
+		displacement.rows() != 3 * spline.m_sparse_system.getControlNums()) {
+		throw std::runtime_error("The finite-element displacement vector has an invalid size.");
+	}
+	displacement_by_patch.resize(patch_count, 64 * 3);
+	for (int patch_id = 0; patch_id < patch_count; ++patch_id) {
+		for (int local_id = 0; local_id < 64; ++local_id) {
+			const int global_id =
+				spline.m_sparse_system.get_l2g_map()[patch_id][local_id];
+			if (global_id < 0) {
+				throw std::runtime_error("A local control point has no valid global id.");
+			}
+			displacement_by_patch(patch_id, local_id) =
+				displacement(global_id, 0);
+			displacement_by_patch(patch_id, local_id + 64) =
+				displacement(
+					global_id + spline.m_sparse_system.getControlNums(),
+					0);
+			displacement_by_patch(patch_id, local_id + 128) =
+				displacement(
+					global_id + 2 * spline.m_sparse_system.getControlNums(),
+					0);
+		}
+	}
+}
+
+double RelativeDifference(double first, double second) {
+	return std::abs(first - second)
+		/ std::max({ std::abs(first), std::abs(second), 1e-12 });
+}
+
+void RunClosedFormSelfChecks(
+	const MMCMultiMaterialSimultaneousParams& params) {
+	const double modulus_at_zero = InterpolateMaterialModulus(0.0, params);
+	const double modulus_at_one = InterpolateMaterialModulus(1.0, params);
+	const double middle_eta = 0.5;
+	const double expected_middle =
+		std::pow(middle_eta, params.material_penalty) * params.E1
+		+ (1.0 - std::pow(middle_eta, params.material_penalty)) * params.E2;
+	if (RelativeDifference(modulus_at_zero, params.E2) > 1e-13 ||
+		RelativeDifference(modulus_at_one, params.E1) > 1e-13 ||
+		RelativeDifference(
+			InterpolateMaterialModulus(middle_eta, params),
+			expected_middle) > 1e-13) {
+		throw std::runtime_error("The closed-form endpoint/interior interpolation check failed.");
+	}
+
+	for (double sample_eta : { 0.0, 0.37, 1.0 }) {
+		const double expected_derivative =
+			params.material_penalty
+			* std::pow(sample_eta, params.material_penalty - 1.0)
+			* (params.E1 - params.E2);
+		if (RelativeDifference(
+			InterpolateMaterialModulusDerivative(sample_eta, params),
+			expected_derivative) > 1e-13) {
+			throw std::runtime_error(
+				"The closed-form material interpolation derivative check failed.");
+		}
+	}
+
+	const double sample_m = 0.63;
+	const double normalized_cell_volume = 0.125;
+	const double ratio_material_derivative =
+		-(1.0 + params.material_ratio_f)
+		* sample_m
+		* normalized_cell_volume;
+	const double independently_expanded_derivative =
+		-sample_m * normalized_cell_volume
+		- params.material_ratio_f * sample_m * normalized_cell_volume;
+	if (RelativeDifference(
+		ratio_material_derivative,
+		independently_expanded_derivative) > 1e-13) {
+		throw std::runtime_error("The closed-form material-ratio derivative check failed.");
+	}
+}
+
+JointEvaluation EvaluateJointState(
+	gpmesh::GPSplineSolidV0& spline,
+	std::vector<boundary_point>& neumann_points,
+	std::vector<boundary_point>& dirichlet_points,
+	const std::map<int, Eigen::Vector3d>& all_vertex,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+	const std::vector<MMCComponent>& components,
+	const std::vector<double>& material_eta,
+	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
+	const MMCMultiMaterialSimultaneousParams& params) {
+	const int cell_count = static_cast<int>(cell_to_vertex.size());
+	if (static_cast<int>(material_eta.size()) != cell_count ||
+		static_cast<int>(unit_local_matrix.size()) != cell_count ||
+		spline.m_num_geometry != cell_count) {
+		throw std::runtime_error("The simultaneous state, local matrix, and IGA cell counts differ.");
+	}
+
+	JointEvaluation evaluation;
+	evaluation.geometry = EvaluateGeometry(
+		all_vertex,
+		cell_to_vertex,
+		components,
+		params);
+	evaluation.material_modulus.resize(cell_count, 0.0);
+	evaluation.material_modulus_derivative.resize(cell_count, 0.0);
+	evaluation.effective_stiffness.resize(cell_count, 0.0);
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		evaluation.material_modulus[cell_id] =
+			InterpolateMaterialModulus(material_eta[cell_id], params);
+		evaluation.material_modulus_derivative[cell_id] =
+			InterpolateMaterialModulusDerivative(material_eta[cell_id], params);
+		evaluation.effective_stiffness[cell_id] =
+			evaluation.geometry.occupancy[cell_id]
+			* evaluation.material_modulus[cell_id];
+	}
+	if (!IsFiniteVector(evaluation.material_modulus) ||
+		!IsFiniteVector(evaluation.effective_stiffness)) {
+		throw std::runtime_error("A material modulus or effective stiffness value is non-finite.");
+	}
+
+	spline.Solver_With_Density_MMC(
+		neumann_points,
+		dirichlet_points,
+		evaluation.effective_stiffness,
+		evaluation.displacement);
+	if (!evaluation.displacement.allFinite()) {
+		throw std::runtime_error("The shared finite-element solve returned a non-finite displacement.");
+	}
+
+	Eigen::MatrixXd displacement_by_patch;
+	BuildDisplacementByPatch(
+		spline,
+		evaluation.displacement,
+		displacement_by_patch);
+
+	evaluation.element_energy.resize(cell_count, 0.0);
+	evaluation.compliance = 0.0;
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		const Eigen::VectorXd element_displacement =
+			displacement_by_patch.row(cell_id);
+		const double energy =
+			(element_displacement.transpose()
+				* unit_local_matrix[cell_id]
+				* element_displacement)(0, 0);
+		evaluation.element_energy[cell_id] = energy;
+		evaluation.compliance +=
+			evaluation.effective_stiffness[cell_id] * energy;
+	}
+	// The reused MMC kernel assembles 1000 * a_e * K_e^0, while the local
+	// objective and sensitivities use the standalone-MMC normalized value
+	// sum_e(a_e q_e). Normalize F^T U to the same reference before comparison.
+	evaluation.compliance_from_load =
+		spline.m_sparse_system.rhs().col(0).dot(evaluation.displacement.col(0))
+		/ kExistingMmcReferenceYoungsModulus;
+	evaluation.compliance_relative_mismatch = RelativeDifference(
+		evaluation.compliance,
+		evaluation.compliance_from_load);
+	if (!std::isfinite(evaluation.compliance) ||
+		!std::isfinite(evaluation.compliance_from_load) ||
+		!IsFiniteVector(evaluation.element_energy)) {
+		throw std::runtime_error("The compliance or an element energy value is non-finite.");
+	}
+	if (evaluation.compliance_relative_mismatch >
+		params.compliance_consistency_tolerance) {
+		throw std::runtime_error(
+			"The relative mismatch between F^T U and sum_e(a_e q_e) exceeds the configured tolerance.");
+	}
+
+	std::vector<double> objective_element_weights(cell_count, 0.0);
+	std::vector<double> geometry_volume_weights(
+		cell_count,
+		1.0 / static_cast<double>(cell_count));
+	std::vector<double> ratio_element_weights(cell_count, 0.0);
+	evaluation.material_objective_gradient.resize(cell_count, 0.0);
+	evaluation.ratio_constraint_material_gradient.resize(cell_count, 0.0);
+
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		const double normalized_cell_volume =
+			1.0 / static_cast<double>(cell_count);
+		objective_element_weights[cell_id] =
+			-evaluation.material_modulus[cell_id]
+			* evaluation.element_energy[cell_id];
+		evaluation.material_objective_gradient[cell_id] =
+			-evaluation.geometry.occupancy[cell_id]
+			* evaluation.element_energy[cell_id]
+			* evaluation.material_modulus_derivative[cell_id];
+
+		evaluation.V1 +=
+			evaluation.geometry.occupancy[cell_id]
+			* material_eta[cell_id]
+			* normalized_cell_volume;
+		evaluation.V2 +=
+			evaluation.geometry.occupancy[cell_id]
+			* (1.0 - material_eta[cell_id])
+			* normalized_cell_volume;
+		ratio_element_weights[cell_id] =
+			((1.0 - material_eta[cell_id])
+				- params.material_ratio_f * material_eta[cell_id])
+			* normalized_cell_volume;
+		evaluation.ratio_constraint_material_gradient[cell_id] =
+			-(1.0 + params.material_ratio_f)
+			* evaluation.geometry.occupancy[cell_id]
+			* normalized_cell_volume;
+	}
+
+	ComputeMmcDerivativeFromElementWeights(
+		evaluation.geometry,
+		cell_to_vertex,
+		objective_element_weights,
+		evaluation.mmc_objective_gradient,
+		&evaluation.mmc_contribution_max_abs,
+		&evaluation.mmc_contribution_sum_abs);
+	ComputeMmcDerivativeFromElementWeights(
+		evaluation.geometry,
+		cell_to_vertex,
+		geometry_volume_weights,
+		evaluation.geometry_constraint_gradient);
+	ComputeMmcDerivativeFromElementWeights(
+		evaluation.geometry,
+		cell_to_vertex,
+		ratio_element_weights,
+		evaluation.ratio_constraint_mmc_gradient);
+
+	evaluation.mmc_volume =
+		std::accumulate(
+			evaluation.geometry.occupancy.begin(),
+			evaluation.geometry.occupancy.end(),
+			0.0)
+		/ static_cast<double>(cell_count);
+	evaluation.ratio_residual =
+		evaluation.V2 - params.material_ratio_f * evaluation.V1;
+	evaluation.geometry_constraint =
+		evaluation.mmc_volume - params.mmc_target_rate;
+	evaluation.positive_ratio_constraint =
+		evaluation.ratio_residual - params.material_ratio_tolerance;
+	evaluation.negative_ratio_constraint =
+		-evaluation.ratio_residual - params.material_ratio_tolerance;
+
+	const auto minimum_maximum_modulus = std::minmax_element(
+		evaluation.material_modulus.begin(),
+		evaluation.material_modulus.end());
+	if (RelativeDifference(
+		*minimum_maximum_modulus.first,
+		*minimum_maximum_modulus.second) <=
+		params.sensitivity_consistency_tolerance) {
+		std::vector<double> base_weights(cell_count, 0.0);
+		for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+			base_weights[cell_id] = -evaluation.element_energy[cell_id];
+		}
+		std::vector<double> base_gradient;
+		ComputeMmcDerivativeFromElementWeights(
+			evaluation.geometry,
+			cell_to_vertex,
+			base_weights,
+			base_gradient);
+		double squared_error = 0.0;
+		double squared_reference = 0.0;
+		const double uniform_modulus = evaluation.material_modulus.front();
+		for (size_t variable = 0;
+			variable < evaluation.mmc_objective_gradient.size();
+			++variable) {
+			const double reference = uniform_modulus * base_gradient[variable];
+			const double difference =
+				evaluation.mmc_objective_gradient[variable] - reference;
+			squared_error += difference * difference;
+			squared_reference += reference * reference;
+		}
+		evaluation.uniform_material_gradient_relative_error =
+			std::sqrt(squared_error)
+			/ std::max(std::sqrt(squared_reference), 1e-12);
+		if (evaluation.uniform_material_gradient_relative_error >
+			params.sensitivity_consistency_tolerance) {
+			throw std::runtime_error("The uniform-material MMC gradient consistency check failed.");
+		}
+	}
+
+	if (!IsFiniteVector(evaluation.material_objective_gradient) ||
+		!IsFiniteVector(evaluation.geometry_constraint_gradient) ||
+		!IsFiniteVector(evaluation.ratio_constraint_mmc_gradient) ||
+		!IsFiniteVector(evaluation.ratio_constraint_material_gradient)) {
+		throw std::runtime_error("An analytical objective or constraint sensitivity is non-finite.");
+	}
+	return evaluation;
+}
+
+std::vector<int> BuildSampleIndices(int value_count, int requested_count) {
+	std::vector<int> indices;
+	if (value_count <= 0 || requested_count <= 0) return indices;
+	const int sample_count = std::min(value_count, requested_count);
+	if (sample_count == 1) return { value_count / 2 };
+	for (int sample = 0; sample < sample_count; ++sample) {
+		const int index = static_cast<int>(std::llround(
+			static_cast<double>(sample)
+			* static_cast<double>(value_count - 1)
+			/ static_cast<double>(sample_count - 1)));
+		if (indices.empty() || indices.back() != index) indices.push_back(index);
+	}
+	return indices;
+}
+
+bool WriteLegacyHexVtk(
+	const std::string& file_path,
+	const std::map<int, Eigen::Vector3d>& all_vertex,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+	const std::vector<double>& mmc_occupancy,
+	const std::vector<double>& material_eta,
+	const std::vector<double>& material_modulus,
+	const std::vector<double>& effective_stiffness) {
+	const int cell_count = static_cast<int>(cell_to_vertex.size());
+	if (all_vertex.empty() || cell_count == 0 ||
+		static_cast<int>(mmc_occupancy.size()) != cell_count ||
+		static_cast<int>(material_eta.size()) != cell_count ||
+		static_cast<int>(material_modulus.size()) != cell_count ||
+		static_cast<int>(effective_stiffness.size()) != cell_count) {
+		return false;
+	}
+
+	std::map<int, int> vertex_index;
+	std::vector<Eigen::Vector3d> ordered_vertices;
+	ordered_vertices.reserve(all_vertex.size());
+	for (const auto& vertex : all_vertex) {
+		vertex_index[vertex.first] = static_cast<int>(ordered_vertices.size());
+		ordered_vertices.push_back(vertex.second);
+	}
+
+	std::ofstream output(file_path, std::ios::out | std::ios::trunc);
+	if (!output.good()) return false;
+	output << std::setprecision(17);
+	output << "# vtk DataFile Version 2.0\n";
+	output << "MMC multi-material simultaneous optimization\n";
+	output << "ASCII\n";
+	output << "DATASET UNSTRUCTURED_GRID\n";
+	output << "POINTS " << ordered_vertices.size() << " double\n";
+	for (const Eigen::Vector3d& vertex : ordered_vertices) {
+		output << vertex.x() << ' ' << vertex.y() << ' ' << vertex.z() << '\n';
+	}
+
+	output << "CELLS " << cell_count << ' ' << cell_count * 9 << "\n";
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		output << 8;
+		for (const auto& vertex : cell_to_vertex.at(cell_id)) {
+			auto vertex_it = vertex_index.find(vertex.first);
+			if (vertex_it == vertex_index.end()) return false;
+			output << ' ' << vertex_it->second;
+		}
+		output << '\n';
+	}
+	output << "CELL_TYPES " << cell_count << "\n";
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		(void)cell_id;
+		output << 12 << '\n';
+	}
+	output << "CELL_DATA " << cell_count << "\n";
+
+	const auto write_scalar = [&output, cell_count](
+		const char* name,
+		const std::vector<double>& values) {
+		output << "SCALARS " << name << " double 1\n";
+		output << "LOOKUP_TABLE default\n";
+		for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+			output << values[cell_id] << '\n';
+		}
+	};
+	write_scalar("mmc_occupancy", mmc_occupancy);
+	write_scalar("material_eta", material_eta);
+	write_scalar("material_modulus", material_modulus);
+	write_scalar("effective_stiffness", effective_stiffness);
+	return output.good();
+}
+
+bool WriteFinalFieldTable(
+	const std::string& file_path,
+	const std::vector<double>& mmc_occupancy,
+	const std::vector<double>& material_eta,
+	const std::vector<double>& material_modulus,
+	const std::vector<double>& effective_stiffness) {
+	const size_t field_count = mmc_occupancy.size();
+	if (material_eta.size() != field_count ||
+		material_modulus.size() != field_count ||
+		effective_stiffness.size() != field_count) {
+		return false;
+	}
+	std::ofstream output(file_path, std::ios::out | std::ios::trunc);
+	if (!output.good()) return false;
+	output << std::setprecision(17);
+	output << "cell_id\tmmc_occupancy\tmaterial_eta\tmaterial_modulus"
+		<< "\teffective_stiffness\n";
+	for (size_t cell_id = 0; cell_id < field_count; ++cell_id) {
+		output << cell_id << '\t'
+			<< mmc_occupancy[cell_id] << '\t'
+			<< material_eta[cell_id] << '\t'
+			<< material_modulus[cell_id] << '\t'
+			<< effective_stiffness[cell_id] << '\n';
+	}
+	return output.good();
+}
+
+void WriteIterationHeader(std::ofstream& output) {
+	output
+		<< "iteration\tcompliance\tcompliance_from_load"
+		<< "\tcompliance_relative_mismatch\tmmc_volume\tV1\tV2"
+		<< "\tratio_residual\tgeometry_constraint"
+		<< "\tpositive_ratio_constraint\tnegative_ratio_constraint"
+		<< "\tgeometry_max_change\tmaterial_max_change"
+		<< "\tgeometry_gradient_norm\tmaterial_gradient_norm"
+		<< "\tuniform_material_gradient_relative_error\n";
+}
+
+void WriteIterationRecord(
+	std::ofstream& output,
+	const MMCMultiMaterialIterationDiagnostic& diagnostic) {
+	output << diagnostic.iteration << '\t'
+		<< diagnostic.compliance << '\t'
+		<< diagnostic.compliance_from_load << '\t'
+		<< diagnostic.compliance_relative_mismatch << '\t'
+		<< diagnostic.mmc_volume << '\t'
+		<< diagnostic.V1 << '\t'
+		<< diagnostic.V2 << '\t'
+		<< diagnostic.material_ratio_residual << '\t'
+		<< diagnostic.geometry_constraint << '\t'
+		<< diagnostic.positive_ratio_constraint << '\t'
+		<< diagnostic.negative_ratio_constraint << '\t'
+		<< diagnostic.geometry_max_change << '\t'
+		<< diagnostic.material_max_change << '\t'
+		<< diagnostic.geometry_gradient_norm << '\t'
+		<< diagnostic.material_gradient_norm << '\t'
+		<< diagnostic.uniform_material_gradient_relative_error << '\n';
+	output.flush();
+}
+
+void WriteSensitivityHeader(std::ofstream& output) {
+	output
+		<< "accepted_iteration\tvariable_block\tvariable_index"
+		<< "\tanalytical_value\tmax_abs_contribution\tsum_abs_contribution\n";
+}
+
+void WriteSensitivityDiagnostics(
+	std::ofstream& output,
+	int accepted_iteration,
+	const JointEvaluation& evaluation,
+	int requested_samples) {
+	const std::vector<int> mmc_samples = BuildSampleIndices(
+		static_cast<int>(evaluation.mmc_objective_gradient.size()),
+		requested_samples);
+	for (int variable : mmc_samples) {
+		output << accepted_iteration << "\tMMC\t" << variable << '\t'
+			<< evaluation.mmc_objective_gradient[variable] << '\t'
+			<< evaluation.mmc_contribution_max_abs[variable] << '\t'
+			<< evaluation.mmc_contribution_sum_abs[variable] << '\n';
+	}
+
+	const std::vector<int> material_samples = BuildSampleIndices(
+		static_cast<int>(evaluation.material_objective_gradient.size()),
+		requested_samples);
+	for (int variable : material_samples) {
+		const double absolute_gradient =
+			std::abs(evaluation.material_objective_gradient[variable]);
+		output << accepted_iteration << "\tmaterial\t" << variable << '\t'
+			<< evaluation.material_objective_gradient[variable] << '\t'
+			<< absolute_gradient << '\t'
+			<< absolute_gradient << '\n';
+	}
+	output.flush();
+}
+
+void CopyEvaluationToResultState(
+	const JointEvaluation& evaluation,
+	const std::vector<double>& normalized_geometry,
+	const std::vector<double>& material_eta,
+	int accepted_iteration,
+	MMCMultiMaterialSimultaneousState& state) {
+	state.accepted_iteration = accepted_iteration;
+	state.normalized_mmc_variables = normalized_geometry;
+	state.material_eta = material_eta;
+	state.mmc_occupancy = evaluation.geometry.occupancy;
+	state.material_modulus = evaluation.material_modulus;
+	state.effective_stiffness = evaluation.effective_stiffness;
+	state.element_energy = evaluation.element_energy;
+	state.mmc_objective_gradient = evaluation.mmc_objective_gradient;
+	state.material_objective_gradient = evaluation.material_objective_gradient;
+	state.geometry_constraint_gradient =
+		evaluation.geometry_constraint_gradient;
+	state.ratio_constraint_mmc_gradient =
+		evaluation.ratio_constraint_mmc_gradient;
+	state.ratio_constraint_material_gradient =
+		evaluation.ratio_constraint_material_gradient;
+}
+
+MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
+	int iteration,
+	const JointEvaluation& evaluation,
+	double geometry_change,
+	double material_change) {
+	MMCMultiMaterialIterationDiagnostic diagnostic;
+	diagnostic.iteration = iteration;
+	diagnostic.compliance = evaluation.compliance;
+	diagnostic.compliance_from_load = evaluation.compliance_from_load;
+	diagnostic.compliance_relative_mismatch =
+		evaluation.compliance_relative_mismatch;
+	diagnostic.mmc_volume = evaluation.mmc_volume;
+	diagnostic.V1 = evaluation.V1;
+	diagnostic.V2 = evaluation.V2;
+	diagnostic.material_ratio_residual = evaluation.ratio_residual;
+	diagnostic.geometry_constraint = evaluation.geometry_constraint;
+	diagnostic.positive_ratio_constraint =
+		evaluation.positive_ratio_constraint;
+	diagnostic.negative_ratio_constraint =
+		evaluation.negative_ratio_constraint;
+	diagnostic.geometry_max_change = geometry_change;
+	diagnostic.material_max_change = material_change;
+	diagnostic.geometry_gradient_norm =
+		L2Norm(evaluation.mmc_objective_gradient);
+	diagnostic.material_gradient_norm =
+		L2Norm(evaluation.material_objective_gradient);
+	diagnostic.uniform_material_gradient_relative_error =
+		evaluation.uniform_material_gradient_relative_error;
+	return diagnostic;
+}
+
+} // namespace mmc_multimaterial_simultaneous
+
+bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
+	const std::map<int, Eigen::Vector3d>& allVertex,
+	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell2V,
+	const std::string& input_model_file,
+	const std::string& bdy_file,
+	const std::vector<int>& protect_cell_ids,
+	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
+	const MMCMultiMaterialSimultaneousParams& params,
+	MMCMultiMaterialSimultaneousResult& result,
+	std::vector<double>& density,
+	std::atomic_bool& is_need_update_model) {
+	using namespace mmc_multimaterial_simultaneous;
+
+	result = MMCMultiMaterialSimultaneousResult{};
+	std::string validation_error;
+	if (!ValidateInputs(
+		allVertex,
+		cell2V,
+		input_model_file,
+		bdy_file,
+		protect_cell_ids,
+		neighbor_info,
+		params,
+		density,
+		validation_error)) {
+		SetFailure(result, validation_error);
+		return false;
+	}
+
+	try {
+		RunClosedFormSelfChecks(params);
+		Timer timer;
+		Eigen::setNbThreads(24);
+		Eigen::initParallel();
+
+		std::vector<CBSplineSolid> patch;
+		ToolFunc::readFileXml(input_model_file, patch);
+		if (patch.empty() ||
+			static_cast<int>(patch.size()) != static_cast<int>(cell2V.size())) {
+			throw std::runtime_error(
+				"The Bezier patch count does not match the fixed-grid cell count.");
+		}
+		timer.out("simultaneous_read_xml");
+
+		std::vector<CPoint> boundary_points;
+		std::vector<int> boundary_types;
+		std::vector<CVector> boundary_values;
+		ReadBoundaryFile(
+			bdy_file,
+			boundary_points,
+			boundary_types,
+			boundary_values);
+
+		gpmesh::GPLog::init(spdlog::level::trace);
+		CUDA_ERROR(cudaDeviceReset());
+
+		gpmesh::GPSplineSolidV0 spline;
+		spline.init_patch(patch);
+		std::vector<boundary_point> neumann_points;
+		std::vector<boundary_point> dirichlet_points;
+		BuildAnalysisBoundaryConditions(
+			patch,
+			spline,
+			boundary_points,
+			boundary_types,
+			boundary_values,
+			neumann_points,
+			dirichlet_points);
+		spline.init_dirichlet_points(dirichlet_points);
+
+		std::vector<Eigen::MatrixXd> unit_local_matrix(
+			patch.size(),
+			Eigen::MatrixXd::Zero(192, 192));
+		spline.Get_Local_Matrix(
+			unit_local_matrix,
+			1.0,
+			params.Poissons);
+		spline.m_sparse_system.rhs().setZero();
+		spline.helper_set_neumann_point_in_sparse_system_rhs(neumann_points);
+		spline.helper_set_dirichlet_point_in_sparse_system_rhs(dirichlet_points);
+		timer.out("simultaneous_analysis_initialization");
+
+		const std::vector<double> xyz_range = ComputeDomainRange(allVertex);
+		std::vector<MMCComponent> components =
+			InitializeComponentsForType(xyz_range, params.mmc_type);
+		if (components.empty()) {
+			throw std::runtime_error(
+				"No initial MMC component was generated for this domain and MMC type.");
+		}
+
+		std::vector<double> physical_lower;
+		std::vector<double> physical_upper;
+		BuildPhysicalComponentBounds(
+			xyz_range,
+			static_cast<int>(components.size()),
+			physical_lower,
+			physical_upper);
+		std::vector<double> normalized_geometry = NormalizeComponents(
+			components,
+			physical_lower,
+			physical_upper);
+		const int geometry_variable_count =
+			static_cast<int>(normalized_geometry.size());
+		const int cell_count = static_cast<int>(cell2V.size());
+		const int total_variable_count =
+			geometry_variable_count + cell_count;
+
+		double initial_eta = params.initial_eta;
+		if (!(initial_eta >= params.eta_min && initial_eta <= 1.0)) {
+			initial_eta = 1.0 / (1.0 + params.material_ratio_f);
+		}
+		initial_eta = std::clamp(initial_eta, params.eta_min, 1.0);
+		std::vector<double> material_eta(cell_count, initial_eta);
+
+		MMASolver mma_solver(total_variable_count, 3);
+		mma_solver.SetAsymptotes(0.05, 0.8, 1.0);
+
+		std::ofstream iteration_output;
+		std::ofstream sensitivity_output;
+		if (params.export_results) {
+			if (params.output_directory.empty()) {
+				throw std::runtime_error("The result output directory cannot be empty.");
+			}
+			std::filesystem::create_directories(params.output_directory);
+			iteration_output.open(
+				params.output_directory + "/iterations.tsv",
+				std::ios::out | std::ios::trunc);
+			sensitivity_output.open(
+				params.output_directory + "/analytical_sensitivities.tsv",
+				std::ios::out | std::ios::trunc);
+			if (!iteration_output.good() || !sensitivity_output.good()) {
+				throw std::runtime_error("Cannot create the simultaneous-optimization diagnostics file.");
+			}
+			iteration_output << std::setprecision(17);
+			sensitivity_output << std::setprecision(17);
+			WriteIterationHeader(iteration_output);
+			WriteSensitivityHeader(sensitivity_output);
+		}
+
+		double previous_geometry_change = 0.0;
+		double previous_material_change = 0.0;
+		int accepted_updates = 0;
+		int last_recorded_accepted_iteration = -1;
+		JointEvaluation current_evaluation;
+		const auto record_accepted_state =
+			[&](const JointEvaluation& evaluation) {
+			const MMCMultiMaterialIterationDiagnostic diagnostic =
+				BuildDiagnostic(
+					accepted_updates,
+					evaluation,
+					previous_geometry_change,
+					previous_material_change);
+			result.diagnostics.push_back(diagnostic);
+			if (params.export_results) {
+				WriteIterationRecord(iteration_output, diagnostic);
+				WriteSensitivityDiagnostics(
+					sensitivity_output,
+					accepted_updates,
+					evaluation,
+					params.sensitivity_sample_count);
+			}
+			density = evaluation.geometry.occupancy;
+			is_need_update_model = true;
+			std::cout
+				<< "[MMC-MultiMaterial-Simultaneous] Accepted: "
+				<< accepted_updates
+				<< " Obj.: " << evaluation.compliance
+				<< " MMC-Vol.: " << evaluation.mmc_volume
+				<< " V1: " << evaluation.V1
+				<< " V2: " << evaluation.V2
+				<< " R: " << evaluation.ratio_residual
+				<< " dMMC: " << previous_geometry_change
+				<< " dEta: " << previous_material_change
+				<< " |gMMC|: " << diagnostic.geometry_gradient_norm
+				<< " |gEta|: " << diagnostic.material_gradient_norm
+				<< std::endl;
+			last_recorded_accepted_iteration = accepted_updates;
+		};
+
+		for (int iteration = 1;
+			iteration <= params.max_iterations;
+			++iteration) {
+			UpdateComponentsFromNormalized(
+				components,
+				normalized_geometry,
+				physical_lower,
+				physical_upper);
+			current_evaluation = EvaluateJointState(
+				spline,
+				neumann_points,
+				dirichlet_points,
+				allVertex,
+				cell2V,
+				components,
+				material_eta,
+				unit_local_matrix,
+				params);
+			record_accepted_state(current_evaluation);
+
+			const double active_constraint_residual = std::max({
+				0.0,
+				current_evaluation.geometry_constraint,
+				current_evaluation.positive_ratio_constraint,
+				current_evaluation.negative_ratio_constraint
+			});
+			if (accepted_updates > 0 &&
+				previous_geometry_change <=
+					params.geometry_change_tolerance &&
+				previous_material_change <=
+					params.material_change_tolerance &&
+				active_constraint_residual <= params.constraint_tolerance) {
+				result.converged = true;
+				break;
+			}
+
+			std::vector<double> joint_variables(total_variable_count, 0.0);
+			std::copy(
+				normalized_geometry.begin(),
+				normalized_geometry.end(),
+				joint_variables.begin());
+			std::copy(
+				material_eta.begin(),
+				material_eta.end(),
+				joint_variables.begin() + geometry_variable_count);
+
+			std::vector<double> objective_gradient(
+				total_variable_count,
+				0.0);
+			std::vector<double> constraint_values = {
+				current_evaluation.geometry_constraint,
+				current_evaluation.positive_ratio_constraint,
+				current_evaluation.negative_ratio_constraint
+			};
+			std::vector<double> constraint_gradient(
+				3 * total_variable_count,
+				0.0);
+
+			for (int variable = 0;
+				variable < geometry_variable_count;
+				++variable) {
+				const double physical_range =
+					physical_upper[variable] - physical_lower[variable];
+				objective_gradient[variable] =
+					current_evaluation.mmc_objective_gradient[variable]
+					* physical_range;
+				constraint_gradient[variable * 3] =
+					current_evaluation.geometry_constraint_gradient[variable]
+					* physical_range;
+				constraint_gradient[variable * 3 + 1] =
+					current_evaluation.ratio_constraint_mmc_gradient[variable]
+					* physical_range;
+				constraint_gradient[variable * 3 + 2] =
+					-current_evaluation.ratio_constraint_mmc_gradient[variable]
+					* physical_range;
+			}
+			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+				const int variable = geometry_variable_count + cell_id;
+				objective_gradient[variable] =
+					current_evaluation.material_objective_gradient[cell_id];
+				constraint_gradient[variable * 3] = 0.0;
+				constraint_gradient[variable * 3 + 1] =
+					current_evaluation.ratio_constraint_material_gradient[cell_id];
+				constraint_gradient[variable * 3 + 2] =
+					-current_evaluation.ratio_constraint_material_gradient[cell_id];
+			}
+
+			std::vector<double> update_lower(total_variable_count, 0.0);
+			std::vector<double> update_upper(total_variable_count, 1.0);
+			for (int variable = 0;
+				variable < geometry_variable_count;
+				++variable) {
+				update_lower[variable] = std::max(
+					0.0,
+					joint_variables[variable] - params.geometry_move_limit);
+				update_upper[variable] = std::min(
+					1.0,
+					joint_variables[variable] + params.geometry_move_limit);
+			}
+			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+				const int variable = geometry_variable_count + cell_id;
+				update_lower[variable] = std::max(
+					params.eta_min,
+					joint_variables[variable] - params.material_move_limit);
+				update_upper[variable] = std::min(
+					1.0,
+					joint_variables[variable] + params.material_move_limit);
+			}
+
+			const std::vector<double> old_geometry = normalized_geometry;
+			const std::vector<double> old_material = material_eta;
+			mma_solver.Update(
+				joint_variables.data(),
+				objective_gradient.data(),
+				constraint_values.data(),
+				constraint_gradient.data(),
+				update_lower.data(),
+				update_upper.data());
+			if (!IsFiniteVector(joint_variables)) {
+				throw std::runtime_error(
+					"The joint MMA update returned a non-finite design variable.");
+			}
+
+			for (int variable = 0;
+				variable < geometry_variable_count;
+				++variable) {
+				normalized_geometry[variable] =
+					std::clamp(joint_variables[variable], 0.0, 1.0);
+			}
+			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+				material_eta[cell_id] = std::clamp(
+					joint_variables[geometry_variable_count + cell_id],
+					params.eta_min,
+					1.0);
+			}
+
+			previous_geometry_change = 0.0;
+			for (int variable = 0;
+				variable < geometry_variable_count;
+				++variable) {
+				previous_geometry_change = std::max(
+					previous_geometry_change,
+					std::abs(
+						normalized_geometry[variable]
+						- old_geometry[variable]));
+			}
+			previous_material_change = 0.0;
+			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+				previous_material_change = std::max(
+					previous_material_change,
+					std::abs(material_eta[cell_id] - old_material[cell_id]));
+			}
+			++accepted_updates;
+
+		}
+
+		UpdateComponentsFromNormalized(
+			components,
+			normalized_geometry,
+			physical_lower,
+			physical_upper);
+		const JointEvaluation final_evaluation = EvaluateJointState(
+			spline,
+			neumann_points,
+			dirichlet_points,
+			allVertex,
+			cell2V,
+			components,
+			material_eta,
+			unit_local_matrix,
+			params);
+		if (last_recorded_accepted_iteration != accepted_updates) {
+			record_accepted_state(final_evaluation);
+		}
+		CopyEvaluationToResultState(
+			final_evaluation,
+			normalized_geometry,
+			material_eta,
+			accepted_updates,
+			result.state);
+		density = final_evaluation.geometry.occupancy;
+		is_need_update_model = true;
+
+		if (params.export_results) {
+			const bool vtk_written = WriteLegacyHexVtk(
+				params.output_directory
+					+ "/mmc_multimaterial_simultaneous.vtk",
+				allVertex,
+				cell2V,
+				final_evaluation.geometry.occupancy,
+				material_eta,
+				final_evaluation.material_modulus,
+				final_evaluation.effective_stiffness);
+			const bool table_written = WriteFinalFieldTable(
+				params.output_directory + "/element_fields.tsv",
+				final_evaluation.geometry.occupancy,
+				material_eta,
+				final_evaluation.material_modulus,
+				final_evaluation.effective_stiffness);
+			if (!vtk_written || !table_written) {
+				throw std::runtime_error("Failed to export the final simultaneous-optimization fields.");
+			}
+		}
+
+		result.success = true;
+		result.message = result.converged
+			? "MMC multi-material simultaneous optimization converged."
+			: "MMC multi-material simultaneous optimization reached the maximum iteration count.";
+		return true;
+	}
+	catch (const std::exception& exception) {
+		SetFailure(result, exception.what());
+		return false;
+	}
+	catch (...) {
+		SetFailure(result, "An unknown error occurred during simultaneous optimization.");
+		return false;
+	}
+}

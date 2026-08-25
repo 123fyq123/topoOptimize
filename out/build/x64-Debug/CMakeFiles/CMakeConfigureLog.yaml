@@ -9978,3 +9978,671 @@ events:
         
       exitCode: 1
 ...
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      The system is: Windows - 10.0.26200 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe 
+      Build flags: /DWIN32;/D_WINDOWS
+      Id flags:  
+      
+      The output was:
+      0
+      鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35222 鐗?
+      鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
+      
+      CMakeCCompilerId.c
+      Microsoft (R) Incremental Linker Version 14.44.35222.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+      
+      /out:CMakeCCompilerId.exe 
+      CMakeCCompilerId.obj 
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.exe"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
+      
+      The C compiler identification is MSVC, found in:
+        D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/3.30.0/CompilerIdC/CMakeCCompilerId.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1243 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        main.c
+        娉ㄦ剰: 鍖呭惈鏂囦欢:  D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\ShowIncludes\\foo.h
+        
+      Found prefix "娉ㄦ剰: 鍖呭惈鏂囦欢:  "
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe 
+      Build flags: /DWIN32;/D_WINDOWS;/GR;/EHsc
+      Id flags:  
+      
+      The output was:
+      0
+      鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35222 鐗?
+      鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
+      
+      CMakeCXXCompilerId.cpp
+      Microsoft (R) Incremental Linker Version 14.44.35222.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+      
+      /out:CMakeCXXCompilerId.exe 
+      CMakeCXXCompilerId.obj 
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
+      
+      The CXX compiler identification is MSVC, found in:
+        D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/3.30.0/CompilerIdCXX/CMakeCXXCompilerId.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1243 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Detecting CXX compiler /showIncludes prefix:
+        main.c
+        娉ㄦ剰: 鍖呭惈鏂囦欢:  D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\ShowIncludes\\foo.h
+        
+      Found prefix "娉ㄦ剰: 鍖呭惈鏂囦欢:  "
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1192 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:75 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Checking whether the CUDA compiler is NVIDIA using "" matched "nvcc: NVIDIA \\(R\\) Cuda compiler driver":
+      nvcc: NVIDIA (R) Cuda compiler driver
+      Copyright (c) 2005-2024 NVIDIA Corporation
+      Built on Wed_Apr_17_19:36:51_Pacific_Daylight_Time_2024
+      Cuda compilation tools, release 12.5, V12.5.40
+      Build cuda_12.5.r12.5/compiler.34177558_0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:53 (__determine_compiler_id_test)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:131 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Compiling the CUDA compiler identification source file "CMakeCUDACompilerId.cu" succeeded.
+      Compiler: D:/apps/cuda/exe/bin/nvcc.exe 
+      Build flags: -D_WINDOWS;-Xcompiler= /GR /EHsc
+      Id flags: --keep;--keep-dir;tmp -v
+      
+      The output was:
+      0
+      
+      D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA>call "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat" 
+      **********************************************************************
+      ** Visual Studio 2022 Developer Command Prompt v17.14.23
+      ** Copyright (c) 2025 Microsoft Corporation
+      **********************************************************************
+      [vcvarsall.bat] Environment initialized for: 'x64'
+      #$ D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat
+      #$ ALLUSERSPROFILE=C:\\ProgramData
+      #$ APPDATA=C:\\Users\\lenovo\\AppData\\Roaming
+      #$ CC=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
+      #$ CODEX_CI=1
+      #$ CODEX_INTERNAL_ORIGINATOR_OVERRIDE=Codex Desktop
+      #$ CODEX_PERMISSION_PROFILE=:workspace
+      #$ CODEX_SANDBOX_NETWORK_DISABLED=1
+      #$ CODEX_SESSION_ID=01a03393-7033-7953-8caa-d48a38ddd1c2
+      #$ CODEX_THREAD_ID=01a03393-7033-7953-8caa-d48a38ddd1c2
+      #$ COLORTERM=
+      #$ CommandPromptType=Native
+      #$ CommonProgramFiles=C:\\Program Files\\Common Files
+      #$ CommonProgramFiles(x86)=C:\\Program Files (x86)\\Common Files
+      #$ CommonProgramW6432=C:\\Program Files\\Common Files
+      #$ COMPUTERNAME=LAPTOP-F4D4RGAL
+      #$ ComSpec=C:\\WINDOWS\\system32\\cmd.exe
+      #$ CUDA_PATH=D:\\apps\\cuda\\exe
+      #$ CUDA_PATH_V12_5=D:\\apps\\cuda\\exe
+      #$ CXX=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
+      #$ DevEnvDir=D:\\apps\\VS\\Community\\Common7\\IDE\\
+      #$ DriverData=C:\\Windows\\System32\\Drivers\\DriverData
+      #$ ExtensionSdkDir=C:\\Program Files (x86)\\Microsoft SDKs\\Windows Kits\\10\\ExtensionSDKs
+      #$ EXTERNAL_INCLUDE=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\include;D:\\apps\\VS\\Community\\VC\\Auxiliary\\VS\\include;D:\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\include;D:\\apps\\VS\\Community\\VC\\Auxiliary\\VS\\include;D:\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt
+      #$ Framework40Version=v4.0
+      #$ FrameworkDir=C:\\Windows\\Microsoft.NET\\Framework64\\
+      #$ FrameworkDir64=C:\\Windows\\Microsoft.NET\\Framework64\\
+      #$ FrameworkVersion=v4.0.30319
+      #$ FrameworkVersion64=v4.0.30319
+      #$ GH_PAGER=cat
+      #$ GIT_PAGER=cat
+      #$ GoLand=D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin
+      #$ GOPATH=D:\\Golang\\WorkSpace
+      #$ GOROOT=D:\\Golang\\go1.23.1.windows-amd64\\go
+      #$ GUROBI_HOME=D:\\apps\\gurobi\\exe\\win64
+      #$ HOMEDRIVE=C:
+      #$ HOMEPATH=\\Users\\lenovo
+      #$ HTMLHelpDir=C:\\Program Files (x86)\\HTML Help Workshop
+      #$ INCLUDE=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\include;D:\\apps\\VS\\Community\\VC\\Auxiliary\\VS\\include;D:\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\include;D:\\apps\\VS\\Community\\VC\\Auxiliary\\VS\\include;D:\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt;D:\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt
+      #$ LANG=C.UTF-8
+      #$ LC_ALL=C.UTF-8
+      #$ LC_CTYPE=C.UTF-8
+      #$ LIB=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x64;D:\\Windows Kits\\10\\lib\\10.0.26100.0\\ucrt\\x64;D:\\Windows Kits\\10\\\\lib\\10.0.26100.0\\\\um\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x64;D:\\Windows Kits\\10\\lib\\10.0.26100.0\\ucrt\\x64;D:\\Windows Kits\\10\\\\lib\\10.0.26100.0\\\\um\\x64
+      #$ LIBPATH=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x86\\store\\references;D:\\Windows Kits\\10\\UnionMetadata\\10.0.26100.0;D:\\Windows Kits\\10\\References\\10.0.26100.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\ATLMFC\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\lib\\x86\\store\\references;D:\\Windows Kits\\10\\UnionMetadata\\10.0.26100.0;D:\\Windows Kits\\10\\References\\10.0.26100.0;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319
+      #$ LOCALAPPDATA=C:\\Users\\lenovo\\AppData\\Local
+      #$ LOGONSERVER=\\\\LAPTOP-F4D4RGAL
+      #$ LOG_FORMAT=json
+      #$ NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S=8676faca28eddb6424d4b54116fe8305e2da6a0ca4e5271e8758fc3c55c3b8fc
+      #$ NO_COLOR=1
+      #$ NUMBER_OF_PROCESSORS=24
+      #$ ONEAPI_ROOT=D:\\apps\\intel-mkl\\2023\\
+      #$ OneDrive=C:\\Users\\lenovo\\OneDrive
+      #$ OS=Windows_NT
+      #$ PAGER=cat
+      #$ Path=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg
+      #$ PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+      #$ Platform=x64
+      #$ PROCESSOR_ARCHITECTURE=AMD64
+      #$ PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+      #$ PROCESSOR_LEVEL=6
+      #$ PROCESSOR_REVISION=b701
+      #$ ProgramData=C:\\ProgramData
+      #$ ProgramFiles=C:\\Program Files
+      #$ ProgramFiles(x86)=C:\\Program Files (x86)
+      #$ ProgramW6432=C:\\Program Files
+      #$ PROMPT=$P$G
+      #$ PSModulePath=D:\\PowerShell\\Modules;C:\\Program Files\\PowerShell\\Modules;c:\\users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules
+      #$ PUBLIC=C:\\Users\\Public
+      #$ RUST_LOG=warn
+      #$ SystemDrive=C:
+      #$ SystemRoot=C:\\WINDOWS
+      #$ TERM=dumb
+      #$ UCRTVersion=10.0.26100.0
+      #$ UniversalCRTSdkDir=D:\\Windows Kits\\10\\
+      #$ USERDOMAIN=LAPTOP-F4D4RGAL
+      #$ USERDOMAIN_ROAMINGPROFILE=LAPTOP-F4D4RGAL
+      #$ USERNAME=lenovo
+      #$ USERPROFILE=C:\\Users\\lenovo
+      #$ VCIDEInstallDir=D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\
+      #$ VCINSTALLDIR=D:\\apps\\VS\\Community\\VC\\
+      #$ VCPKG_ROOT=D:\\apps\\VS\\Community\\VC\\vcpkg
+      #$ VCToolsInstallDir=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\
+      #$ VCToolsRedistDir=D:\\apps\\VS\\Community\\VC\\Redist\\MSVC\\14.44.35112\\
+      #$ VCToolsVersion=14.44.35207
+      #$ VisualStudioVersion=17.0
+      #$ VS170COMNTOOLS=D:\\apps\\VS\\Community\\Common7\\Tools\\
+      #$ VS2022INSTALLDIR=D:\\apps\\VS\\Community
+      #$ VSCMD_ARG_app_plat=Desktop
+      #$ VSCMD_ARG_HOST_ARCH=x64
+      #$ VSCMD_ARG_TGT_ARCH=x64
+      #$ VSCMD_VER=17.14.23
+      #$ vsconsoleoutput=1
+      #$ VSINSTALLDIR=D:\\apps\\VS\\Community\\
+      #$ VSSDK150INSTALL=D:\\apps\\VS\\Community\\VSSDK
+      #$ VSSDKINSTALL=D:\\apps\\VS\\Community\\VSSDK
+      #$ windir=C:\\WINDOWS
+      #$ WindowsLibPath=D:\\Windows Kits\\10\\UnionMetadata\\10.0.26100.0;D:\\Windows Kits\\10\\References\\10.0.26100.0
+      #$ WindowsSdkBinPath=D:\\Windows Kits\\10\\bin\\
+      #$ WindowsSdkDir=D:\\Windows Kits\\10\\
+      #$ WindowsSDKLibVersion=10.0.26100.0\\
+      #$ WindowsSdkVerBinPath=D:\\Windows Kits\\10\\bin\\10.0.26100.0\\
+      #$ WindowsSDKVersion=10.0.26100.0\\
+      #$ ZES_ENABLE_SYSMAN=1
+      #$ __DOTNET_ADD_64BIT=1
+      #$ __DOTNET_PREFERRED_BITNESS=64
+      #$ __VSCMD_PREINIT_PATH=C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources
+      #$ __VSCMD_PREINIT_VCToolsVersion=14.44.35207
+      #$ __VSCMD_PREINIT_VS170COMNTOOLS=D:\\apps\\VS\\Community\\Common7\\Tools\\
+      #$ PATH=D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg
+      #$ _NVVM_BRANCH_=nvvm
+      #$ _SPACE_= 
+      #$ _CUDART_=cudart
+      #$ _HERE_=D:/apps/cuda/exe/bin
+      #$ _THERE_=D:/apps/cuda/exe/bin
+      #$ _TARGET_SIZE_=
+      #$ _TARGET_DIR_=
+      #$ _TARGET_SIZE_=64
+      #$ _WIN_PLATFORM_=x64
+      #$ TOP=D:/apps/cuda/exe/bin/..
+      #$ CICC_PATH=D:/apps/cuda/exe/bin/../nvvm/bin
+      #$ CICC_NEXT_PATH=D:/apps/cuda/exe/bin/../nvvm-next/bin
+      #$ NVVMIR_LIBRARY_DIR=D:/apps/cuda/exe/bin/../nvvm/libdevice
+      #$ PATH=D:/apps/cuda/exe/bin/../nvvm/bin;D:/apps/cuda/exe/bin;D:/apps/cuda/exe/bin/../lib;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg
+      #$ INCLUDES="-ID:/apps/cuda/exe/bin/../include"  
+      #$ LIBRARIES=  "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"
+      #$ CUDAFE_FLAGS=
+      #$ PTXAS_FLAGS=
+      #$ erase tmp/a_dlink.reg.c
+      CMakeCUDACompilerId.cu
+      #$ resource file tmp/CMakeCUDACompilerId.cpp4.ii.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]
+      #$ cl.exe @"tmp/CMakeCUDACompilerId.cpp4.ii.res" > "tmp/CMakeCUDACompilerId.cpp4.ii" 
+      CMakeCUDACompilerId.cu
+      #$ cudafe++ --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" 
+      #$ resource file tmp/CMakeCUDACompilerId.cpp1.ii.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]
+      #$ cl.exe @"tmp/CMakeCUDACompilerId.cpp1.ii.res" > "tmp/CMakeCUDACompilerId.cpp1.ii" 
+      CMakeCUDACompilerId.cu
+      #$ cicc --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed  -arch compute_52 -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"
+      #$ ptxas -arch=sm_52 -m64 "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_52.cubin" 
+      #$ fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=52,file=tmp/CMakeCUDACompilerId.sm_52.cubin" "--image3=kind=ptx,sm=52,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" 
+      #$ resource file tmp/CMakeCUDACompilerId.obj.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"   "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.cudafe1.cpp" ]
+      #$ cl.exe @"tmp/CMakeCUDACompilerId.obj.res" -Fo"tmp/CMakeCUDACompilerId.obj" 
+      CMakeCUDACompilerId.cudafe1.cpp
+      #$ resource file tmp/a_dlink.sm_52.cubin.optf: [-m64 --arch=sm_52 --register-link-binaries="tmp/a_dlink.reg.c"    "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.obj"  cudadevrt.lib  -o "tmp/a_dlink.sm_52.cubin"]
+      #$ nvlink -optf "tmp/a_dlink.sm_52.cubin.optf"
+      #$ fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=52,file=tmp/a_dlink.sm_52.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" 
+      #$ resource file tmp/a_dlink.obj.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP -EHsc -DFATBINFILE="\\"tmp/a_dlink.fatbin.c\\"" -DREGISTERLINKBINARYFILE="\\"tmp/a_dlink.reg.c\\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 "D:\\apps\\cuda\\exe\\bin\\crt\\link.stub" ]
+      #$ cl.exe @"tmp/a_dlink.obj.res" -Fo"tmp/a_dlink.obj" 
+      link.stub
+      #$ resource file tmp/a.exe.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib]
+      #$ cl.exe @"tmp/a.exe.res" -Fe"a.exe" 
+        姝ｅ湪鍒涘缓搴?a.lib 鍜屽璞?a.exp
+      
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "a.exe"
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "a.exp"
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "a.lib"
+      
+      The CUDA compiler identification is NVIDIA, found in:
+        D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/3.30.0/CompilerIdCUDA/a.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1243 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:131 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Detecting CUDA compiler /showIncludes prefix:
+        nvcc fatal   : Don't know what to do with 'D:/c'
+        
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1243 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:131 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Detecting CUDA compiler /showIncludes prefix:
+        nvcc fatal   : Don't know what to do with 'D:/c'
+        
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/Internal/CMakeNVCCParseImplicitInfo.cmake:128 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:242 (cmake_nvcc_parse_implicit_info)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed CUDA nvcc implicit link information:
+        found 'PATH=' string: [D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg]
+        found 'LIBRARIES=' string: ["/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"]
+        found 'INCLUDES=' string: ["-ID:/apps/cuda/exe/bin/../include"  ]
+        considering line: []
+        considering line: [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA>call "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat" ]
+        considering line: [**********************************************************************]
+        considering line: [** Visual Studio 2022 Developer Command Prompt v17.14.23]
+        considering line: [** Copyright (c) 2025 Microsoft Corporation]
+        considering line: [**********************************************************************]
+        considering line: [[vcvarsall.bat] Environment initialized for: 'x64']
+        considering line: [D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat]
+        considering line: [erase tmp/a_dlink.reg.c]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [resource file tmp/CMakeCUDACompilerId.cpp4.ii.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.cpp4.ii.res" > "tmp/CMakeCUDACompilerId.cpp4.ii" ]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [cudafe++ --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" ]
+        considering line: [resource file tmp/CMakeCUDACompilerId.cpp1.ii.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.cpp1.ii.res" > "tmp/CMakeCUDACompilerId.cpp1.ii" ]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [cicc --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed  -arch compute_52 -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"]
+        considering line: [ptxas -arch=sm_52 -m64 "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_52.cubin" ]
+        considering line: [fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=52,file=tmp/CMakeCUDACompilerId.sm_52.cubin" "--image3=kind=ptx,sm=52,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" ]
+        considering line: [resource file tmp/CMakeCUDACompilerId.obj.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"   "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.cudafe1.cpp" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.obj.res" -Fo"tmp/CMakeCUDACompilerId.obj" ]
+        considering line: [CMakeCUDACompilerId.cudafe1.cpp]
+        considering line: [resource file tmp/a_dlink.sm_52.cubin.optf: [-m64 --arch=sm_52 --register-link-binaries="tmp/a_dlink.reg.c"    "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.obj"  cudadevrt.lib  -o "tmp/a_dlink.sm_52.cubin"]]
+          extracted link line: [resource file tmp/a_dlink.sm_52.cubin.optf: [-m64 --arch=sm_52 --register-link-binaries="tmp/a_dlink.reg.c"    "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.obj"  cudadevrt.lib  -o "tmp/a_dlink.sm_52.cubin"]]
+        considering line: [nvlink -optf "tmp/a_dlink.sm_52.cubin.optf"]
+          ignoring nvlink line
+        considering line: [fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=52,file=tmp/a_dlink.sm_52.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" ]
+        considering line: [resource file tmp/a_dlink.obj.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP -EHsc -DFATBINFILE="\\"tmp/a_dlink.fatbin.c\\"" -DREGISTERLINKBINARYFILE="\\"tmp/a_dlink.reg.c\\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 "D:\\apps\\cuda\\exe\\bin\\crt\\link.stub" ]]
+        considering line: [cl.exe @"tmp/a_dlink.obj.res" -Fo"tmp/a_dlink.obj" ]
+        considering line: [link.stub]
+        considering line: [resource file tmp/a.exe.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib]]
+          extracted link line: [resource file tmp/a.exe.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib]]
+        considering line: [cl.exe @"tmp/a.exe.res" -Fe"a.exe" ]
+          extracted link line: [cl.exe -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib -Fe"a.exe" ]
+        considering line: [  姝ｅ湪鍒涘缓搴?a.lib 鍜屽璞?a.exp]
+        considering line: []
+      
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        link line: [cuda-fake-ld cl.exe -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib -Fe"a.exe" ]
+          arg [cuda-fake-ld] ==> ignore
+          arg [cl.exe] ==> recognize MSVC cl
+          arg [-D__CUDA_ARCH_LIST__=520] ==> ignore
+          arg [-D__NV_LEGACY_LAUNCH] ==> ignore
+          arg [-nologo] ==> ignore
+          arg [/GR] ==> ignore
+          arg [/EHsc] ==> ignore
+          arg [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj] ==> ignore
+          arg [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj] ==> ignore
+          arg [-link] ==> ignore MSVC cl option
+          arg [-INCREMENTAL:NO] ==> ignore
+          arg [/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64] ==> dir [D:/apps/cuda/exe/bin/../lib/x64]
+          arg [cudadevrt.lib] ==> lib [cudadevrt.lib]
+          arg [cudart_static.lib] ==> lib [cudart_static.lib]
+          arg [-Fea.exe] ==> ignore
+        collapse library dir [D:/apps/cuda/exe/bin/../lib/x64] ==> [D:/apps/cuda/exe/lib/x64]
+        implicit libs: [cudadevrt.lib;cudart_static.lib]
+        implicit objs: []
+        implicit dirs: [D:/apps/cuda/exe/lib/x64]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/Internal/CMakeNVCCParseImplicitInfo.cmake:146 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCUDACompiler.cmake:242 (cmake_nvcc_parse_implicit_info)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed CUDA nvcc include information:
+        found 'PATH=' string: [D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\VCPackages;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;D:\\apps\\VS\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\HTML Help Workshop;D:\\apps\\VS\\Community\\Team Tools\\DiagnosticsHub\\Collector;D:\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64;D:\\Windows Kits\\10\\bin\\\\x64;D:\\apps\\VS\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;D:\\apps\\VS\\Community\\Common7\\IDE\\;D:\\apps\\VS\\Community\\Common7\\Tools\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\.codex\\tmp\\arg0\\codex-arg00SWDvi;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;D:\\apps\\gurobi\\exe\\win64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;C:\\Program Files\\RBTools\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\apps\\Cmake\\bin;D:\\CG\\Upba\\Ubpa_v2\\Ubpa\\bin;D:\\CG\\MinGW\\MinGW\\bin;D:\\apps\\C++\\Nodejs\\;D:\\Golang\\go1.23.1.windows-amd64\\go\\bin;D:\\apps\\protobuf\\protoc-29.0-rc-1-win64\\bin;D:\\apps\\Git\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.2.0\\;D:\\Windows Kits\\10\\Windows Performance Toolkit\\;D:\\CG\\Qt\\Tools\\mingw730_64\\bin;D:\\apps\\cuda\\exe\\bin;D:\\apps\\cuda\\exe\\libnvvp;D:\\CG\\Qt\\5.14.2\\msvc2017_64\\bin;D:\\apps\\golang\\exe\\bin;D:\\apps\\git extension\\;D:\\Docker\\docker\\resources\\bin;D:\\apps\\golang\\golang1.26\\bin;D:\\Python\\Scripts\\;D:\\Python\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\lenovo\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\lenovo\\AppData\\Local\\Microsoft\\WindowsApps;D:\\apps\\VS Code\\Microsoft VS Code\\bin;C:\\Users\\lenovo\\AppData\\Roaming\\npm;C:\\Users\\lenovo\\go\\bin;D:\\apps\\goland\\ide\\GoLand 2025.2.4\\bin;C:\\Users\\lenovo\\.bun\\bin;D:\\Golang\\WorkSpace\\bin;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\lenovo\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\lenovo\\AppData\\Local\\OpenAI\\Codex\\bin\\c6c4820dcd243daa;C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.818.5229.0_x64__2p2nqsd0c76g0\\app\\resources;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;D:\\apps\\VS\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;D:\\apps\\VS\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;D:\\apps\\VS\\Community\\VC\\vcpkg]
+        found 'LIBRARIES=' string: ["/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"]
+        found 'INCLUDES=' string: ["-ID:/apps/cuda/exe/bin/../include"  ]
+        considering line: []
+        considering line: [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA>call "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat" ]
+        considering line: [**********************************************************************]
+        considering line: [** Visual Studio 2022 Developer Command Prompt v17.14.23]
+        considering line: [** Copyright (c) 2025 Microsoft Corporation]
+        considering line: [**********************************************************************]
+        considering line: [[vcvarsall.bat] Environment initialized for: 'x64']
+        considering line: [D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../../VC/Auxiliary/Build/vcvars64.bat]
+        considering line: [erase tmp/a_dlink.reg.c]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [resource file tmp/CMakeCUDACompilerId.cpp4.ii.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.cpp4.ii.res" > "tmp/CMakeCUDACompilerId.cpp4.ii" ]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [cudafe++ --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" ]
+        considering line: [resource file tmp/CMakeCUDACompilerId.cpp1.ii.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc -D__CUDACC__ -D__NVCC__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" "CMakeCUDACompilerId.cu" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.cpp1.ii.res" > "tmp/CMakeCUDACompilerId.cpp1.ii" ]
+        considering line: [CMakeCUDACompilerId.cu]
+        considering line: [cicc --ms_c++14 --microsoft_version=1944 --msvc_target_version=1944 --compiler_bindir "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/../../../../../../.." --sdk_dir "D:/Windows Kits/10/" --display_error_number --orig_src_file_name "CMakeCUDACompilerId.cu" --orig_src_path_name "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed  -arch compute_52 -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"]
+        considering line: [ptxas -arch=sm_52 -m64 "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_52.cubin" ]
+        considering line: [fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=52,file=tmp/CMakeCUDACompilerId.sm_52.cubin" "--image3=kind=ptx,sm=52,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" ]
+        considering line: [resource file tmp/CMakeCUDACompilerId.obj.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"   "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.cudafe1.cpp" ]]
+        considering line: [cl.exe @"tmp/CMakeCUDACompilerId.obj.res" -Fo"tmp/CMakeCUDACompilerId.obj" ]
+        considering line: [CMakeCUDACompilerId.cudafe1.cpp]
+        considering line: [resource file tmp/a_dlink.sm_52.cubin.optf: [-m64 --arch=sm_52 --register-link-binaries="tmp/a_dlink.reg.c"    "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.obj"  cudadevrt.lib  -o "tmp/a_dlink.sm_52.cubin"]]
+          extracted link line: [resource file tmp/a_dlink.sm_52.cubin.optf: [-m64 --arch=sm_52 --register-link-binaries="tmp/a_dlink.reg.c"    "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.obj"  cudadevrt.lib  -o "tmp/a_dlink.sm_52.cubin"]]
+        considering line: [nvlink -optf "tmp/a_dlink.sm_52.cubin.optf"]
+          ignoring nvlink line
+        considering line: [fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=52,file=tmp/a_dlink.sm_52.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" ]
+        considering line: [resource file tmp/a_dlink.obj.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP -EHsc -DFATBINFILE="\\"tmp/a_dlink.fatbin.c\\"" -DREGISTERLINKBINARYFILE="\\"tmp/a_dlink.reg.c\\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  /GR /EHsc "-ID:/apps/cuda/exe/bin/../include"    -D "_WINDOWS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=5 -D__CUDACC_VER_BUILD__=40 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=5 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 "D:\\apps\\cuda\\exe\\bin\\crt\\link.stub" ]]
+        considering line: [cl.exe @"tmp/a_dlink.obj.res" -Fo"tmp/a_dlink.obj" ]
+        considering line: [link.stub]
+        considering line: [resource file tmp/a.exe.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib]]
+          extracted link line: [resource file tmp/a.exe.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib]]
+        considering line: [cl.exe @"tmp/a.exe.res" -Fe"a.exe" ]
+          extracted link line: [cl.exe -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib -Fe"a.exe" ]
+        considering line: [  姝ｅ湪鍒涘缓搴?a.lib 鍜屽璞?a.exp]
+        considering line: []
+      
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        link line: [cuda-fake-ld cl.exe -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo /GR /EHsc "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj" "D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj" -link -INCREMENTAL:NO   "/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64"  cudadevrt.lib  cudart_static.lib -Fe"a.exe" ]
+          arg [cuda-fake-ld] ==> ignore
+          arg [cl.exe] ==> recognize MSVC cl
+          arg [-D__CUDA_ARCH_LIST__=520] ==> ignore
+          arg [-D__NV_LEGACY_LAUNCH] ==> ignore
+          arg [-nologo] ==> ignore
+          arg [/GR] ==> ignore
+          arg [/EHsc] ==> ignore
+          arg [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\a_dlink.obj] ==> ignore
+          arg [D:\\labCode\\LabViewer-Vsub\\out\\build\\x64-Debug\\CMakeFiles\\3.30.0\\CompilerIdCUDA\\tmp\\CMakeCUDACompilerId.obj] ==> ignore
+          arg [-link] ==> ignore MSVC cl option
+          arg [-INCREMENTAL:NO] ==> ignore
+          arg [/LIBPATH:D:/apps/cuda/exe/bin/../lib/x64] ==> dir [D:/apps/cuda/exe/bin/../lib/x64]
+          arg [cudadevrt.lib] ==> lib [cudadevrt.lib]
+          arg [cudart_static.lib] ==> lib [cudart_static.lib]
+          arg [-Fea.exe] ==> ignore
+        collapse library dir [D:/apps/cuda/exe/bin/../lib/x64] ==> [D:/apps/cuda/exe/lib/x64]
+        implicit libs: [cudadevrt.lib;cudart_static.lib]
+        implicit objs: []
+        implicit dirs: [D:/apps/cuda/exe/lib/x64]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ekinpu"
+      binary: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ekinpu"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS"
+      CMAKE_C_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-ekinpu'
+        
+        Run Build Command(s): d:\\apps\\vs\\community\\common7\\ide\\commonextensions\\microsoft\\cmake\\Ninja\\ninja.exe -v cmTC_a897c
+        [1/2] D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe  /nologo   /DWIN32 /D_WINDOWS  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\\cmTC_a897c.dir\\CMakeCCompilerABI.c.obj /FdCMakeFiles\\cmTC_a897c.dir\\ /FS -c D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c
+        娉ㄦ剰: 鍖呭惈鏂囦欢:  D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCompilerABI.h
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && D:\\apps\\Cmake\\bin\\cmake.exe -E vs_link_exe --intdir=CMakeFiles\\cmTC_a897c.dir --rc=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_a897c.dir\\CMakeCCompilerABI.c.obj  /out:cmTC_a897c.exe /implib:cmTC_a897c.lib /pdb:cmTC_a897c.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Running the C compiler's linker: "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35222.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-gaplrp"
+      binary: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-gaplrp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /GR /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-gaplrp'
+        
+        Run Build Command(s): d:\\apps\\vs\\community\\common7\\ide\\commonextensions\\microsoft\\cmake\\Ninja\\ninja.exe -v cmTC_df5c3
+        [1/2] D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP   /DWIN32 /D_WINDOWS /GR /EHsc  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\\cmTC_df5c3.dir\\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\\cmTC_df5c3.dir\\ /FS -c D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp
+        娉ㄦ剰: 鍖呭惈鏂囦欢:  D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCompilerABI.h
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && D:\\apps\\Cmake\\bin\\cmake.exe -E vs_link_exe --intdir=CMakeFiles\\cmTC_df5c3.dir --rc=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_df5c3.dir\\CMakeCXXCompilerABI.cpp.obj  /out:cmTC_df5c3.exe /implib:cmTC_df5c3.lib /pdb:cmTC_df5c3.pdb /version:0.0 /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'CXX': D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Running the CXX compiler's linker: "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35222.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    checks:
+      - "Detecting CUDA compiler ABI info"
+    directories:
+      source: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-swrh86"
+      binary: "D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-swrh86"
+    cmakeVariables:
+      CMAKE_CUDA_FLAGS: "-D_WINDOWS -Xcompiler=\" /GR /EHsc\""
+      CMAKE_CUDA_FLAGS_DEBUG: "-Xcompiler=\" -Zi -Ob0 -Od /RTC1\""
+      CMAKE_CUDA_RUNTIME_LIBRARY: "Static"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_CUDA_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-swrh86'
+        
+        Run Build Command(s): d:\\apps\\vs\\community\\common7\\ide\\commonextensions\\microsoft\\cmake\\Ninja\\ninja.exe -v cmTC_9cceb
+        [1/2] D:\\apps\\cuda\\exe\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCUDACompilerABI.cu -o CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_9cceb.dir\\,-FS
+        cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?
+        CMakeCUDACompilerABI.cu\x0d
+        cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?
+        CMakeCUDACompilerABI.cu\x0d
+        CMakeCUDACompilerABI.cu\x0d
+        cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?
+        tmpxft_00007828_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp\x0d
+        D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCompilerCUDAArch.h(10): warning C4305: 鈥渞eturn鈥? 浠庘€渋nt鈥濆埌鈥渂ool鈥濇埅鏂?
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && D:\\apps\\Cmake\\bin\\cmake.exe -E vs_link_exe --intdir=CMakeFiles\\cmTC_9cceb.dir --rc=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_9cceb.exe /implib:cmTC_9cceb.lib /pdb:cmTC_9cceb.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"D:/apps/cuda/exe/lib/x64" && cd ."
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed CUDA implicit include dir info: rv=start
+        warn: unable to parse implicit include dirs!
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Parsed CUDA implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        ignore line: [Change Dir: 'D:/labCode/LabViewer-Vsub/out/build/x64-Debug/CMakeFiles/CMakeScratch/TryCompile-swrh86']
+        ignore line: []
+        ignore line: [Run Build Command(s): d:\\apps\\vs\\community\\common7\\ide\\commonextensions\\microsoft\\cmake\\Ninja\\ninja.exe -v cmTC_9cceb]
+        ignore line: [[1/2] D:\\apps\\cuda\\exe\\bin\\nvcc.exe -forward-unknown-to-host-compiler   -D_WINDOWS -Xcompiler=" /GR /EHsc"  -Xcompiler=" -Zi -Ob0 -Od /RTC1" -Xcompiler=-MDd   -Xcompiler=-v -MD -MT CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj -MF CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj.d -x cu -c D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCUDACompilerABI.cu -o CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj -Xcompiler=-FdCMakeFiles\\cmTC_9cceb.dir\\ -FS]
+        ignore line: [cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?]
+        ignore line: [CMakeCUDACompilerABI.cu\x0d]
+        ignore line: [cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?]
+        ignore line: [CMakeCUDACompilerABI.cu\x0d]
+        ignore line: [CMakeCUDACompilerABI.cu\x0d]
+        ignore line: [cl: 鍛戒护琛?warning D9002 :蹇界暐鏈煡閫夐」鈥?v鈥?]
+        ignore line: [tmpxft_00007828_00000000-10_CMakeCUDACompilerABI.cudafe1.cpp\x0d]
+        ignore line: [D:\\apps\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCompilerCUDAArch.h(10): warning C4305: 鈥渞eturn鈥? 浠庘€渋nt鈥濆埌鈥渂ool鈥濇埅鏂?]
+        ignore line: [[2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && D:\\apps\\Cmake\\bin\\cmake.exe -E vs_link_exe --intdir=CMakeFiles\\cmTC_9cceb.dir --rc=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=D:\\WINDOW~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- D:\\apps\\VS\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\cmTC_9cceb.dir\\CMakeCUDACompilerABI.cu.obj  /out:cmTC_9cceb.exe /implib:cmTC_9cceb.lib /pdb:cmTC_9cceb.pdb /version:0.0 /machine:x64 -v /debug /INCREMENTAL  cudadevrt.lib  cudart_static.lib -LIBPATH:"D:/apps/cuda/exe/lib/x64" && cd ."]
+        ignore line: []
+        ignore line: []
+        linker tool for 'CUDA': D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "D:/apps/Cmake/share/cmake-3.30/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:11 (project)"
+    message: |
+      Running the CUDA compiler's linker: "D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35222.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+...

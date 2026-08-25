@@ -32,6 +32,7 @@
 #include <map>
 #include <Eigen/Dense>
 #include "MMASolver.h"
+#include "MMC_Trace_Diagnostics.h"
 #include <fstream>
 namespace Cuda_TopOpt_Pipeline_nsp {
 	using namespace nanoflann;
@@ -1929,12 +1930,17 @@ void Cuda_TopOpt_MMC_Node(
 	std::vector<double> globalPhi; // 全局TDF nGrid * 1
 	const double alhpa = 1e-3, epsilon = 0.20; // Heaviside 函数参数
 	MMASolver mmaSolver(9 * mmcComponents.size(), 1); // 1个约束（体积）
+	// Diagnostic-only instrumentation. It observes the existing standalone MMC
+	// state without changing its variables, update order, or termination rules.
+	mmc_trace::Writer mmc_debug_trace(
+		"mmc_standalone_result/mmc_debug_trace.tsv");
 	const int nVertex = allVertex.size();
 	const int nGrid = density.size();
 	const int nVarsPerComp = 9;
 	allPhiDrv.resize(nComp);
 	allPhis.resize(nComp);
 	globalPhi.resize(nVertex);
+	std::vector<double> delta_H;
 	while (topopt_iter < max_iter) {
 		std::cout << topopt_iter++ << std::endl;
 		int reduce_num = (int)(0.02 * (exist_num - tot_num * target_rate));
@@ -2020,9 +2026,10 @@ void Cuda_TopOpt_MMC_Node(
 		std::vector<double> delta(1, vol - target_rate);
 
 		// 计算灵敏度
+		double allCe = 0.0;
 		{
 			// 公式 10 Heaviside函数的导数
-			std::vector<double> delta_H(nVertex);
+			delta_H.resize(nVertex);
 			for (int i = 0; i < nVertex; ++i) {
 				if (std::abs(globalPhi[i]) > epsilon) {
 					delta_H[i] = 0.0;
@@ -2033,7 +2040,6 @@ void Cuda_TopOpt_MMC_Node(
 				}
 			}
 
-			double allCe = 0.;
 			// 单元应变能Ce
 			std::vector<double> Ce(nGrid);
 			for (int p_id = 0; p_id < nGrid; ++p_id) {
@@ -2106,8 +2112,43 @@ void Cuda_TopOpt_MMC_Node(
 
 		vector<double> designVariables;
 		FlattenDesignVariables(mmcComponents, designVariables);
+		const std::vector<double> oldDesignVariables = designVariables;
 		mmaSolver.Update(designVariables.data(), df0dx.data(), delta.data(), dfdx.data(), xmin_all.data(), xmax_all.data());
 		UpdateComponentsFromVector(mmcComponents, designVariables);
+		std::vector<double> geometry_step(designVariables.size(), 0.0);
+		double geometry_change_max = 0.0;
+		for (size_t variable = 0; variable < designVariables.size(); ++variable) {
+			geometry_step[variable] =
+				designVariables[variable] - oldDesignVariables[variable];
+			geometry_change_max = std::max(
+				geometry_change_max,
+				std::abs(geometry_step[variable]));
+		}
+		mmc_trace::Record trace;
+		trace.mode = "standalone_mmc";
+		trace.action = "update";
+		trace.iteration = topopt_iter;
+		trace.component_count = nComp;
+		trace.vertex_count = nVertex;
+		trace.cell_count = nGrid;
+		trace.objective = allCe;
+		trace.volume = vol;
+		trace.volume_constraint = delta[0];
+		trace.active_constraint_residual = std::max(0.0, delta[0]);
+		trace.geometry_change_max = geometry_change_max;
+		trace.previous_objective_linear_geometry =
+			mmc_trace::Dot(df0dx, geometry_step);
+		trace.previous_geometry_constraint_linear_geometry =
+			mmc_trace::Dot(dfdx, geometry_step);
+		trace.global_phi = &globalPhi;
+		trace.heaviside = &vertexH;
+		trace.heaviside_derivative = &delta_H;
+		trace.occupancy = &density;
+		trace.physical_variables = &oldDesignVariables;
+		trace.mmc_objective_gradient = &df0dx;
+		trace.geometry_constraint_gradient = &dfdx;
+		trace.geometry_step = &geometry_step;
+		mmc_debug_trace.Write(trace);
 		is_need_update_model = true;
 	}
 }

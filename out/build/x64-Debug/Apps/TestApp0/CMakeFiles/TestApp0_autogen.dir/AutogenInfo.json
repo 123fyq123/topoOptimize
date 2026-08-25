@@ -52,6 +52,7 @@
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/CatmullClarkBezierSolver.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_Hyperelasticity_Solver.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_Linear_Elastic_Solver.h",
+		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MMC_SIMP_Sequential.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MultiMaterial_SIMP.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/Cuda_TopOpt_MultiRes.h",
@@ -88,6 +89,7 @@
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/GP_vertex_normal_ref.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/IGA_helper_function.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/MMASolver.h",
+		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/MMC_Trace_Diagnostics.h",
 		"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/gpmesh_MeshKernel_helper.h",
 		"D:/labCode/LabViewer-Vsub/extern/opencascade/opencascade770-install/inc"
 	],

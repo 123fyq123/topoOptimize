@@ -63,6 +63,8 @@ add_library(${TargetName}
 		Cuda_Linear_Elastic_Solver.h
         Cuda_TopOpt_Pipeline.h
 		Cuda_TopOpt_MMC_SIMP_Sequential.h
+		Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h
+		MMC_Trace_Diagnostics.h
 		Cuda_TopOpt_MultiMaterial_SIMP.h
 		Cuda_TopOpt_MultiRes.h
 		Kernels/GP_Debug.cu
@@ -77,6 +79,7 @@ set(SOURCE_LIST
 		Cuda_Hyperelasticity_Solver.cu
 		Cuda_TopOpt_Pipeline.cu
 		Cuda_TopOpt_MMC_SIMP_Sequential.cu
+		Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.cu
 		Cuda_TopOpt_MultiMaterial_SIMP.cu
 		CPU_Linear_Elastic_Solver.cpp
         CPU_Hyperelasticity_Solver.cu

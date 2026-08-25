@@ -2645,7 +2645,7 @@ background:#444444;
                   <x>0</x>
                   <y>0</y>
                   <width>277</width>
-                  <height>524</height>
+                  <height>475</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2919,7 +2919,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>140</x>
-                   <y>490</y>
+                   <y>370</y>
                    <width>111</width>
                    <height>27</height>
                   </rect>
@@ -2981,6 +2981,201 @@ background:#444444;
                  </property>
                  <property name="text">
                   <string>MMC组件摆放：</string>
+                 </property>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_mmc_simp_simultaneous">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>277</width>
+                  <height>475</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>MMC-SIMP同步优化</string>
+                </attribute>
+                <widget class="QGroupBox" name="groupBox_mmc_simp_simultaneous">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>271</width>
+                   <height>301</height>
+                  </rect>
+                 </property>
+                 <property name="title">
+                  <string>同步优化参数</string>
+                 </property>
+                 <widget class="QLabel" name="label_simultaneous_rate">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>30</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>保留比例（体积）：</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_Rate_Simultaneous">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>27</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_simultaneous_iters">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>70</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>最大迭代次数：</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_Iters_Simultaneous">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>67</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_simultaneous_mmc_type">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>110</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>MMC组件摆放：</string>
+                  </property>
+                  <property name="toolTip">
+                   <string>组件初始化类型，支持 1 到 11</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_MMC_type_Simultaneous">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>107</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                  <property name="toolTip">
+                   <string>组件初始化类型，支持 1 到 11</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_material_ratio">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>150</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>材料比例 V2/V1：</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_Material_Ratio">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>147</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                  <property name="toolTip">
+                   <string>材料比例 V2/V1</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_material_E1">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>190</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>材料1弹性模量 E1：</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_Material_E1">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>187</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                  <property name="toolTip">
+                   <string>材料 1 弹性模量</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_material_E2">
+                  <property name="geometry">
+                   <rect>
+                    <x>20</x>
+                    <y>230</y>
+                    <width>131</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>材料2弹性模量 E2：</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="TopOpt_Material_E2">
+                  <property name="geometry">
+                   <rect>
+                    <x>160</x>
+                    <y>227</y>
+                    <width>85</width>
+                    <height>26</height>
+                   </rect>
+                  </property>
+                  <property name="toolTip">
+                   <string>材料 2 弹性模量</string>
+                  </property>
+                 </widget>
+                </widget>
+                <widget class="QPushButton" name="TopOpt_Run_Simultaneous">
+                 <property name="geometry">
+                  <rect>
+                   <x>20</x>
+                   <y>320</y>
+                   <width>231</width>
+                   <height>31</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>运行MMC-SIMP同步优化</string>
+                 </property>
+                 <property name="toolTip">
+                  <string>同步优化 MMC 组件几何与双材料分布</string>
                  </property>
                 </widget>
                </widget>

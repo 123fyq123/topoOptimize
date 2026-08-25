@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by XieJin on 10/27/2023.
 //
 
@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include "SolverGPU/Cuda_TopOpt_Pipeline.h"
 #include "SolverGPU/Cuda_TopOpt_MMC_SIMP_Sequential.h"
+#include "SolverGPU/Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h"
 #include "SolverGPU/Cuda_TopOpt_MultiRes.h"
 
 void TopOpt_GPU_V0(std::string _filename,
@@ -402,4 +403,118 @@ void TopOpt_GPU_MMC_SIMP_Sequential(std::string _filename,
 	Cuda_TopOpt_MMC_SIMP_Sequential(allVertex, cell2V, bezier_file, bdy_file, pro, neighbor_info,
 		mmc_target_rate, mmc_max_iter, material_ratio_f, simp_max_iter, E1, E2, Poisson,
 		density, is_need_update_topopt_model, mmcType);
+
+}
+// UI/模型层到新增同步求解器的独立适配入口。
+// 本函数只负责网格、Bezier、边界条件和参数转换；数值迭代全部位于
+// Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.cu，不会转入原 MMC 或顺序流程。
+void TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
+	std::string _filename,
+	IGA::HexBdy& hexbdy,
+	std::vector<int>& pro,
+	int mmcType,
+	double mmc_target_rate,
+	double max_iter,
+	double material_ratio_f,
+	double E1,
+	double E2,
+	double Poisson,
+	std::vector<double>& density,
+	std::atomic_bool& is_need_update_topopt_model) {
+	if (hexbdy.empty()) {
+		std::cerr << "No Boundary Condition!" << std::endl;
+		return;
+	}
+
+	BSplineSolid solids;
+	FileHandler file(_filename);
+	const std::string model_name = IGA_CC_Helper::get_model_name(_filename);
+	HexV3fMesh* mesh = new HexV3fMesh();
+	file.read2HexMeshObj(mesh, true, true, true);
+	ApproximationCC approximation(mesh, nullptr);
+	approximation.construct_bss_new();
+	solids = approximation.bss;
+
+	const std::filesystem::path temp_path("./temp/");
+	if (!std::filesystem::exists(temp_path)) {
+		std::filesystem::create_directory(temp_path);
+	}
+	const std::string bezier_file = "./temp/" + model_name + ".xml";
+	const std::string bdy_file = "./temp/" + model_name + ".bdy";
+	IGA_CC_Helper::write2Bezier(bezier_file, solids);
+
+	IGA::CCBezierBdy converted_boundary;
+	IGA::BdyConvert_V2(
+		_filename,
+		hexbdy,
+		converted_boundary,
+		approximation);
+	IGA_CC_Helper::write2bdy(
+		bdy_file,
+		converted_boundary,
+		solids);
+
+	std::map<int, Eigen::Vector3d> all_vertex;
+	std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>> cell_to_vertex;
+	for (int vertex_id = 0;
+		vertex_id < static_cast<int>(mesh->vertices_.size());
+		++vertex_id) {
+		const auto vertex = mesh->vertices_[vertex_id];
+		all_vertex[vertex_id] =
+			Eigen::Vector3d{ vertex.x, vertex.y, vertex.z };
+	}
+	for (int cell_id = 0;
+		cell_id < static_cast<int>(mesh->cells_.size());
+		++cell_id) {
+		cell_to_vertex[cell_id].resize(8);
+		const auto cell_vertices = mesh->cells_[cell_id].vertex_;
+		for (int local_vertex = 0; local_vertex < 8; ++local_vertex) {
+			const int vertex_id = cell_vertices[local_vertex].idx();
+			const auto vertex = mesh->vertices_[vertex_id];
+			cell_to_vertex[cell_id][local_vertex] = std::make_pair(
+				vertex_id,
+				Eigen::Vector3d{ vertex.x, vertex.y, vertex.z });
+		}
+	}
+
+	std::vector<std::vector<std::pair<int, double>>> neighbor_info(
+		mesh->cells_.size());
+	// 将界面参数显式装入同步求解器自己的参数对象，避免复用旧流程中的
+	// 隐式默认值或阶段间状态。
+	MMCMultiMaterialSimultaneousParams params;
+	params.mmc_type = mmcType;
+	params.mmc_target_rate = mmc_target_rate;
+	params.max_iterations = std::max(1, static_cast<int>(max_iter));
+	params.material_ratio_f = material_ratio_f;
+	params.E1 = E1;
+	params.E2 = E2;
+	params.Poissons = Poisson;
+	params.initial_eta = 1.0 / (1.0 + material_ratio_f);
+	params.output_directory =
+		"./mmc_multimaterial_simultaneous_result/" + model_name;
+
+	MMCMultiMaterialSimultaneousResult result;
+	const bool success = Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
+		all_vertex,
+		cell_to_vertex,
+		bezier_file,
+		bdy_file,
+		pro,
+		neighbor_info,
+		params,
+		result,
+		density,
+		is_need_update_topopt_model);
+	std::cout
+		<< "[MMC-MultiMaterial-Simultaneous] solver entry: "
+		<< "Cuda_TopOpt_MMC_MultiMaterial_Simultaneous; "
+		<< result.message
+		<< std::endl;
+	if (!success) {
+		std::cerr
+			<< "[MMC-MultiMaterial-Simultaneous] failed: "
+			<< result.message
+			<< std::endl;
+	}
+	delete mesh;
 }

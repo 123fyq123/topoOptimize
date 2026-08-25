@@ -6,6 +6,7 @@
 #include <atomic>
 #include <magic_enum.hpp>
 #include <QMessageBox>
+#include <QIntValidator>
 #pragma execution_character_set("utf-8")
 #include <filesystem>
 #include "IGA_CC_Helper.h"
@@ -135,6 +136,21 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		validator_1->setRange(1, 10000); // 用实际的最小值和最大值替换 minValue 和 maxValue
 		ui->TopOpt_Iters_2->setText("20");
 		ui->TopOpt_Iters_2->setValidator(validator_2);
+		ui->TopOpt_Rate_Simultaneous->setText("0.3");
+		ui->TopOpt_Rate_Simultaneous->setValidator(validator_0);
+		ui->TopOpt_Iters_Simultaneous->setText("20");
+		ui->TopOpt_Iters_Simultaneous->setValidator(validator_2);
+		ui->TopOpt_MMC_type_Simultaneous->setText("1");
+		ui->TopOpt_MMC_type_Simultaneous->setValidator(
+			new QIntValidator(1, 11, ui->TopOpt_MMC_type_Simultaneous));
+		ui->TopOpt_Material_Ratio->setText("1.5");
+		ui->TopOpt_Material_Ratio->setValidator(validator_2);
+		ui->TopOpt_Material_E1->setText("1.0");
+		ui->TopOpt_Material_E1->setValidator(validator_2);
+		// 与顺序 MMC-SIMP 内部实际使用的比较工况 E1=1、E2=100 对齐。
+		ui->TopOpt_Material_E2->setText("100.0");
+		ui->TopOpt_Material_E2->setValidator(validator_2);
+
 
 
 		ui->XPosition_fixed->setText("0.0");
@@ -1208,6 +1224,7 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 	connect(ui->TopOpt_Run_2, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_2()));
 	connect(ui->TopOpt_Run_4, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_4()));
 	connect(ui->TopOpt_Run_Seq, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_Seq()));
+	connect(ui->TopOpt_Run_Simultaneous, SIGNAL(clicked(bool)), this, SLOT(TopOpt_Run_Simultaneous()));
 	connect(btn_generate_hex_mesh_, SIGNAL(clicked(bool)), this, SLOT(GenerateRegularHexMesh()));
 	connect(ui->fix_topopt_result, SIGNAL(clicked(bool)), this, SLOT(SetFinalTopOptMesh()));
 	// connect(ui->Protect_topopt, SIGNAL(clicked(bool)), this, SLOT(Protect_topopt()));
@@ -2209,6 +2226,46 @@ void iGamePoster::TopOpt_Run_Seq() {
 		});
 }
 
+void iGamePoster::TopOpt_Run_Simultaneous() {
+	// 同步模式使用独立控件和独立分发函数；这里不调用原 MMC 按钮处理函数，
+	// 也不调用先 MMC 后 SIMP 的顺序入口。
+	const int mmc_type =
+		ui->TopOpt_MMC_type_Simultaneous->text().toInt();
+	const double target_rate =
+		ui->TopOpt_Rate_Simultaneous->text().toDouble();
+	const double max_iterations =
+		ui->TopOpt_Iters_Simultaneous->text().toDouble();
+	const double material_ratio =
+		ui->TopOpt_Material_Ratio->text().toDouble();
+	const double material_E1 =
+		ui->TopOpt_Material_E1->text().toDouble();
+	const double material_E2 =
+		ui->TopOpt_Material_E2->text().toDouble();
+
+	QtConcurrent::run([
+		this,
+		mmc_type,
+		target_rate,
+		max_iterations,
+		material_ratio,
+		material_E1,
+		material_E2]() {
+		ui->openGLWidget->analysis_flag = false;
+		TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
+			poster_filename,
+			ui->openGLWidget->hexbdy,
+			ui->openGLWidget->topopt_pro,
+			mmc_type,
+			target_rate,
+			max_iterations,
+			material_ratio,
+			material_E1,
+			material_E2,
+			ui->openGLWidget->PoissonsRatio,
+			ui->openGLWidget->hex_density,
+			ui->openGLWidget->is_need_update_topopt_model);
+	});
+}
 void iGamePoster::GenerateRegularHexMesh() {
 	QDialog dialog(this);
 	dialog.setWindowTitle("Generate regular hex mesh");
@@ -2960,4 +3017,3 @@ void iGamePoster::generate_V()
 	//	int dir = flag1 * 4 + flag2 * 2 + flag3;
 	//	ui->openGLWidget->set_V(offset_x, offset_y, offset_z,dir);
 }
-

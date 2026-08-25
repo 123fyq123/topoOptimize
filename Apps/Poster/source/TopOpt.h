@@ -75,3 +75,17 @@ void TopOpt_GPU_MMC_SIMP_Sequential(std::string _filename,
 	double Poissons,
 	std::vector<double>& density,
 	std::atomic_bool& is_need_update_topopt_model);
+
+void TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
+	std::string _filename,
+	IGA::HexBdy& hexbdy,
+	std::vector<int>& pro,
+	int mmcType,
+	double mmc_target_rate,
+	double max_iter,
+	double material_ratio_f,
+	double E1,
+	double E2,
+	double Poissons,
+	std::vector<double>& density,
+	std::atomic_bool& is_need_update_topopt_model);
