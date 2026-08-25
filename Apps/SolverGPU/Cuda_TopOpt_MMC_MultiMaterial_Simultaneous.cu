@@ -33,7 +33,7 @@ namespace mmc_multimaterial_simultaneous {
 //   2. ComputeGlobalTDF()/EvaluateGeometry()：KS -> Heaviside -> m_e；
 //   3. ComputeMmcDerivativeFromElementWeights()：复用的 MMC 链式法则；
 //   4. EvaluateJointState()：a_e=m_eE_e、一次共享有限元和两组灵敏度；
-//   5. Cuda_TopOpt_MMC_MultiMaterial_Simultaneous()：联合 MMA 与收敛；
+//   5. Cuda_TopOpt_MMC_MultiMaterial_Simultaneous()：MMC-MMA 与材料-OC；
 // 全量有限差分帮助函数暂时保留，但已从正常同步优化入口断开。
 //
 // 核心符号：
@@ -251,6 +251,11 @@ bool ValidateInputs(
 		error = "Both material moduli must be finite and positive.";
 		return false;
 	}
+	if (!(params.E1 < params.E2)) {
+		error =
+			"The soft-material convention requires E1 < E2 so that larger eta means softer material.";
+		return false;
+	}
 	if (!(params.material_penalty >= 1.0) || !std::isfinite(params.material_penalty)) {
 		error = "The material penalty must be finite and at least one.";
 		return false;
@@ -266,6 +271,12 @@ bool ValidateInputs(
 	}
 	if (!(params.eta_min > 0.0 && params.eta_min < 1.0)) {
 		error = "eta_min must be in (0, 1).";
+		return false;
+	}
+	if (!(params.material_move_limit > 0.0 &&
+		params.material_move_limit <= 1.0) ||
+		!std::isfinite(params.material_move_limit)) {
+		error = "The material OC move limit must be finite and in (0, 1].";
 		return false;
 	}
 	if (!(params.Poissons > -1.0 && params.Poissons < 0.5)) {
@@ -341,22 +352,95 @@ double HeavisideDerivative(double phi, double alpha, double epsilon) {
 		* (1.0 - phi * phi / (epsilon * epsilon));
 }
 
-double InterpolateMaterialModulus(
-	double eta,
+double InterpolateYoungsModulus(
+	double rho,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// 双材料 SIMP 插值：E_e = eta_e^p E1 + (1-eta_e^p) E2。
-	// 这里没有材料滤波或投影，eta_e 直接作为插值输入。
-	const double eta_power = std::pow(eta, params.material_penalty);
-	return eta_power * params.E1 + (1.0 - eta_power) * params.E2;
+	// 与顺序版同名函数保持 rho/rho_power_p 命名；同步流程中的 rho 即 eta。
+	const double rho_power_p = std::pow(rho, params.material_penalty);
+	return rho_power_p * params.E1 + (1.0 - rho_power_p) * params.E2;
 }
 
-double InterpolateMaterialModulusDerivative(
-	double eta,
+double InterpolateYoungsModulusDerivative(
+	double rho,
 	const MMCMultiMaterialSimultaneousParams& params) {
 	// dE_e/deta_e = p eta_e^(p-1) (E1-E2)。
 	return params.material_penalty
-		* std::pow(eta, params.material_penalty - 1.0)
+		* std::pow(rho, params.material_penalty - 1.0)
 		* (params.E1 - params.E2);
+}
+
+// 直接复制顺序版 Cuda_TopOpt_MultiMaterial_SIMP.cu 的同名函数。
+// 同步版调用时 rho_full 是完整网格 eta，dc_full 是完整网格材料梯度；
+// 返回值只送入 OC，不覆盖 JointEvaluation 中保存的原始解析灵敏度。
+std::vector<double> FilterSensitivities(
+	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
+	const std::vector<double>& rho_full,
+	const std::vector<double>& dc_full,
+	double rho_min) {
+	std::vector<double> filtered(dc_full.size(), 0.0);
+	for (int i = 0; i < static_cast<int>(dc_full.size()); ++i) {
+		if (rho_full[i] <= 0.0) {
+			continue;
+		}
+		double sum_weight = 0.0;
+		double accum = 0.0;
+		for (const auto& [j, weight] : neighbor_info[i]) {
+			if (j < 0 || j >= static_cast<int>(dc_full.size())) {
+				continue;
+			}
+			if (rho_full[j] <= 0.0) {
+				continue;
+			}
+			const double clamped_weight = std::max(0.0, weight);
+			sum_weight += clamped_weight;
+			accum += clamped_weight * rho_full[j] * dc_full[j];
+		}
+		// Sigmund 灵敏度过滤：
+		//   dc_hat_i = sum_j(w_ij * rho_j * dc_j) / (rho_i * sum_j(w_ij))
+		const double denom = std::max(rho_full[i], rho_min) * std::max(sum_weight, 1e-12);
+		filtered[i] = accum / denom;
+	}
+	return filtered;
+}
+
+// 复用顺序版 Cuda_TopOpt_MultiMaterial_SIMP.cu::OCUpdate 的二分、移动
+// 限值、上下界和材料总量框架。唯一必要的方向修正来自当前变量语义：
+// eta 越大越软且 dC/deta>0，因此使用 sqrt(lambda/dC)，使高灵敏度
+// 单元减小 eta。耦合产生的 m_e 已包含在传入 dc 中，不在这里二次处理。
+void OCUpdate(
+	std::vector<double>& x,
+	double material_ratio_f,
+	const std::vector<double>& dc,
+	double rho_min,
+	double move_limit) {
+	double l1 = 0.0;
+	double l2 = 100000.0;
+	const int nn = static_cast<int>(x.size());
+	std::vector<double> xnew(nn, rho_min);
+	while ((l2 - l1) / (l1 + l2) > 1e-4) {
+		const double lmid = 0.5 * (l1 + l2);
+		for (int i = 0; i < nn; ++i) {
+			const double positive_dc = std::max(
+				dc[i],
+				std::numeric_limits<double>::min());
+			const double candidate = x[i] * std::sqrt(lmid / positive_dc);
+			xnew[i] = std::max(rho_min, std::max(x[i] - move_limit, std::min(1.0, std::min(x[i] + move_limit, candidate))));
+		}
+		double sum_x = 0.0;
+		for (double value : xnew) {
+			sum_x += value;
+		}
+		// MATLAB: x represents E1 and f = V2 / V1, hence sum(x) = nn / (1 + f).
+		const double target_soft_volume =
+			nn / (1.0 + material_ratio_f);
+		if (sum_x - target_soft_volume > 0.0) {
+			l2 = lmid;
+		}
+		else {
+			l1 = lmid;
+		}
+	}
+	x = xnew;
 }
 
 std::vector<MMCComponent> MakeInitialComponents(
@@ -1104,8 +1188,8 @@ double RelativeDifference(double first, double second) {
 
 void RunClosedFormSelfChecks(
 	const MMCMultiMaterialSimultaneousParams& params) {
-	const double modulus_at_zero = InterpolateMaterialModulus(0.0, params);
-	const double modulus_at_one = InterpolateMaterialModulus(1.0, params);
+	const double modulus_at_zero = InterpolateYoungsModulus(0.0, params);
+	const double modulus_at_one = InterpolateYoungsModulus(1.0, params);
 	const double middle_eta = 0.5;
 	const double expected_middle =
 		std::pow(middle_eta, params.material_penalty) * params.E1
@@ -1113,7 +1197,7 @@ void RunClosedFormSelfChecks(
 	if (RelativeDifference(modulus_at_zero, params.E2) > 1e-13 ||
 		RelativeDifference(modulus_at_one, params.E1) > 1e-13 ||
 		RelativeDifference(
-			InterpolateMaterialModulus(middle_eta, params),
+			InterpolateYoungsModulus(middle_eta, params),
 			expected_middle) > 1e-13) {
 		throw std::runtime_error("The closed-form endpoint/interior interpolation check failed.");
 	}
@@ -1124,7 +1208,7 @@ void RunClosedFormSelfChecks(
 			* std::pow(sample_eta, params.material_penalty - 1.0)
 			* (params.E1 - params.E2);
 		if (RelativeDifference(
-			InterpolateMaterialModulusDerivative(sample_eta, params),
+			InterpolateYoungsModulusDerivative(sample_eta, params),
 			expected_derivative) > 1e-13) {
 			throw std::runtime_error(
 				"The closed-form material interpolation derivative check failed.");
@@ -1145,6 +1229,7 @@ void RunClosedFormSelfChecks(
 		independently_expanded_derivative) > 1e-13) {
 		throw std::runtime_error("The closed-form material-ratio derivative check failed.");
 	}
+
 }
 
 JointEvaluation EvaluateJointState(
@@ -1184,9 +1269,9 @@ JointEvaluation EvaluateJointState(
 	evaluation.effective_stiffness.resize(cell_count, 0.0);
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 		evaluation.material_modulus[cell_id] =
-			InterpolateMaterialModulus(material_eta[cell_id], params);
+			InterpolateYoungsModulus(material_eta[cell_id], params);
 		evaluation.material_modulus_derivative[cell_id] =
-			InterpolateMaterialModulusDerivative(material_eta[cell_id], params);
+			InterpolateYoungsModulusDerivative(material_eta[cell_id], params);
 		evaluation.effective_stiffness[cell_id] =
 			evaluation.geometry.density[cell_id]
 			* evaluation.material_modulus[cell_id];
@@ -1321,9 +1406,8 @@ JointEvaluation EvaluateJointState(
 		evaluation.V2 - params.material_ratio_f * evaluation.V1;
 	evaluation.geometry_constraint =
 		evaluation.mmc_volume - params.mmc_target_rate;
-	// MMA 只接受不等式，因此把 |R| <= tolerance 写成两个约束：
-	//   R - tolerance <= 0
-	//  -R - tolerance <= 0。
+	// 仅作为诊断记录材料比例相对容差的两个有符号偏差；它们不传入
+	// MMC-MMA，实际材料比例由 OC 更新满足。
 	evaluation.positive_ratio_constraint =
 		evaluation.ratio_residual - params.material_ratio_tolerance;
 	evaluation.negative_ratio_constraint =
@@ -1872,7 +1956,7 @@ void RunAllFiniteDifferenceValidation(
 	//   x_i +/- h -> 重新计算几何/材料 -> 重新装配 K -> 重新求解 U
 	//              -> 重新计算 C、MMC体积和比例残差。
 	// 内部变量用中心差分；落在上下界的变量用单边差分，保证变量不漏检。
-	// 该过程只读取基础设计状态，不推进联合 MMA 历史。
+	// 该过程只读取基础设计状态，不推进 MMC-MMA 或材料-OC 历史。
 	const int cell_count = static_cast<int>(cell_to_vertex.size());
 	const double step = params.finite_difference_step;
 	const char* mmc_variable_names[kVariablesPerComponent] = {
@@ -2569,7 +2653,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		spline.helper_set_dirichlet_point_in_sparse_system_rhs(dirichlet_points);
 		timer.out("simultaneous_analysis_initialization");
 
-		// -------------------- 2. 两块设计变量与持久化 MMA --------------------
+		// -------------------- 2. 两块设计变量、MMC-MMA 与材料-OC --------------------
 		// mmc_type 只影响初始组件数量/姿态；每个组件仍保持固定 9 变量顺序。
 		const std::vector<double> xyz_range = ComputeDomainRange(allVertex);
 		std::vector<MMCComponent> mmcComponents =
@@ -2593,9 +2677,6 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		const int geometry_variable_count =
 			static_cast<int>(mmcDesignVariables.size());
 		const int cell_count = static_cast<int>(cell2V.size());
-		const int total_variable_count =
-			geometry_variable_count + cell_count;
-
 		double initial_eta = params.initial_eta;
 		if (!(initial_eta >= params.eta_min && initial_eta <= 1.0)) {
 			initial_eta = 1.0 / (1.0 + params.material_ratio_f);
@@ -2604,13 +2685,19 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		// 始终为全部单元保留一个 eta_e；MMC 移动时不按阈值增删变量。
 		std::vector<double> materialEta(cell_count, initial_eta);
 
-		// 联合变量维数 = 9*组件数 + 单元数；约束数 = 1个几何体积 +
-		// 2个材料比例不等式。mmaSolver 跨迭代持久化以保留渐近线历史。
-		MMASolver mmaSolver(total_variable_count, 3);
-		mmaSolver.SetAsymptotes(0.05, 0.8, 1.0);
+		// 与独立 MMC 相同，MMA 只更新 MMC 物理变量并只施加几何体积
+		// 约束。材料比例由下方占有率加权 OC 二分单独满足；把同一比例
+		// 约束再次放入 MMC-MMA 会和 OC 的职责重复，并使几何块振荡。
+		MMASolver mmaSolver(geometry_variable_count, 1);
+		std::cout
+			<< "[MMC-MultiMaterial-Simultaneous] Update scheme: MMC=MMA, "
+			<< "material=sequential-compatible filtered OC, move="
+			<< params.material_move_limit << std::endl;
 
 		std::ofstream iteration_output;
 		std::ofstream sensitivity_output;
+		std::ofstream material_oc_trace_output;
+		std::ofstream material_oc_summary_output;
 		std::unique_ptr<mmc_trace::Writer> debug_output;
 		if (params.export_results) {
 			if (params.output_directory.empty()) {
@@ -2623,13 +2710,36 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			sensitivity_output.open(
 				params.output_directory + "/analytical_sensitivities.tsv",
 				std::ios::out | std::ios::trunc);
-			if (!iteration_output.good() || !sensitivity_output.good()) {
+			material_oc_trace_output.open(
+				params.output_directory + "/material_oc_trace.tsv",
+				std::ios::out | std::ios::trunc);
+			material_oc_summary_output.open(
+				params.output_directory + "/material_oc_summary.tsv",
+				std::ios::out | std::ios::trunc);
+			if (!iteration_output.good() || !sensitivity_output.good()
+				|| !material_oc_trace_output.good()
+				|| !material_oc_summary_output.good()) {
 				throw std::runtime_error("Cannot create the simultaneous-optimization diagnostics file.");
 			}
 			iteration_output << std::setprecision(17);
 			sensitivity_output << std::setprecision(17);
+			material_oc_trace_output << std::setprecision(17);
+			material_oc_summary_output << std::setprecision(17);
 			WriteIterationHeader(iteration_output);
 			WriteSensitivityHeader(sensitivity_output);
+			material_oc_trace_output
+				<< "iteration\tcell_id\tfilter_applied\tmmc_occupancy"
+				<< "\telement_energy\teta_before\traw_dC_deta"
+				<< "\tfiltered_dc_for_oc\tdiagnostic_dc_over_occupancy"
+				<< "\teta_after\teta_step\n";
+			material_oc_summary_output
+				<< "iteration\tfilter_applied\teta_before_min\teta_before_max"
+				<< "\teta_after_min\teta_after_max\teta_step_min\teta_step_max"
+				<< "\traw_min\traw_max\tfiltered_dc_min\tfiltered_dc_max"
+				<< "\tdiagnostic_dc_over_occupancy_min\tdiagnostic_dc_over_occupancy_max"
+				<< "\tweighted_eta_before\tweighted_eta_after"
+				<< "\teta_sum_before\teta_sum_after\ttarget_soft_resource"
+				<< "\tresource_residual_after\n";
 			debug_output = std::make_unique<mmc_trace::Writer>(
 				params.output_directory + "/mmc_debug_trace.tsv");
 			if (!debug_output->Good()) {
@@ -2687,7 +2797,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		};
 
 		// -------------------- 3. 同步优化主循环 --------------------
-		// 一轮只有一个当前联合状态和一次联合 MMA 更新，不是先 MMC 后 SIMP。
+		// 一轮只有一个当前联合状态。MMC-MMA 与材料-OC 都使用这个状态的
+		// 位移、单元能量和解析梯度，不是先完整 MMC 后完整 SIMP。
 		for (int iteration = 1;
 			iteration <= params.max_iterations;
 			++iteration) {
@@ -2768,102 +2879,156 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				trace.material_step = &previous_material_step;
 				debug_output->Write(trace);
 			}
-			// -------------------- 4. 拼接联合 MMA 输入 --------------------
-			// jointDesignVariables = [physical MMC variables, eta_0, ..., eta_(N-1)]。
-			std::vector<double> jointDesignVariables(total_variable_count, 0.0);
-			std::copy(
-				mmcDesignVariables.begin(),
-				mmcDesignVariables.end(),
-				jointDesignVariables.begin());
-			std::copy(
-				materialEta.begin(),
-				materialEta.end(),
-				jointDesignVariables.begin() + geometry_variable_count);
-
-			std::vector<double> df0dxJoint(
-				total_variable_count,
+			// -------------------- 4. 同一状态下分别更新 MMC 与材料 --------------------
+			std::vector<double> df0dxMmc(
+				geometry_variable_count,
 				0.0);
-			// 约束列顺序固定为：g0=几何体积，g1=R-tol，g2=-R-tol。
+			// 与独立 MMC 相同：MMC-MMA 只接收几何体积约束。
+			// R-tol 与 -R-tol 继续记录为诊断，不参与 MMC 更新。
 			std::vector<double> constraint_values = {
-				current_evaluation.geometry_constraint,
-				current_evaluation.positive_ratio_constraint,
-				current_evaluation.negative_ratio_constraint
+				current_evaluation.geometry_constraint
 			};
-			std::vector<double> dfdxJoint(
-				3 * total_variable_count,
+			std::vector<double> dfdxMmc(
+				geometry_variable_count,
 				0.0);
 
 			// MMC 变量和解析梯度都保持物理量语义，与独立 MMC 完全相同。
 			for (int variable = 0;
 				variable < geometry_variable_count;
 				++variable) {
-				df0dxJoint[variable] =
+				df0dxMmc[variable] =
 					current_evaluation.mmc_objective_gradient[variable];
-				dfdxJoint[variable * 3] =
+				dfdxMmc[variable] =
 					current_evaluation.geometry_constraint_gradient[variable];
-				dfdxJoint[variable * 3 + 1] =
-					current_evaluation.ratio_constraint_mmc_gradient[variable];
-				dfdxJoint[variable * 3 + 2] =
-					-current_evaluation.ratio_constraint_mmc_gradient[variable];
-			}
-			// eta_e 本身已经处于 [eta_min,1]，无需额外尺度换元。几何体积
-			// 与 eta 无关，所以对应约束梯度为 0。
-			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-				const int variable = geometry_variable_count + cell_id;
-				df0dxJoint[variable] =
-					current_evaluation.material_objective_gradient[cell_id];
-				dfdxJoint[variable * 3] = 0.0;
-				dfdxJoint[variable * 3 + 1] =
-					current_evaluation.ratio_constraint_material_gradient[cell_id];
-				dfdxJoint[variable * 3 + 2] =
-					-current_evaluation.ratio_constraint_material_gradient[cell_id];
 			}
 
 			// 直接传入完整物理边界。MMASolver 内部已经根据每个变量的
 			// xmax-xmin 生成渐近线和移动区间，外层不再重复套局部移动边界。
-			std::vector<double> update_lower(total_variable_count, 0.0);
-			std::vector<double> update_upper(total_variable_count, 1.0);
-			for (int variable = 0;
-				variable < geometry_variable_count;
-				++variable) {
-				update_lower[variable] = physical_lower[variable];
-				update_upper[variable] = physical_upper[variable];
-			}
-			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-				const int variable = geometry_variable_count + cell_id;
-				update_lower[variable] = params.eta_min;
-				update_upper[variable] = 1.0;
-			}
-
 			const std::vector<double> oldMmcDesignVariables =
 				mmcDesignVariables;
 			const std::vector<double> oldMaterialEta = materialEta;
-			// 两块变量使用同一目标、同一组三个约束，同时更新一次。
+			// MMC 仍走原有 MMA 类型更新；材料 eta 单独走软材料 OC。两者读取
+			// 的都是 current_evaluation，不在两块更新之间重新求解有限元。
 			mmaSolver.Update(
-				jointDesignVariables.data(),
-				df0dxJoint.data(),
+				mmcDesignVariables.data(),
+				df0dxMmc.data(),
 				constraint_values.data(),
-				dfdxJoint.data(),
-				update_lower.data(),
-				update_upper.data());
-			if (!IsFiniteVector(jointDesignVariables)) {
+				dfdxMmc.data(),
+				physical_lower.data(),
+				physical_upper.data());
+			if (!IsFiniteVector(mmcDesignVariables)) {
 				throw std::runtime_error(
-					"The joint MMA update returned a non-finite design variable.");
+					"The MMC MMA update returned a non-finite design variable.");
 			}
-
 			for (int variable = 0;
 				variable < geometry_variable_count;
 				++variable) {
 				mmcDesignVariables[variable] = std::clamp(
-					jointDesignVariables[variable],
+					mmcDesignVariables[variable],
 					physical_lower[variable],
 					physical_upper[variable]);
 			}
-			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-				materialEta[cell_id] = std::clamp(
-					jointDesignVariables[geometry_variable_count + cell_id],
-					params.eta_min,
-					1.0);
+			// eta 越大越软，真实 dC/deta 为正；直接过滤这个解析导数。
+			// 最终等效刚度对 eta 的链式项 m_e 已经在其中乘入一次。
+			std::vector<double> dc_full =
+				current_evaluation.material_objective_gradient;
+			if (!neighbor_info.empty()) {
+				const std::vector<double> filtered_full = FilterSensitivities(
+					neighbor_info,
+					materialEta,
+					dc_full,
+					params.eta_min);
+				dc_full = filtered_full;
+			}
+			OCUpdate(
+				materialEta,
+				params.material_ratio_f,
+				dc_full,
+				params.eta_min,
+				params.material_move_limit);
+			if (!IsFiniteVector(materialEta)) {
+				throw std::runtime_error(
+					"The material OC update returned a non-finite eta value.");
+			}
+
+			// 只读 OC 诊断：完整保存真实正解析灵敏度、过滤后的 OC 输入
+			// 以及更新前后 eta。dc/m_e 只保留为对照列，不参与 OC。
+			if (params.export_results) {
+				const bool filter_applied = !neighbor_info.empty();
+				double eta_before_min = std::numeric_limits<double>::max();
+				double eta_before_max = std::numeric_limits<double>::lowest();
+				double eta_after_min = std::numeric_limits<double>::max();
+				double eta_after_max = std::numeric_limits<double>::lowest();
+				double eta_step_min = std::numeric_limits<double>::max();
+				double eta_step_max = std::numeric_limits<double>::lowest();
+				double raw_min = std::numeric_limits<double>::max();
+				double raw_max = std::numeric_limits<double>::lowest();
+				double filtered_min = std::numeric_limits<double>::max();
+				double filtered_max = std::numeric_limits<double>::lowest();
+				double reduced_min = std::numeric_limits<double>::max();
+				double reduced_max = std::numeric_limits<double>::lowest();
+				double weighted_eta_before = 0.0;
+				double weighted_eta_after = 0.0;
+				double eta_sum_before = 0.0;
+				double eta_sum_after = 0.0;
+				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+					const double occupancy = std::max(
+						0.0,
+						current_evaluation.geometry.density[cell_id]);
+					const double raw =
+						current_evaluation.material_objective_gradient[cell_id];
+					const double filtered = dc_full[cell_id];
+					const double reduced = occupancy > kTiny
+						? filtered / occupancy
+						: 0.0;
+					const double step = materialEta[cell_id]
+						- oldMaterialEta[cell_id];
+					material_oc_trace_output
+						<< iteration << '\t' << cell_id << '\t'
+						<< (filter_applied ? 1 : 0) << '\t' << occupancy << '\t'
+						<< current_evaluation.element_energy[cell_id] << '\t'
+						<< oldMaterialEta[cell_id] << '\t' << raw << '\t'
+						<< filtered << '\t' << reduced << '\t'
+						<< materialEta[cell_id] << '\t' << step << '\n';
+					eta_before_min = std::min(eta_before_min, oldMaterialEta[cell_id]);
+					eta_before_max = std::max(eta_before_max, oldMaterialEta[cell_id]);
+					eta_after_min = std::min(eta_after_min, materialEta[cell_id]);
+					eta_after_max = std::max(eta_after_max, materialEta[cell_id]);
+					eta_step_min = std::min(eta_step_min, step);
+					eta_step_max = std::max(eta_step_max, step);
+					raw_min = std::min(raw_min, raw);
+					raw_max = std::max(raw_max, raw);
+					filtered_min = std::min(filtered_min, filtered);
+					filtered_max = std::max(filtered_max, filtered);
+					if (occupancy > kTiny) {
+						reduced_min = std::min(reduced_min, reduced);
+						reduced_max = std::max(reduced_max, reduced);
+					}
+					weighted_eta_before += occupancy * oldMaterialEta[cell_id];
+					weighted_eta_after += occupancy * materialEta[cell_id];
+					eta_sum_before += oldMaterialEta[cell_id];
+					eta_sum_after += materialEta[cell_id];
+				}
+				if (reduced_min == std::numeric_limits<double>::max()) {
+					reduced_min = 0.0;
+					reduced_max = 0.0;
+				}
+				const double target_soft_resource = cell_count
+					/ (1.0 + params.material_ratio_f);
+				material_oc_summary_output
+					<< iteration << '\t' << (filter_applied ? 1 : 0) << '\t'
+					<< eta_before_min << '\t' << eta_before_max << '\t'
+					<< eta_after_min << '\t' << eta_after_max << '\t'
+					<< eta_step_min << '\t' << eta_step_max << '\t'
+					<< raw_min << '\t' << raw_max << '\t'
+					<< filtered_min << '\t' << filtered_max << '\t'
+					<< reduced_min << '\t' << reduced_max << '\t'
+					<< weighted_eta_before << '\t' << weighted_eta_after << '\t'
+					<< eta_sum_before << '\t' << eta_sum_after << '\t'
+					<< target_soft_resource << '\t'
+					<< (eta_sum_after - target_soft_resource) << '\n';
+				material_oc_trace_output.flush();
+				material_oc_summary_output.flush();
 			}
 
 			// 保存两块实际物理步长，用于下一轮只读诊断。

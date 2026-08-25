@@ -34,6 +34,8 @@ struct MMCMultiMaterialSimultaneousParams {
 	// initial_eta < 0 时自动使用 1 / (1 + material_ratio_f)。
 	double initial_eta = -1.0;
 	double eta_min = 1e-3;
+	// 与顺序材料阶段默认值一致；仅限制同步版材料 OC 的单轮变化。
+	double material_move_limit = 0.2;
 
 	// 有限元与 MMC 平滑几何参数。
 	double Poissons = 0.3;
@@ -42,7 +44,7 @@ struct MMCMultiMaterialSimultaneousParams {
 	double ks_lambda = 100.0;
 
 	// 同步流程固定运行 max_iterations 次，变量变化量与约束残差只作为
-	// 诊断，不参与提前终止。两块变量均把各自完整边界交给 MMA。
+	// 诊断，不参与提前终止。MMC 使用持久化 MMA，材料 eta 使用 OC。
 	double material_ratio_tolerance = 1e-4;
 	double compliance_consistency_tolerance = 5e-3;
 	double sensitivity_consistency_tolerance = 1e-9;

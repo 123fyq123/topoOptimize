@@ -477,8 +477,41 @@ void TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
 		}
 	}
 
-	std::vector<std::vector<std::pair<int, double>>> neighbor_info(
-		mesh->cells_.size());
+	std::vector<std::vector<std::pair<int, double>>> neighbor_info;
+	// 与顺序 MMC+SIMP 入口使用同一套单元邻域和权重构造。同步求解器
+	// 的 FilterSensitivities 直接复用顺序材料阶段，因此不能只传空行。
+	for (int i = 0;
+		i < static_cast<int>(solids.Local_V3f.size());
+		++i) {
+		std::vector<CellHandle> temp_aroundcell;
+		std::vector<double> temp_aroundcell_weight;
+		double rmin = std::numeric_limits<float>::max();
+		std::set<CellHandle> c_c = mesh->neighbor_c_c(CellHandle(i));
+		for (auto c_c_it = c_c.begin(); c_c_it != c_c.end(); ++c_c_it) {
+			rmin = fmin(
+				rmin,
+				distance(mesh->cell_center[i], mesh->cell_center[*c_c_it]));
+		}
+		rmin = rmin * 1.5;
+		for (int k = 0; k < static_cast<int>(mesh->cells_.size()); ++k) {
+			const double rdis = distance(
+				mesh->cell_center[i],
+				mesh->cell_center[k]);
+			if (rdis <= rmin) {
+				temp_aroundcell.push_back(CellHandle(k));
+				temp_aroundcell_weight.push_back(rmin - rdis);
+			}
+		}
+		std::vector<std::pair<int, double>> temp_neighbor_info;
+		for (int j = 0;
+			j < static_cast<int>(temp_aroundcell.size());
+			++j) {
+			temp_neighbor_info.emplace_back(std::pair<int, double>{
+				temp_aroundcell[j],
+				temp_aroundcell_weight[j] });
+		}
+		neighbor_info.emplace_back(temp_neighbor_info);
+	}
 	// 将界面参数显式装入同步求解器自己的参数对象，避免复用旧流程中的
 	// 隐式默认值或阶段间状态。
 	MMCMultiMaterialSimultaneousParams params;
