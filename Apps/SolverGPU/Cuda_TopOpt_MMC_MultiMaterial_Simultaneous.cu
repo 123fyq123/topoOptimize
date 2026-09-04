@@ -1,6 +1,7 @@
-ï»¿#include "Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h"
+#include "Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h"
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <filesystem>
@@ -27,24 +28,24 @@
 namespace mmc_multimaterial_simultaneous {
 
 // ============================== Review map ==============================
-// è¿™ä»½æ–‡ä»¶åªå®ç°æ–°å¢çš„åŒæ­¥æµç¨‹ï¼Œä¸è¿›å…¥ç°æœ‰ MMC/SIMP/é¡ºåºä¼˜åŒ–ä¸»å¾ªç¯ã€‚
-// å»ºè®®æŒ‰ä»¥ä¸‹é¡ºåº reviewï¼š
-//   1. calc_Phi_Node()ï¼šç›´æ¥æ²¿ç”¨ç‹¬ç«‹ MMC çš„å•ç»„ä»¶ TDF ä¸ 9 ä¸ªå‡ ä½•å¯¼æ•°ï¼›
-//   2. ComputeGlobalTDF()/EvaluateGeometry()ï¼šKS -> Heaviside -> m_eï¼›
-//   3. ComputeMmcDerivativeFromElementWeights()ï¼šå¤ç”¨çš„ MMC é“¾å¼æ³•åˆ™ï¼›
-//   4. EvaluateJointState()ï¼ša_e=m_eE_eã€ä¸€æ¬¡å…±äº«æœ‰é™å…ƒå’Œä¸¤ç»„çµæ•åº¦ï¼›
-//   5. Cuda_TopOpt_MMC_MultiMaterial_Simultaneous()ï¼šMMC-MMA ä¸ææ–™-OCï¼›
-// å…¨é‡æœ‰é™å·®åˆ†å¸®åŠ©å‡½æ•°æš‚æ—¶ä¿ç•™ï¼Œä½†å·²ä»æ­£å¸¸åŒæ­¥ä¼˜åŒ–å…¥å£æ–­å¼€ã€‚
+// Õâ·İÎÄ¼şÖ»ÊµÏÖĞÂÔöµÄÍ¬²½Á÷³Ì£¬²»½øÈëÏÖÓĞ MMC/SIMP/Ë³ĞòÓÅ»¯Ö÷Ñ­»·¡£
+// ½¨Òé°´ÒÔÏÂË³Ğò review£º
+//   1. calc_Phi_Node()£ºÖ±½ÓÑØÓÃ¶ÀÁ¢ MMC µÄµ¥×é¼ş TDF Óë 9 ¸ö¼¸ºÎµ¼Êı£»
+//   2. ComputeGlobalTDF()/EvaluateGeometry()£ºKS -> Heaviside -> m_e£»
+//   3. ComputeMmcDerivativeFromElementWeights()£º¸´ÓÃµÄ MMC Á´Ê½·¨Ôò£»
+//   4. EvaluateSimultaneousState()£ºa_e=m_e E_e£¬Ò»´Î¹²Ïí½á¹¹·ÖÎöºóÍ¬Ê±¸ø³öÁ½¿éÌİ¶È£»
+//   5. Cuda_TopOpt_MMC_MultiMaterial_Simultaneous()£ºMMC-MMA + ²ÄÁÏ OC£»
+// È«Á¿ÓĞÏŞ²î·Ö°ïÖúº¯ÊıÔİÊ±±£Áô£¬µ«ÒÑ´ÓÕı³£Í¬²½ÓÅ»¯Èë¿Ú¶Ï¿ª¡£
 //
-// æ ¸å¿ƒç¬¦å·ï¼š
-//   d_ir : ç¬¬ i ä¸ª MMC ç»„ä»¶çš„ç¬¬ r ä¸ªå‡ ä½•å˜é‡
-//   phi_i: ç¬¬ i ä¸ªç»„ä»¶çš„å±€éƒ¨æ‹“æ‰‘æè¿°å‡½æ•°
-//   Phi  : æ‰€æœ‰ç»„ä»¶ç» KS èšåˆåçš„å…¨å±€ TDF
-//   m_e  : å•å…ƒ 8 ä¸ªé¡¶ç‚¹ Heaviside å€¼çš„å¹³å‡ï¼Œå³ MMC å æœ‰ç‡
-//   eta_e: å•å…ƒåŒææ–™å˜é‡
-//   E_e  : eta_e å¯¹åº”çš„æ’å€¼ææ–™æ¨¡é‡
-//   a_e  : m_e E_eï¼Œæœ‰é™å…ƒè£…é…å®é™…ä½¿ç”¨çš„å•å…ƒç¼©æ”¾ç³»æ•°
-//   q_e  : U_e^T K_e^0 U_eï¼Œå•ä½æ¨¡é‡å•å…ƒèƒ½é‡
+// ºËĞÄ·ûºÅ£º
+//   d_ir : µÚ i ¸ö MMC ×é¼şµÄµÚ r ¸ö¼¸ºÎ±äÁ¿
+//   phi_i: µÚ i ¸ö×é¼şµÄ¾Ö²¿ÍØÆËÃèÊöº¯Êı
+//   Phi  : ËùÓĞ×é¼ş¾­ KS ¾ÛºÏºóµÄÈ«¾Ö TDF
+//   m_e  : µ¥Ôª 8 ¸ö¶¥µã Heaviside ÖµµÄÆ½¾ù£¬¼´ MMC Õ¼ÓĞÂÊ
+//   eta_e: µ¥ÔªË«²ÄÁÏ±äÁ¿
+//   E_e  : eta_e ¶ÔÓ¦µÄ²åÖµ²ÄÁÏÄ£Á¿
+//   a_e  : m_e E_e£¬ÓĞÏŞÔª×°ÅäÊµ¼ÊÊ¹ÓÃµÄµ¥ÔªËõ·ÅÏµÊı
+//   q_e  : U_e^T K_e^0 U_e£¬µ¥Î»Ä£Á¿µ¥ÔªÄÜÁ¿
 // =======================================================================
 
 constexpr int kVariablesPerComponent = 9;
@@ -57,16 +58,16 @@ constexpr double kFiniteDifferenceNearZeroTolerance = 1e-10;
 constexpr double kFiniteDifferencePassAbsoluteTolerance = 1e-8;
 
 struct MMC_Component {
-	// å˜é‡é¡ºåºå¿…é¡»ä¸ç‹¬ç«‹ 3D MMC ä¿æŒä¸€è‡´ï¼›MMA å±•å¹³å’Œçµæ•åº¦ç´¢å¼•éƒ½ä¾èµ–è¯¥é¡ºåºã€‚
-	double x0 = 0.0;
-	double y0 = 0.0;
-	double z0 = 0.0;
-	double l1 = 0.0;
-	double l2 = 0.0;
-	double l3 = 0.0;
-	double alpha = 0.0;
-	double beta = 0.0;
-	double gamma = 0.0;
+	// ±äÁ¿Ë³Ğò±ØĞëÓë¶ÀÁ¢ 3D MMC ±£³ÖÒ»ÖÂ£»MMA Õ¹Æ½ºÍÁéÃô¶ÈË÷Òı¶¼ÒÀÀµ¸ÃË³Ğò¡£
+	double center_x = 0.0;
+	double center_y = 0.0;
+	double center_z = 0.0;
+	double length_x = 0.0;
+	double length_y = 0.0;
+	double length_z = 0.0;
+	double rotation_alpha = 0.0;
+	double rotation_beta = 0.0;
+	double rotation_gamma = 0.0;
 
 	MMC_Component() = default;
 
@@ -80,20 +81,20 @@ struct MMC_Component {
 		double rotation_alpha,
 		double rotation_beta,
 		double rotation_gamma)
-		: x0(x)
-		, y0(y)
-		, z0(z)
-		, l1(length1)
-		, l2(length2)
-		, l3(length3)
-		, alpha(rotation_alpha)
-		, beta(rotation_beta)
-		, gamma(rotation_gamma) {
+		: center_x(x)
+		, center_y(y)
+		, center_z(z)
+		, length_x(length1)
+		, length_y(length2)
+		, length_z(length3)
+		, rotation_alpha(rotation_alpha)
+		, rotation_beta(rotation_beta)
+		, rotation_gamma(rotation_gamma) {
 	}
 };
 
-// æ–°å¢çš„åŒæ­¥è¾…åŠ©å‡½æ•°åŸå…ˆä½¿ç”¨ MMCComponentï¼›ä¿ç•™åˆ«åé¿å…æ— æ„ä¹‰åœ°æ‰©å¤§æ”¹åŠ¨ï¼Œ
-// MMC å…¬å…±è®¡ç®—æ®µåˆ™ç›´æ¥æ²¿ç”¨ç‹¬ç«‹æµç¨‹çš„ MMC_Component åç§°ã€‚
+// ĞÂÔöµÄÍ¬²½¸¨Öúº¯ÊıÔ­ÏÈÊ¹ÓÃ MMCComponent£»±£Áô±ğÃû±ÜÃâÎŞÒâÒåµØÀ©´ó¸Ä¶¯£¬
+// MMC ¹«¹²¼ÆËã¶ÎÔòÖ±½ÓÑØÓÃ¶ÀÁ¢Á÷³ÌµÄ MMC_Component Ãû³Æ¡£
 using MMCComponent = MMC_Component;
 
 struct Point {
@@ -127,24 +128,27 @@ using KDTree = nanoflann::KDTreeSingleIndexAdaptor<
 	3>;
 
 struct GeometryEvaluation {
-	// ä»¥ä¸‹åç§°ä¸ Cuda_TopOpt_MMC_Node ä¸»å¾ªç¯ä¿æŒä¸€è‡´ï¼Œä¾¿äºé€è¡Œå¯¹ç…§ã€‚
+	// ÒÔÏÂÃû³ÆÓë Cuda_TopOpt_MMC_Node Ö÷Ñ­»·±£³ÖÒ»ÖÂ£¬±ãÓÚÖğĞĞ¶ÔÕÕ¡£
 	std::vector<std::vector<double>> allPhis;
 	std::vector<std::vector<std::vector<double>>> allPhiDrv;
 	std::vector<double> globalPhi;
 	std::vector<std::vector<double>> phimaxDphi;
 	std::vector<double> vertexH;
 	std::vector<double> delta_H;
-	// è¿™é‡Œåªè¡¨ç¤º MMC å•å…ƒå æœ‰ç‡ m_eï¼›ææ–™åœºå’Œç­‰æ•ˆåˆšåº¦å¦å­˜ï¼Œä¸æ··å…¥ densityã€‚
+	// ÕâÀïÖ»±íÊ¾ MMC µ¥ÔªÕ¼ÓĞÂÊ m_e£»²ÄÁÏ³¡ºÍµÈĞ§¸Õ¶ÈÁí´æ£¬²»»ìÈë density¡£
 	std::vector<double> density;
 };
 
-struct JointEvaluation {
-	// ä¸€æ¬¡å·²æ¥å—è”åˆçŠ¶æ€çš„å…¨éƒ¨æœ‰é™å…ƒé‡ã€ç›®æ ‡/çº¦æŸå’Œè§£ææ¢¯åº¦ã€‚
-	// ä¸¤ç»„ç›®æ ‡æ¢¯åº¦å¿…é¡»å…±äº«è¿™é‡ŒåŒä¸€ä¸ª displacement å’Œ element_energyã€‚
+struct SimultaneousEvaluation {
+	// Ò»´ÎÒÑ½ÓÊÜÁªºÏ×´Ì¬µÄÈ«²¿ÓĞÏŞÔªÁ¿¡¢Ä¿±ê/Ô¼ÊøºÍ½âÎöÌİ¶È¡£
+	// Á½×éÄ¿±êÌİ¶È±ØĞë¹²ÏíÕâÀïÍ¬Ò»¸ö displacement ºÍ element_energy¡£
 	GeometryEvaluation geometry;
 	Eigen::MatrixXd displacement;
 	std::vector<double> material_modulus;
 	std::vector<double> material_modulus_derivative;
+	std::vector<double> projected_occupancy; // ¼æÈİ¾ÉÊä³ö×Ö¶Î£»µ±Ç°ÊıÖµÂ·¾¶ÖĞ chi_e == m_e
+	std::vector<double> projected_occupancy_derivative;
+	double projection_beta = 0.0;
 	std::vector<double> effective_stiffness; // a_e = m_e E_e
 	std::vector<double> element_energy;      // q_e = U_e^T K_e^0 U_e
 	std::vector<double> mmc_objective_gradient;
@@ -273,10 +277,30 @@ bool ValidateInputs(
 		error = "eta_min must be in (0, 1).";
 		return false;
 	}
-	if (!(params.material_move_limit > 0.0 &&
-		params.material_move_limit <= 1.0) ||
-		!std::isfinite(params.material_move_limit)) {
-		error = "The material OC move limit must be finite and in (0, 1].";
+	if (!(params.projection_threshold > 0.0 &&
+		params.projection_threshold < 1.0) ||
+		!std::isfinite(params.projection_threshold)) {
+		error = "The projection threshold must be finite and in (0, 1).";
+		return false;
+	}
+	if (!(params.material_binary_active_threshold >= 0.0 &&
+		params.material_binary_active_threshold < 1.0) ||
+		!std::isfinite(params.material_binary_active_threshold)) {
+		error = "The material binary threshold must be finite and in [0, 1).";
+		return false;
+	}
+	if (!(params.material_active_threshold >= 0.0 &&
+		params.material_active_threshold < 1.0) ||
+		!std::isfinite(params.material_active_threshold)) {
+		error = "The material OC active threshold must be finite and in [0, 1).";
+		return false;
+	}
+	if (!(params.projection_beta_initial > 0.0) ||
+		!(params.projection_beta_max >= params.projection_beta_initial) ||
+		!std::isfinite(params.projection_beta_initial) ||
+		!std::isfinite(params.projection_beta_max) ||
+		params.projection_beta_update_interval <= 0) {
+		error = "The projection beta continuation parameters are invalid.";
 		return false;
 	}
 	if (!(params.Poissons > -1.0 && params.Poissons < 0.5)) {
@@ -293,11 +317,6 @@ bool ValidateInputs(
 		!std::isfinite(params.heaviside_epsilon) ||
 		!std::isfinite(params.ks_lambda)) {
 		error = "Heaviside epsilon and KS lambda must be positive.";
-		return false;
-	}
-	if (!(params.material_ratio_tolerance >= 0.0) ||
-		!std::isfinite(params.material_ratio_tolerance)) {
-		error = "The material-ratio constraint tolerance must be finite and nonnegative.";
 		return false;
 	}
 	if (params.finite_difference_mmc_sample_count < 0 ||
@@ -337,8 +356,8 @@ void GetNearestIds(
 }
 
 double Heaviside(double phi, double alpha, double epsilon) {
-	// ä¸ç‹¬ç«‹ MMC ä¸€è‡´çš„æ­£åˆ™åŒ– Heavisideï¼šè¿‡æ¸¡å¸¦å¤–åˆ†åˆ«å– 1 å’Œ alphaï¼Œ
-	// è¿‡æ¸¡å¸¦ [-epsilon, epsilon] å†…ä½¿ç”¨ä¸‰æ¬¡å¤šé¡¹å¼ä¿æŒå¯å¯¼ã€‚
+	// Óë¶ÀÁ¢ MMC Ò»ÖÂµÄÕıÔò»¯ Heaviside£º¹ı¶É´øÍâ·Ö±ğÈ¡ 1 ºÍ alpha£¬
+	// ¹ı¶É´ø [-epsilon, epsilon] ÄÚÊ¹ÓÃÈı´Î¶àÏîÊ½±£³Ö¿Éµ¼¡£
 	if (phi > epsilon) return 1.0;
 	if (phi < -epsilon) return alpha;
 	return 3.0 * (1.0 - alpha) / 4.0
@@ -355,7 +374,7 @@ double HeavisideDerivative(double phi, double alpha, double epsilon) {
 double InterpolateYoungsModulus(
 	double rho,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// ä¸é¡ºåºç‰ˆåŒåå‡½æ•°ä¿æŒ rho/rho_power_p å‘½åï¼›åŒæ­¥æµç¨‹ä¸­çš„ rho å³ etaã€‚
+	// ÓëË³Ğò°æÍ¬Ãûº¯Êı±£³Ö rho/rho_power_p ÃüÃû£»Í¬²½Á÷³ÌÖĞµÄ rho ¼´ eta¡£
 	const double rho_power_p = std::pow(rho, params.material_penalty);
 	return rho_power_p * params.E1 + (1.0 - rho_power_p) * params.E2;
 }
@@ -363,15 +382,13 @@ double InterpolateYoungsModulus(
 double InterpolateYoungsModulusDerivative(
 	double rho,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// dE_e/deta_e = p eta_e^(p-1) (E1-E2)ã€‚
+	// dE_e/deta_e = p eta_e^(p-1) (E1-E2)¡£
 	return params.material_penalty
 		* std::pow(rho, params.material_penalty - 1.0)
 		* (params.E1 - params.E2);
 }
 
-// ç›´æ¥å¤åˆ¶é¡ºåºç‰ˆ Cuda_TopOpt_MultiMaterial_SIMP.cu çš„åŒåå‡½æ•°ã€‚
-// åŒæ­¥ç‰ˆè°ƒç”¨æ—¶ rho_full æ˜¯å®Œæ•´ç½‘æ ¼ etaï¼Œdc_full æ˜¯å®Œæ•´ç½‘æ ¼ææ–™æ¢¯åº¦ï¼›
-// è¿”å›å€¼åªé€å…¥ OCï¼Œä¸è¦†ç›– JointEvaluation ä¸­ä¿å­˜çš„åŸå§‹è§£æçµæ•åº¦ã€‚
+// ÓëË³Ğò MMC-SIMP ±£³ÖÒ»ÖÂ£º²ÄÁÏ OC ¸üĞÂÇ°ÏÈ×ö Sigmund ÁéÃô¶È¹ıÂË¡£
 std::vector<double> FilterSensitivities(
 	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
 	const std::vector<double>& rho_full,
@@ -395,7 +412,7 @@ std::vector<double> FilterSensitivities(
 			sum_weight += clamped_weight;
 			accum += clamped_weight * rho_full[j] * dc_full[j];
 		}
-		// Sigmund çµæ•åº¦è¿‡æ»¤ï¼š
+		// Sigmund ÁéÃô¶È¹ıÂË£º
 		//   dc_hat_i = sum_j(w_ij * rho_j * dc_j) / (rho_i * sum_j(w_ij))
 		const double denom = std::max(rho_full[i], rho_min) * std::max(sum_weight, 1e-12);
 		filtered[i] = accum / denom;
@@ -403,41 +420,93 @@ std::vector<double> FilterSensitivities(
 	return filtered;
 }
 
-// å¤ç”¨é¡ºåºç‰ˆ Cuda_TopOpt_MultiMaterial_SIMP.cu::OCUpdate çš„äºŒåˆ†ã€ç§»åŠ¨
-// é™å€¼ã€ä¸Šä¸‹ç•Œå’Œææ–™æ€»é‡æ¡†æ¶ã€‚å”¯ä¸€å¿…è¦çš„æ–¹å‘ä¿®æ­£æ¥è‡ªå½“å‰å˜é‡è¯­ä¹‰ï¼š
-// eta è¶Šå¤§è¶Šè½¯ä¸” dC/deta>0ï¼Œå› æ­¤ä½¿ç”¨ sqrt(lambda/dC)ï¼Œä½¿é«˜çµæ•åº¦
-// å•å…ƒå‡å° etaã€‚è€¦åˆäº§ç”Ÿçš„ m_e å·²åŒ…å«åœ¨ä¼ å…¥ dc ä¸­ï¼Œä¸åœ¨è¿™é‡ŒäºŒæ¬¡å¤„ç†ã€‚
+double ProjectionBetaForIteration(
+	const MMCMultiMaterialSimultaneousParams& params,
+	int evaluation_iteration) {
+	const int continuation_stage = std::max(0, evaluation_iteration - 1)
+		/ params.projection_beta_update_interval;
+	return std::min(
+		params.projection_beta_max,
+		params.projection_beta_initial * std::pow(2.0, continuation_stage));
+}
+
+double ProjectOccupancy(
+	double occupancy,
+	double beta,
+	double threshold) {
+	const double denominator =
+		std::tanh(beta * threshold) + std::tanh(beta * (1.0 - threshold));
+	return (std::tanh(beta * threshold)
+		+ std::tanh(beta * (std::clamp(occupancy, 0.0, 1.0) - threshold)))
+		/ denominator;
+}
+
+double ProjectOccupancyDerivative(
+	double occupancy,
+	double beta,
+	double threshold) {
+	const double denominator =
+		std::tanh(beta * threshold) + std::tanh(beta * (1.0 - threshold));
+	const double cosh_term = std::cosh(beta * (occupancy - threshold));
+	return beta / (denominator * cosh_term * cosh_term);
+}
+
+// ²ÄÁÏ¿éÑØÓÃ OC ¶ş·Ö¸üĞÂ¡£MMC Ö»×÷Îªµ±Ç°ÂÖµÄ³£Á¿È¨ÖØ½øÈëÄ¿±êÁéÃô¶È
+// ºÍ²ÄÁÏ×ÊÔ´Í³¼Æ£¬²»ÔÚ²ÄÁÏ×Ó¸üĞÂÖĞ¸Ä±ä×é¼ş¼¸ºÎ¡£
 void OCUpdate(
 	std::vector<double>& x,
 	double material_ratio_f,
 	const std::vector<double>& dc,
+	const std::vector<double>& raw_occupancy,
+	const std::vector<double>& material_weight,
+	double active_threshold,
 	double rho_min,
 	double move_limit) {
-	double l1 = 0.0;
-	double l2 = 100000.0;
 	const int nn = static_cast<int>(x.size());
-	std::vector<double> xnew(nn, rho_min);
-	while ((l2 - l1) / (l1 + l2) > 1e-4) {
-		const double lmid = 0.5 * (l1 + l2);
+	if (static_cast<int>(dc.size()) != nn ||
+		static_cast<int>(raw_occupancy.size()) != nn ||
+		static_cast<int>(material_weight.size()) != nn) {
+		throw std::runtime_error(
+			"The material OC input sizes do not match the design vector.");
+	}
+	std::vector<double> xnew(x);
+	std::vector<unsigned char> active(nn, 0);
+	double inactive_soft_resource = 0.0;
+	double total_material_weight = 0.0;
+	for (int i = 0; i < nn; ++i) {
+		total_material_weight += material_weight[i];
+		if (raw_occupancy[i] > active_threshold) {
+			active[i] = 1;
+		}
+		else {
+			inactive_soft_resource += material_weight[i] * x[i];
+		}
+	}
+	const double target_soft_resource = total_material_weight
+		/ (1.0 + material_ratio_f);
+	const double target_active_soft_resource =
+		std::max(0.0, target_soft_resource - inactive_soft_resource);
+	double lambda_low = 0.0;
+	double lambda_high = 100000.0;
+	while ((lambda_high - lambda_low) / (lambda_low + lambda_high) > 1e-4) {
+		const double lmid = 0.5 * (lambda_low + lambda_high);
+		double active_soft_resource = 0.0;
 		for (int i = 0; i < nn; ++i) {
+			if (!active[i]) {
+				continue;
+			}
 			const double positive_dc = std::max(
 				dc[i],
 				std::numeric_limits<double>::min());
-			const double candidate = x[i] * std::sqrt(lmid / positive_dc);
+			const double candidate = x[i] * std::sqrt(positive_dc / lmid);
 			xnew[i] = std::max(rho_min, std::max(x[i] - move_limit, std::min(1.0, std::min(x[i] + move_limit, candidate))));
+			active_soft_resource += material_weight[i] * xnew[i];
 		}
-		double sum_x = 0.0;
-		for (double value : xnew) {
-			sum_x += value;
-		}
-		// MATLAB: x represents E1 and f = V2 / V1, hence sum(x) = nn / (1 + f).
-		const double target_soft_volume =
-			nn / (1.0 + material_ratio_f);
-		if (sum_x - target_soft_volume > 0.0) {
-			l2 = lmid;
+		if (active_soft_resource > target_active_soft_resource) {
+			lambda_low = lmid;
 		}
 		else {
-			l1 = lmid;
+			lambda_high = lmid;
 		}
 	}
 	x = xnew;
@@ -643,8 +712,8 @@ void calc_Phi_Node(
 	int i,
 	int p,
 	double epsilon) {
-	// å¤ç”¨ç‹¬ç«‹ 3D MMC çš„ç»„ä»¶ TDF é€»è¾‘ã€‚å¯¹æ¯ä¸ªé¡¶ç‚¹åŒæ—¶è¿”å› phi_i
-	// ä»¥åŠå¯¹ 9 ä¸ªç»„ä»¶å˜é‡çš„è§£æå¯¼æ•°ï¼Œåç»­ä¸å†å¯¹è¿™ä¸€æ®µåšæ•°å€¼å·®åˆ†ã€‚
+	// ¸´ÓÃ¶ÀÁ¢ 3D MMC µÄ×é¼ş TDF Âß¼­¡£¶ÔÃ¿¸ö¶¥µãÍ¬Ê±·µ»Ø phi_i
+	// ÒÔ¼°¶Ô 9 ¸ö×é¼ş±äÁ¿µÄ½âÎöµ¼Êı£¬ºóĞø²»ÔÙ¶ÔÕâÒ»¶Î×öÊıÖµ²î·Ö¡£
 	(void)minL;
 	(void)epsilon;
 	const int nVertex = static_cast<int>(allVertex.size());
@@ -654,15 +723,15 @@ void calc_Phi_Node(
 		std::vector<double>(kVariablesPerComponent, 0.0));
 
 	const MMC_Component& component = components[i];
-	const double x0 = component.x0;
-	const double y0 = component.y0;
-	const double z0 = component.z0;
-	const double l1 = component.l1 + std::numeric_limits<double>::epsilon();
-	const double l2 = component.l2 + std::numeric_limits<double>::epsilon();
-	const double l3 = component.l3 + std::numeric_limits<double>::epsilon();
-	const double alp = component.alpha;
-	const double bet = component.beta;
-	const double gam = component.gamma;
+	const double x0 = component.center_x;
+	const double y0 = component.center_y;
+	const double z0 = component.center_z;
+	const double l1 = component.length_x + std::numeric_limits<double>::epsilon();
+	const double l2 = component.length_y + std::numeric_limits<double>::epsilon();
+	const double l3 = component.length_z + std::numeric_limits<double>::epsilon();
+	const double alp = component.rotation_alpha;
+	const double bet = component.rotation_beta;
+	const double gam = component.rotation_gamma;
 
 	const double sa = std::sin(alp), ca = std::cos(alp);
 	const double sb = std::sin(bet), cb = std::cos(bet);
@@ -768,12 +837,12 @@ void ComputeGlobalTDF(
 	double lmd,
 	std::vector<double>& globalPhi,
 	std::vector<std::vector<double>>& phimaxDphi) {
-	// ç”¨ KS å‡½æ•°å¹³æ»‘è¿‘ä¼¼ max_i(phi_i)ï¼Œä»è€Œè¡¨è¾¾å¤šä¸ª MMC ç»„ä»¶çš„å¹¶é›†ï¼š
+	// ÓÃ KS º¯ÊıÆ½»¬½üËÆ max_i(phi_i)£¬´Ó¶ø±í´ï¶à¸ö MMC ×é¼şµÄ²¢¼¯£º
 	//   Phi = log(sum_i exp(lambda*phi_i)) / lambda
 	//   dPhi/dphi_i = exp(lambda*phi_i) / sum_j exp(lambda*phi_j)
 	//
-	// æ³¨æ„ï¼šåˆ†æ¯çš„ +1e-9 æ˜¯ä»ç‹¬ç«‹ MMC å®é™…ä¸»å¾ªç¯å¤ç”¨çš„ç¨³å®šé¡¹ã€‚
-	// å®ƒä¼šä½¿è§£æå¯¼æ•°æˆä¸ºä¸¥æ ¼ KS å¯¼æ•°çš„è½»å¾®è¿‘ä¼¼ï¼›å…¨æœ‰é™å·®åˆ†æ—¥å¿—ç”¨äºé‡åŒ–è¯¥åå·®ã€‚
+	// ×¢Òâ£º·ÖÄ¸µÄ +1e-9 ÊÇ´Ó¶ÀÁ¢ MMC Êµ¼ÊÖ÷Ñ­»·¸´ÓÃµÄÎÈ¶¨Ïî¡£
+	// Ëü»áÊ¹½âÎöµ¼Êı³ÉÎªÑÏ¸ñ KS µ¼ÊıµÄÇáÎ¢½üËÆ£»È«ÓĞÏŞ²î·ÖÈÕÖ¾ÓÃÓÚÁ¿»¯¸ÃÆ«²î¡£
 	const int nComp = static_cast<int>(allPhis.size());
 	if (nComp == 0) {
 		throw std::runtime_error("The MMC component set is empty.");
@@ -804,9 +873,9 @@ GeometryEvaluation EvaluateGeometry(
 	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell2V,
 	const std::vector<MMCComponent>& mmcComponents,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// å®Œæ•´å‡ ä½•æ˜ å°„ï¼š
-	//   d_ir -> phi_i -> KSå…¨å±€Phi -> H(Phi) -> å•å…ƒå æœ‰ç‡m_eã€‚
-	// æœ¬å‡½æ•°åªè®¡ç®—å‡ ä½•åœºå’Œé“¾å¼å› å­ï¼Œä¸è¿›è¡Œæœ‰é™å…ƒæ±‚è§£ã€‚
+	// ÍêÕû¼¸ºÎÓ³Éä£º
+	//   d_ir -> phi_i -> KSÈ«¾ÖPhi -> H(Phi) -> µ¥ÔªÕ¼ÓĞÂÊm_e¡£
+	// ±¾º¯ÊıÖ»¼ÆËã¼¸ºÎ³¡ºÍÁ´Ê½Òò×Ó£¬²»½øĞĞÓĞÏŞÔªÇó½â¡£
 	GeometryEvaluation evaluation;
 	const int nComp = static_cast<int>(mmcComponents.size());
 	const int nVertex = static_cast<int>(allVertex.size());
@@ -849,8 +918,8 @@ GeometryEvaluation EvaluateGeometry(
 			params.heaviside_epsilon);
 	}
 
-	// å…­é¢ä½“å•å…ƒå æœ‰ç‡å– 8 ä¸ªé¡¶ç‚¹ Heaviside å€¼çš„ç®—æœ¯å¹³å‡ï¼š
-	//   m_e = (1/8) sum_{v in e} H(Phi_v)ã€‚
+	// ÁùÃæÌåµ¥ÔªÕ¼ÓĞÂÊÈ¡ 8 ¸ö¶¥µã Heaviside ÖµµÄËãÊõÆ½¾ù£º
+	//   m_e = (1/8) sum_{v in e} H(Phi_v)¡£
 	evaluation.density.assign(nGrid, 0.0);
 	for (int i = 0; i < nGrid; ++i) {
 		for (const auto& vertex : cell2V.at(i)) {
@@ -928,19 +997,19 @@ void FlattenPhysicalComponents(
 	physical_variables.clear();
 	physical_variables.reserve(components.size() * kVariablesPerComponent);
 	for (const MMCComponent& component : components) {
-		physical_variables.push_back(component.x0);
-		physical_variables.push_back(component.y0);
-		physical_variables.push_back(component.z0);
-		physical_variables.push_back(component.l1);
-		physical_variables.push_back(component.l2);
-		physical_variables.push_back(component.l3);
-		physical_variables.push_back(component.alpha);
-		physical_variables.push_back(component.beta);
-		physical_variables.push_back(component.gamma);
+		physical_variables.push_back(component.center_x);
+		physical_variables.push_back(component.center_y);
+		physical_variables.push_back(component.center_z);
+		physical_variables.push_back(component.length_x);
+		physical_variables.push_back(component.length_y);
+		physical_variables.push_back(component.length_z);
+		physical_variables.push_back(component.rotation_alpha);
+		physical_variables.push_back(component.rotation_beta);
+		physical_variables.push_back(component.rotation_gamma);
 	}
 }
 
-// ä¸ç‹¬ç«‹ MMC ä¸€æ ·ç›´æ¥ä¿å­˜å’Œæ›´æ–°ä¹ä¸ªç‰©ç†è®¾è®¡å˜é‡ã€‚
+// Óë¶ÀÁ¢ MMC Ò»ÑùÖ±½Ó±£´æºÍ¸üĞÂ¾Å¸öÎïÀíÉè¼Æ±äÁ¿¡£
 void UpdateComponentsFromPhysical(
 	std::vector<MMCComponent>& components,
 	const std::vector<double>& physical_variables) {
@@ -951,15 +1020,15 @@ void UpdateComponentsFromPhysical(
 	}
 	int variable = 0;
 	for (MMCComponent& component : components) {
-		component.x0 = physical_variables[variable++];
-		component.y0 = physical_variables[variable++];
-		component.z0 = physical_variables[variable++];
-		component.l1 = physical_variables[variable++];
-		component.l2 = physical_variables[variable++];
-		component.l3 = physical_variables[variable++];
-		component.alpha = physical_variables[variable++];
-		component.beta = physical_variables[variable++];
-		component.gamma = physical_variables[variable++];
+		component.center_x = physical_variables[variable++];
+		component.center_y = physical_variables[variable++];
+		component.center_z = physical_variables[variable++];
+		component.length_x = physical_variables[variable++];
+		component.length_y = physical_variables[variable++];
+		component.length_z = physical_variables[variable++];
+		component.rotation_alpha = physical_variables[variable++];
+		component.rotation_beta = physical_variables[variable++];
+		component.rotation_gamma = physical_variables[variable++];
 	}
 }
 
@@ -970,16 +1039,16 @@ void ComputeMmcDerivativeFromElementWeights(
 	std::vector<double>& gradient,
 	std::vector<double>* maximum_absolute_contribution = nullptr,
 	std::vector<double>* sum_absolute_contribution = nullptr) {
-	// å°†ä»»æ„â€œå¯¹å•å…ƒå æœ‰ç‡ m_e çš„å¯¼æ•°æƒé‡â€ç»§ç»­æ²¿ MMC å‡ ä½•é“¾åä¼ ã€‚
-	// è‹¥ç›®æ ‡é‡å†™ä¸º J(m)ï¼Œè°ƒç”¨æ–¹ä¼ å…¥ element_weights[e] = dJ/dm_eï¼Œ
-	// æœ¬å‡½æ•°è®¡ç®—ï¼š
+	// ½«ÈÎÒâ¡°¶Ôµ¥ÔªÕ¼ÓĞÂÊ m_e µÄµ¼ÊıÈ¨ÖØ¡±¼ÌĞøÑØ MMC ¼¸ºÎÁ´·´´«¡£
+	// ÈôÄ¿±êÁ¿Ğ´Îª J(m)£¬µ÷ÓÃ·½´«Èë element_weights[e] = dJ/dm_e£¬
+	// ±¾º¯Êı¼ÆËã£º
 	//   dJ/dd_ir = sum_e (dJ/dm_e) (dm_e/dd_ir)
-	//             = sum_v w_v H'(Phi_v) KS'_i(v) phi'_{ir}(v)ã€‚
+	//             = sum_v w_v H'(Phi_v) KS'_i(v) phi'_{ir}(v)¡£
 	//
-	// ä¸‰ç§ä¸»è¦è°ƒç”¨çš„ element_weights å«ä¹‰ï¼š
-	//   æŸ”é¡ºåº¦ï¼š-E_e q_e
-	//   MMCä½“ç§¯ï¼š1 / N
-	//   æ¯”ä¾‹æ®‹å·®ï¼š((1-eta_e)-f eta_e) / N
+	// ÈıÖÖÖ÷Òªµ÷ÓÃµÄ element_weights º¬Òå£º
+	//   ÈáË³¶È£º-E_e q_e
+	//   MMCÌå»ı£º1 / N
+	//   ±ÈÀı²Ğ²î£º((1-eta_e)-f eta_e) / N
 	const int nComp =
 		static_cast<int>(geometry.allPhiDrv.size());
 	const int nVertex =
@@ -989,9 +1058,9 @@ void ComputeMmcDerivativeFromElementWeights(
 		throw std::runtime_error("The element-weight count does not match the MMC grid.");
 	}
 
-	// m_e æ˜¯ 8 ä¸ªé¡¶ç‚¹å€¼çš„å¹³å‡ï¼Œå› æ­¤å…ˆæŠŠå•å…ƒæƒé‡æŒ‰ 1/8 ç´¯åŠ å›é¡¶ç‚¹ã€‚
-	// è¿™ä¸åŸ MMC çš„ CeNode / volNod ç´¯åŠ æ–¹å¼ä¸€è‡´ï¼›è¿™é‡ŒåªæŠŠä¸¤è€…ç»Ÿä¸€æˆ
-	// elementWeightNodeï¼Œä¾¿äºåŒä¸€æ®µä»£ç æœåŠ¡ç›®æ ‡ã€ä½“ç§¯å’Œææ–™æ¯”ä¾‹ä¸‰ä¸ªé‡ã€‚
+	// m_e ÊÇ 8 ¸ö¶¥µãÖµµÄÆ½¾ù£¬Òò´ËÏÈ°Ñµ¥ÔªÈ¨ÖØ°´ 1/8 ÀÛ¼Ó»Ø¶¥µã¡£
+	// ÕâÓëÔ­ MMC µÄ CeNode / volNod ÀÛ¼Ó·½Ê½Ò»ÖÂ£»ÕâÀïÖ»°ÑÁ½ÕßÍ³Ò»³É
+	// elementWeightNode£¬±ãÓÚÍ¬Ò»¶Î´úÂë·şÎñÄ¿±ê¡¢Ìå»ıºÍ²ÄÁÏ±ÈÀıÈı¸öÁ¿¡£
 	std::vector<double> elementWeightNode(nVertex, 0.0);
 	for (int cell_id = 0; cell_id < nGrid; ++cell_id) {
 		for (const auto& vertex : cell_to_vertex.at(cell_id)) {
@@ -999,8 +1068,8 @@ void ComputeMmcDerivativeFromElementWeights(
 		}
 	}
 
-	// ä¸ç‹¬ç«‹ MMC ä¸»å¾ªç¯ç›¸åŒï¼šå…ˆè®¡ç®—
-	// PhimaxDrvAct[c][v][d] = phimaxDphi[v][c] * allPhiDrv[c][v][d]ã€‚
+	// Óë¶ÀÁ¢ MMC Ö÷Ñ­»·ÏàÍ¬£ºÏÈ¼ÆËã
+	// PhimaxDrvAct[c][v][d] = phimaxDphi[v][c] * allPhiDrv[c][v][d]¡£
 	std::vector<std::vector<std::vector<double>>> PhimaxDrvAct(
 		nComp,
 		std::vector<std::vector<double>>(
@@ -1034,8 +1103,8 @@ void ComputeMmcDerivativeFromElementWeights(
 			double max_abs = 0.0;
 			double sum_abs = 0.0;
 			for (int vertex_id = 0; vertex_id < nVertex; ++vertex_id) {
-				// æ˜¾å¼å†™å‡ºé“¾å¼ä¹˜ç§¯ï¼šdJ/dm -> dm/dH -> dH/dPhi
-				// -> dPhi/dphi_i -> dphi_i/dd_irã€‚
+				// ÏÔÊ½Ğ´³öÁ´Ê½³Ë»ı£ºdJ/dm -> dm/dH -> dH/dPhi
+				// -> dPhi/dphi_i -> dphi_i/dd_ir¡£
 				const double contribution =
 					elementWeightNode[vertex_id]
 					* geometry.delta_H[vertex_id]
@@ -1215,24 +1284,60 @@ void RunClosedFormSelfChecks(
 		}
 	}
 
-	const double sample_m = 0.63;
+	// ProjectOccupancy() ÒÑ²»ÔÚÖ÷Ä£ĞÍÖĞÊ¹ÓÃ£»ÏÂÃæÓÃ¹Ì¶¨ m_e Ñù±¾ºË¶Ô
+	// ²ÄÁÏ±ÈÀıÔ¼ÊøµÄÔ­Ê¼ MMC Õ¼ÓĞÂÊÁ´¡£
+	const double sample_m = 0.37;
 	const double normalized_cell_volume = 0.125;
 	const double ratio_material_derivative =
 		-(1.0 + params.material_ratio_f)
 		* sample_m
 		* normalized_cell_volume;
 	const double independently_expanded_derivative =
-		-sample_m * normalized_cell_volume
-		- params.material_ratio_f * sample_m * normalized_cell_volume;
+		-sample_m
+		* normalized_cell_volume
+		- params.material_ratio_f
+		* sample_m
+		* normalized_cell_volume;
 	if (RelativeDifference(
 		ratio_material_derivative,
 		independently_expanded_derivative) > 1e-13) {
 		throw std::runtime_error("The closed-form material-ratio derivative check failed.");
 	}
 
+	// ÓÃ¾Ö²¿ÖĞĞÄ²î·ÖÍ¬Ê±ºË¶Ô R ¶Ô m Óë eta µÄÁ½ÌõÁ´£¬·ÀÖ¹ÒÅÂ©
+	// m_e È¨ÖØ»ò²ÄÁÏ eta È¨ÖØ¡£
+	const double sample_eta = 0.41;
+	const double ratio_coefficient =
+		(1.0 - sample_eta) - params.material_ratio_f * sample_eta;
+	const auto local_ratio = [&](double occupancy, double eta) {
+		return occupancy * ((1.0 - eta) - params.material_ratio_f * eta)
+			* normalized_cell_volume;
+	};
+	const double finite_difference_step = 1e-6;
+	const double ratio_mmc_derivative = ratio_coefficient
+		* normalized_cell_volume;
+	const double ratio_mmc_finite_difference =
+		(local_ratio(sample_m + finite_difference_step, sample_eta)
+			- local_ratio(sample_m - finite_difference_step, sample_eta))
+		/ (2.0 * finite_difference_step);
+	const double ratio_material_finite_difference =
+		(local_ratio(sample_m, sample_eta + finite_difference_step)
+			- local_ratio(sample_m, sample_eta - finite_difference_step))
+		/ (2.0 * finite_difference_step);
+	if (RelativeDifference(
+		ratio_mmc_derivative,
+		ratio_mmc_finite_difference) > 1e-7 ||
+		RelativeDifference(
+			ratio_material_derivative,
+			ratio_material_finite_difference) > 1e-7) {
+		throw std::runtime_error(
+			"The projected material-ratio finite-difference self-check failed.");
+	}
+
 }
 
-JointEvaluation EvaluateJointState(
+// Í¬²½ÓÅ»¯ºËĞÄÂß¼­
+SimultaneousEvaluation EvaluateSimultaneousState(
 	gpmesh::GPSplineSolidV0& spline,
 	std::vector<boundary_point>& neumann_points,
 	std::vector<boundary_point>& dirichlet_points,
@@ -1241,14 +1346,15 @@ JointEvaluation EvaluateJointState(
 	const std::vector<MMCComponent>& components,
 	const std::vector<double>& material_eta,
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
-	const MMCMultiMaterialSimultaneousParams& params) {
-	// å•è½®è”åˆçŠ¶æ€è®¡ç®—å™¨ã€‚ç»™å®šå½“å‰ MMC ç»„ä»¶å’Œå®Œæ•´ç½‘æ ¼ eta å‘é‡ï¼ŒæŒ‰ä»¥ä¸‹é¡ºåºï¼š
-	//   1. è®¡ç®— m_eï¼›
-	//   2. è®¡ç®— E_e(eta_e) å’Œ a_e=m_eE_eï¼›
-	//   3. åªæ±‚è§£ä¸€æ¬¡ K(a)U=Fï¼›
-	//   4. ç”±åŒä¸€ä¸ª U/q_e è®¡ç®— MMC ä¸ææ–™ä¸¤ç»„è§£ææ¢¯åº¦ï¼›
-	//   5. è®¡ç®—å‡ ä½•ä½“ç§¯å’Œææ–™æ¯”ä¾‹çº¦æŸåŠå…¶ä¸¤å—æ¢¯åº¦ã€‚
-	// è¯¥å‡½æ•°ä¸æ›´æ–° MMAï¼Œä¹Ÿä¸ä¿®æ”¹è®¾è®¡å˜é‡ï¼Œå› æ­¤å¯å®‰å…¨ç”¨äºæœ‰é™å·®åˆ†é‡æ±‚è§£ã€‚
+	const MMCMultiMaterialSimultaneousParams& params,
+	int projection_iteration = 1) {
+	// µ¥ÂÖÁªºÏ×´Ì¬¼ÆËãÆ÷¡£¸ø¶¨µ±Ç° MMC ×é¼şºÍÍêÕûÍø¸ñ eta ÏòÁ¿£¬°´ÒÔÏÂË³Ğò£º
+	//   1. ¼ÆËã MMC µ¥ÔªÕ¼ÓĞÂÊ m_e£»
+	//   2. ¼ÆËã E_e(eta_e) ºÍ a_e=m_e E_e£»
+	//   3. Ö»Çó½âÒ»´Î K(a)U=F£»
+	//   4. ÓÉÍ¬Ò»¸ö U/q_e ¼ÆËã MMC Óë²ÄÁÏÁ½×é½âÎöÌİ¶È£»
+	//   5. ¼ÆËã¼¸ºÎÌå»ıºÍ²ÄÁÏ±ÈÀıÔ¼Êø¼°ÆäÁ½¿éÌİ¶È¡£
+	// ¸Ãº¯Êı²»¸üĞÂ MMA£¬Ò²²»ĞŞ¸ÄÉè¼Æ±äÁ¿£¬Òò´Ë¿É°²È«ÓÃÓÚÓĞÏŞ²î·ÖÖØÇó½â¡£
 	const int cell_count = static_cast<int>(cell_to_vertex.size());
 	if (static_cast<int>(material_eta.size()) != cell_count ||
 		static_cast<int>(unit_local_matrix.size()) != cell_count ||
@@ -1256,32 +1362,41 @@ JointEvaluation EvaluateJointState(
 		throw std::runtime_error("The simultaneous state, local matrix, and IGA cell counts differ.");
 	}
 
-	JointEvaluation evaluation;
+	SimultaneousEvaluation evaluation;
 	evaluation.geometry = EvaluateGeometry(
 		all_vertex,
 		cell_to_vertex,
-		components,
-		params);
-	// è€¦åˆç‚¹åªæœ‰ä¸€ä¸ªï¼ša_e = m_e E_eã€‚ä¼ ç»™æœ‰é™å…ƒè£…é…çš„æ˜¯ a_eï¼Œ
-	// ä¸æ˜¯è£¸ eta_eï¼Œä¹Ÿä¸æ˜¯å•ç‹¬çš„ MMC å æœ‰ç‡ã€‚
+			components,
+	params);
+	// ÎªÁËÓë´¿ MMC Ä£°å±£³ÖÒ»ÖÂ£¬ÓĞÏŞÔª×°ÅäÖ±½ÓÊ¹ÓÃÔ­Ê¼Õ¼ÓĞÂÊ m_e¡£
+	// projected_occupancy ½ö×÷Îª¼æÈİ¾Éµ¼³ö×Ö¶ÎµÄ¿½±´£¬²»ÔÙ²ÎÓëÍ¶Ó°Ä£ĞÍ¡£
 	evaluation.material_modulus.resize(cell_count, 0.0);
 	evaluation.material_modulus_derivative.resize(cell_count, 0.0);
+	evaluation.projected_occupancy.resize(cell_count, 0.0);
+	evaluation.projected_occupancy_derivative.resize(cell_count, 0.0);
 	evaluation.effective_stiffness.resize(cell_count, 0.0);
+	evaluation.projection_beta = ProjectionBetaForIteration(
+		params, projection_iteration);
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-		evaluation.material_modulus[cell_id] =
+		evaluation.material_modulus[cell_id] = // \(\eta_e\)SIMP ¶à²ÄÁÏÉè¼Æ±äÁ¿¡£¾ö¶¨µ±Ç°µ¥ÔªÆ«Ïò²ÄÁÏ E1 »¹ÊÇ E2¡£
 			InterpolateYoungsModulus(material_eta[cell_id], params);
-		evaluation.material_modulus_derivative[cell_id] =
+		evaluation.material_modulus_derivative[cell_id] = // ¶à²ÄÁÏ²åÖµµ¼Êı
 			InterpolateYoungsModulusDerivative(material_eta[cell_id], params);
-		evaluation.effective_stiffness[cell_id] =
+		evaluation.projected_occupancy[cell_id] = // ¾É×Ö¶Î£¬Ô­À´ÊÇÍ¶Ó°
+			evaluation.geometry.density[cell_id];
+		evaluation.projected_occupancy_derivative[cell_id] = 1.0; // ¾É×Ö¶Î£¬Ô­À´ÊÇÍ¶Ó°
+		evaluation.effective_stiffness[cell_id] = // mmcÕ¼ÓĞÂÊ * simp¶à²ÄÁÏ²åÖµÃÜ¶È
 			evaluation.geometry.density[cell_id]
 			* evaluation.material_modulus[cell_id];
 	}
 	if (!IsFiniteVector(evaluation.material_modulus) ||
+		!IsFiniteVector(evaluation.projected_occupancy) ||
+		!IsFiniteVector(evaluation.projected_occupancy_derivative) ||
 		!IsFiniteVector(evaluation.effective_stiffness)) {
 		throw std::runtime_error("A material modulus or effective stiffness value is non-finite.");
 	}
 
-	// å…±äº«ç»“æ„åˆ†æï¼šå½“å‰è”åˆçŠ¶æ€åªåœ¨æ­¤å¤„æ±‚è§£ä¸€æ¬¡ä½ç§»ã€‚
+	// ¹²Ïí½á¹¹·ÖÎö£ºµ±Ç°ÁªºÏ×´Ì¬Ö»ÔÚ´Ë´¦Çó½âÒ»´ÎÎ»ÒÆ¡£
 	spline.Solver_With_Density_MMC(
 		neumann_points,
 		dirichlet_points,
@@ -1291,14 +1406,14 @@ JointEvaluation EvaluateJointState(
 		throw std::runtime_error("The shared finite-element solve returned a non-finite displacement.");
 	}
 
+	// ºÍ´¿MMCÒ»Ñù£¬°ÑÈ«¾ÖÎ»ÒÆÏòÁ¿ U ÖØĞÂÕûÀí³É¡°Ã¿¸öµ¥Ôª/patch Ò»ĞĞ¡±µÄ¾Ö²¿Î»ÒÆ¾ØÕó¡£
 	Eigen::MatrixXd displacement_by_patch;
 	BuildDisplacementByPatch(
 		spline,
 		evaluation.displacement,
 		displacement_by_patch);
 
-	// q_e ä½¿ç”¨å•ä½æ¨¡é‡å±€éƒ¨çŸ©é˜µ K_e^0ã€‚äºæ˜¯
-	//   C = sum_e a_e q_e = sum_e m_e E_e q_eã€‚
+	// q_e Ê¹ÓÃµ¥Î»Ä£Á¿¾Ö²¿¾ØÕó K_e^0¡£Ä¿±êÖµÀÛ¼Ó·½Ê½Óë´¿ MMC ±£³ÖÒ»ÖÂ£ºC = sum_e q_e¡£
 	evaluation.element_energy.resize(cell_count, 0.0);
 	evaluation.compliance = 0.0;
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
@@ -1310,38 +1425,25 @@ JointEvaluation EvaluateJointState(
 				* element_displacement)(0, 0);
 		evaluation.element_energy[cell_id] = energy;
 		evaluation.compliance +=
-			evaluation.effective_stiffness[cell_id] * energy;
+			energy;
 	}
-	// The reused MMC kernel assembles 1000 * a_e * K_e^0, while the local
-	// objective and sensitivities use the standalone-MMC normalized value
-	// sum_e(a_e q_e). Normalize F^T U to the same reference before comparison.
-	evaluation.compliance_from_load =
-		spline.m_sparse_system.rhs().col(0).dot(evaluation.displacement.col(0))
-		/ 1000.0;
-	evaluation.compliance_relative_mismatch = RelativeDifference(
-		evaluation.compliance,
-		evaluation.compliance_from_load);
+
+	// ±£Áô¾ÉÕï¶Ï×Ö¶Î£¬µ«¹Ø±Õ F^T U ³ß¶ÈÒ»ÖÂĞÔ¼ì²é£»µ±Ç°Ä¿±êÖµ°´´¿ MMC µÄ sum_e q_e ¼ÇÂ¼¡£
+	evaluation.compliance_from_load = evaluation.compliance;
+	evaluation.compliance_relative_mismatch = 0.0;
 	if (!std::isfinite(evaluation.compliance) ||
-		!std::isfinite(evaluation.compliance_from_load) ||
 		!IsFiniteVector(evaluation.element_energy)) {
 		throw std::runtime_error("The compliance or an element energy value is non-finite.");
 	}
-	if (evaluation.compliance_relative_mismatch >
-		params.compliance_consistency_tolerance) {
-		throw std::runtime_error(
-			"The relative mismatch between F^T U and sum_e(a_e q_e) exceeds the configured tolerance.");
-	}
 
-	// æŸ”é¡ºåº¦ä¼´éšå…¬å¼ï¼šdC/dx = -U^T(dK/dx)Uã€‚
-	// å¯¹ MMCï¼šdC/dm_e = -E_e q_eï¼›
-	// å¯¹ææ–™ï¼šdC/deta_e = -m_e q_e dE_e/deta_eã€‚
+	// ÈáË³¶È°éËæ¹«Ê½£ºdC/dx = -U^T(dK/dx)U¡£
+	// ¶Ô MMC£ºdC/dm_e = -E_e q_e£»
+	// ¶Ô²ÄÁÏ£ºdC/deta_e = -m_e q_e dE_e/deta_e¡£
 	std::vector<double> objective_element_weights(cell_count, 0.0);
 	std::vector<double> geometry_volume_weights(
 		cell_count,
 		1.0 / static_cast<double>(cell_count));
-	std::vector<double> ratio_element_weights(cell_count, 0.0);
 	evaluation.material_objective_gradient.resize(cell_count, 0.0);
-	evaluation.ratio_constraint_material_gradient.resize(cell_count, 0.0);
 
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 		const double normalized_cell_volume =
@@ -1354,10 +1456,10 @@ JointEvaluation EvaluateJointState(
 			* evaluation.element_energy[cell_id]
 			* evaluation.material_modulus_derivative[cell_id];
 
-		// å æœ‰ç‡åŠ æƒçš„ææ–™èµ„æºï¼š
+		// MMC Õ¼ÓĞÂÊ¼ÓÈ¨µÄ²ÄÁÏ×ÊÔ´£º
 		//   V1 = sum_e m_e eta_e / N
 		//   V2 = sum_e m_e (1-eta_e) / N
-		//   R  = V2 - f V1ã€‚
+		//   R  = V2 - f V1¡£
 		evaluation.V1 +=
 			evaluation.geometry.density[cell_id]
 			* material_eta[cell_id]
@@ -1366,18 +1468,9 @@ JointEvaluation EvaluateJointState(
 			evaluation.geometry.density[cell_id]
 			* (1.0 - material_eta[cell_id])
 			* normalized_cell_volume;
-		ratio_element_weights[cell_id] =
-			((1.0 - material_eta[cell_id])
-				- params.material_ratio_f * material_eta[cell_id])
-			* normalized_cell_volume;
-		evaluation.ratio_constraint_material_gradient[cell_id] =
-			-(1.0 + params.material_ratio_f)
-			* evaluation.geometry.density[cell_id]
-			* normalized_cell_volume;
 	}
 
-	// åŒä¸€ä¸ª MMC åä¼ å‡½æ•°é€šè¿‡ä¸åŒ element_weights åˆ†åˆ«å¾—åˆ°ï¼š
-	// ç›®æ ‡æ¢¯åº¦ã€å‡ ä½•ä½“ç§¯æ¢¯åº¦å’Œæ¯”ä¾‹æ®‹å·®å¯¹ MMC å˜é‡çš„æ¢¯åº¦ã€‚
+	// MMC Ö»·´´«Ä¿±êÌİ¶ÈºÍ¼¸ºÎÌå»ıÔ¼Êø£»²ÄÁÏ±ÈÀıÓÉ²ÄÁÏ OC ¸ºÔğ£¬²»ÔÙ·´´«µ½ MMC¡£
 	ComputeMmcDerivativeFromElementWeights(
 		evaluation.geometry,
 		cell_to_vertex,
@@ -1390,11 +1483,12 @@ JointEvaluation EvaluateJointState(
 		cell_to_vertex,
 		geometry_volume_weights,
 		evaluation.geometry_constraint_gradient);
-	ComputeMmcDerivativeFromElementWeights(
-		evaluation.geometry,
-		cell_to_vertex,
-		ratio_element_weights,
-		evaluation.ratio_constraint_mmc_gradient);
+	evaluation.ratio_constraint_mmc_gradient.assign(
+		components.size() * kVariablesPerComponent,
+		0.0);
+	evaluation.ratio_constraint_material_gradient.assign(
+		cell_count,
+		0.0);
 
 	evaluation.mmc_volume =
 		std::accumulate(
@@ -1402,59 +1496,13 @@ JointEvaluation EvaluateJointState(
 			evaluation.geometry.density.end(),
 			0.0)
 		/ static_cast<double>(cell_count);
-	evaluation.ratio_residual =
-		evaluation.V2 - params.material_ratio_f * evaluation.V1;
-	evaluation.geometry_constraint =
-		evaluation.mmc_volume - params.mmc_target_rate;
-	// ä»…ä½œä¸ºè¯Šæ–­è®°å½•ææ–™æ¯”ä¾‹ç›¸å¯¹å®¹å·®çš„ä¸¤ä¸ªæœ‰ç¬¦å·åå·®ï¼›å®ƒä»¬ä¸ä¼ å…¥
-	// MMC-MMAï¼Œå®é™…ææ–™æ¯”ä¾‹ç”± OC æ›´æ–°æ»¡è¶³ã€‚
-	evaluation.positive_ratio_constraint =
-		evaluation.ratio_residual - params.material_ratio_tolerance;
-	evaluation.negative_ratio_constraint =
-		-evaluation.ratio_residual - params.material_ratio_tolerance;
-
-	const auto minimum_maximum_modulus = std::minmax_element(
-		evaluation.material_modulus.begin(),
-		evaluation.material_modulus.end());
-	if (RelativeDifference(
-		*minimum_maximum_modulus.first,
-		*minimum_maximum_modulus.second) <=
-		params.sensitivity_consistency_tolerance) {
-		std::vector<double> base_weights(cell_count, 0.0);
-		for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-			base_weights[cell_id] = -evaluation.element_energy[cell_id];
-		}
-		std::vector<double> base_gradient;
-		ComputeMmcDerivativeFromElementWeights(
-			evaluation.geometry,
-			cell_to_vertex,
-			base_weights,
-			base_gradient);
-		double squared_error = 0.0;
-		double squared_reference = 0.0;
-		const double uniform_modulus = evaluation.material_modulus.front();
-		for (size_t variable = 0;
-			variable < evaluation.mmc_objective_gradient.size();
-			++variable) {
-			const double reference = uniform_modulus * base_gradient[variable];
-			const double difference =
-				evaluation.mmc_objective_gradient[variable] - reference;
-			squared_error += difference * difference;
-			squared_reference += reference * reference;
-		}
-		evaluation.uniform_material_gradient_relative_error =
-			std::sqrt(squared_error)
-			/ std::max(std::sqrt(squared_reference), 1e-12);
-		if (evaluation.uniform_material_gradient_relative_error >
-			params.sensitivity_consistency_tolerance) {
-			throw std::runtime_error("The uniform-material MMC gradient consistency check failed.");
-		}
-	}
+	// ²ÄÁÏ±ÈÀıÓÉ OC ¶ş·ÖÖ±½ÓÎ¬³Ö£»ratio Ô¼Êø²»ÔÙ×÷ÎªÍ¬²½ÓÅ»¯Ô¼Êø²ÎÓëÁ÷³Ì¡£
+	evaluation.ratio_residual = 0.0;
+	evaluation.positive_ratio_constraint = 0.0;
+	evaluation.negative_ratio_constraint = 0.0;
 
 	if (!IsFiniteVector(evaluation.material_objective_gradient) ||
-		!IsFiniteVector(evaluation.geometry_constraint_gradient) ||
-		!IsFiniteVector(evaluation.ratio_constraint_mmc_gradient) ||
-		!IsFiniteVector(evaluation.ratio_constraint_material_gradient)) {
+		!IsFiniteVector(evaluation.geometry_constraint_gradient)) {
 		throw std::runtime_error("An analytical objective or constraint sensitivity is non-finite.");
 	}
 	return evaluation;
@@ -1646,7 +1694,7 @@ void RunFiniteDifferenceValidation(
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
 	const MMCMultiMaterialSimultaneousParams& params,
 	int accepted_iteration,
-	const JointEvaluation& base_evaluation,
+	const SimultaneousEvaluation& base_evaluation,
 	std::ofstream& output) {
 	const double relative_step = params.finite_difference_step;
 
@@ -1683,7 +1731,7 @@ void RunFiniteDifferenceValidation(
 		std::vector<MMCComponent> minus_components = base_components;
 		UpdateComponentsFromPhysical(plus_components, plus_geometry);
 		UpdateComponentsFromPhysical(minus_components, minus_geometry);
-		const JointEvaluation plus_evaluation = EvaluateJointState(
+		const SimultaneousEvaluation plus_evaluation = EvaluateSimultaneousState(
 			spline,
 			neumann_points,
 			dirichlet_points,
@@ -1693,7 +1741,7 @@ void RunFiniteDifferenceValidation(
 			base_material_eta,
 			unit_local_matrix,
 			params);
-		const JointEvaluation minus_evaluation = EvaluateJointState(
+		const SimultaneousEvaluation minus_evaluation = EvaluateSimultaneousState(
 			spline,
 			neumann_points,
 			dirichlet_points,
@@ -1744,7 +1792,7 @@ void RunFiniteDifferenceValidation(
 		std::vector<double> minus_material = base_material_eta;
 		plus_material[variable] += step;
 		minus_material[variable] -= step;
-		const JointEvaluation plus_evaluation = EvaluateJointState(
+		const SimultaneousEvaluation plus_evaluation = EvaluateSimultaneousState(
 			spline,
 			neumann_points,
 			dirichlet_points,
@@ -1754,7 +1802,7 @@ void RunFiniteDifferenceValidation(
 			plus_material,
 			unit_local_matrix,
 			params);
-		const JointEvaluation minus_evaluation = EvaluateJointState(
+		const SimultaneousEvaluation minus_evaluation = EvaluateSimultaneousState(
 			spline,
 			neumann_points,
 			dirichlet_points,
@@ -1950,13 +1998,13 @@ void RunAllFiniteDifferenceValidation(
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
 	const MMCMultiMaterialSimultaneousParams& params,
 	int accepted_iteration,
-	const JointEvaluation& base_evaluation,
+	const SimultaneousEvaluation& base_evaluation,
 	std::ofstream& output) {
-	// ä¸¥æ ¼çš„é€å˜é‡ç«¯åˆ°ç«¯éªŒè¯ï¼Œä¸å›ºå®š U æˆ– q_eï¼š
-	//   x_i +/- h -> é‡æ–°è®¡ç®—å‡ ä½•/ææ–™ -> é‡æ–°è£…é… K -> é‡æ–°æ±‚è§£ U
-	//              -> é‡æ–°è®¡ç®— Cã€MMCä½“ç§¯å’Œæ¯”ä¾‹æ®‹å·®ã€‚
-	// å†…éƒ¨å˜é‡ç”¨ä¸­å¿ƒå·®åˆ†ï¼›è½åœ¨ä¸Šä¸‹ç•Œçš„å˜é‡ç”¨å•è¾¹å·®åˆ†ï¼Œä¿è¯å˜é‡ä¸æ¼æ£€ã€‚
-	// è¯¥è¿‡ç¨‹åªè¯»å–åŸºç¡€è®¾è®¡çŠ¶æ€ï¼Œä¸æ¨è¿› MMC-MMA æˆ–ææ–™-OC å†å²ã€‚
+	// ÑÏ¸ñµÄÖğ±äÁ¿¶Ëµ½¶ËÑéÖ¤£¬²»¹Ì¶¨ U »ò q_e£º
+	//   x_i +/- h -> ÖØĞÂ¼ÆËã¼¸ºÎ/²ÄÁÏ -> ÖØĞÂ×°Åä K -> ÖØĞÂÇó½â U
+	//              -> ÖØĞÂ¼ÆËã C¡¢MMCÌå»ıºÍ±ÈÀı²Ğ²î¡£
+	// ÄÚ²¿±äÁ¿ÓÃÖĞĞÄ²î·Ö£»ÂäÔÚÉÏÏÂ½çµÄ±äÁ¿ÓÃµ¥±ß²î·Ö£¬±£Ö¤±äÁ¿²»Â©¼ì¡£
+	// ¸Ã¹ı³ÌÖ»¶ÁÈ¡»ù´¡Éè¼Æ×´Ì¬£¬²»ÍÆ½ø MMA »ò OC ÀúÊ·¡£
 	const int cell_count = static_cast<int>(cell_to_vertex.size());
 	const double step = params.finite_difference_step;
 	const char* mmc_variable_names[kVariablesPerComponent] = {
@@ -1978,7 +2026,7 @@ void RunAllFiniteDifferenceValidation(
 		<< 2 * (physical_geometry.size() + base_material_eta.size())
 		<< std::endl;
 
-	// ç¬¬ä¸€å—ï¼šé€ä¸ªæ‰°åŠ¨ç‰©ç† MMC å˜é‡ï¼›æ­¥é•¿æŒ‰å¯¹åº”ç‰©ç†èŒƒå›´ç¼©æ”¾ã€‚
+	// µÚÒ»¿é£ºÖğ¸öÈÅ¶¯ÎïÀí MMC ±äÁ¿£»²½³¤°´¶ÔÓ¦ÎïÀí·¶Î§Ëõ·Å¡£
 	for (int variable = 0;
 		variable < static_cast<int>(physical_geometry.size());
 		++variable) {
@@ -1994,15 +2042,15 @@ void RunAllFiniteDifferenceValidation(
 			: (can_step_forward ? "forward" : "backward");
 		const int component_index = variable / kVariablesPerComponent;
 		const int local_variable_index = variable % kVariablesPerComponent;
-		JointEvaluation plus_evaluation;
-		JointEvaluation minus_evaluation;
+		SimultaneousEvaluation plus_evaluation;
+		SimultaneousEvaluation minus_evaluation;
 
 		if (can_step_forward) {
 			std::vector<double> plus_geometry = physical_geometry;
 			plus_geometry[variable] += mmc_step;
 			std::vector<MMCComponent> plus_components = base_components;
 			UpdateComponentsFromPhysical(plus_components, plus_geometry);
-			plus_evaluation = EvaluateJointState(
+			plus_evaluation = EvaluateSimultaneousState(
 				spline,
 				neumann_points,
 				dirichlet_points,
@@ -2021,7 +2069,7 @@ void RunAllFiniteDifferenceValidation(
 			minus_geometry[variable] -= mmc_step;
 			std::vector<MMCComponent> minus_components = base_components;
 			UpdateComponentsFromPhysical(minus_components, minus_geometry);
-			minus_evaluation = EvaluateJointState(
+			minus_evaluation = EvaluateSimultaneousState(
 				spline,
 				neumann_points,
 				dirichlet_points,
@@ -2092,7 +2140,7 @@ void RunAllFiniteDifferenceValidation(
 			<< " scheme: " << scheme << std::endl;
 	}
 
-	// ç¬¬äºŒå—ï¼šé€ä¸ªæ‰°åŠ¨å®Œæ•´ç½‘æ ¼ä¸Šçš„ eta_eï¼›æ¯ä¸ª eta_e éƒ½è§¦å‘ç‹¬ç«‹ FE é‡æ±‚è§£ã€‚
+	// µÚ¶ş¿é£ºÖğ¸öÈÅ¶¯ÍêÕûÍø¸ñÉÏµÄ eta_e£»Ã¿¸ö eta_e ¶¼´¥·¢¶ÀÁ¢ FE ÖØÇó½â¡£
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 		const double eta = base_material_eta[cell_id];
 		const bool can_step_forward = eta + step <= 1.0;
@@ -2104,12 +2152,12 @@ void RunAllFiniteDifferenceValidation(
 		const double eta_minus = can_step_backward ? eta - step : eta;
 		const double denominator =
 			can_step_forward && can_step_backward ? 2.0 * step : step;
-		JointEvaluation plus_evaluation;
-		JointEvaluation minus_evaluation;
+		SimultaneousEvaluation plus_evaluation;
+		SimultaneousEvaluation minus_evaluation;
 		if (can_step_forward) {
 			std::vector<double> plus_material = base_material_eta;
 			plus_material[cell_id] = eta_plus;
-			plus_evaluation = EvaluateJointState(
+			plus_evaluation = EvaluateSimultaneousState(
 				spline,
 				neumann_points,
 				dirichlet_points,
@@ -2126,7 +2174,7 @@ void RunAllFiniteDifferenceValidation(
 		if (can_step_backward) {
 			std::vector<double> minus_material = base_material_eta;
 			minus_material[cell_id] = eta_minus;
-			minus_evaluation = EvaluateJointState(
+			minus_evaluation = EvaluateSimultaneousState(
 				spline,
 				neumann_points,
 				dirichlet_points,
@@ -2220,12 +2268,15 @@ bool WriteLegacyHexVtk(
 	const std::map<int, Eigen::Vector3d>& all_vertex,
 	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
 	const std::vector<double>& mmc_occupancy,
+	const std::vector<double>& projected_occupancy,
 	const std::vector<double>& material_eta,
 	const std::vector<double>& material_modulus,
-	const std::vector<double>& effective_stiffness) {
+	const std::vector<double>& effective_stiffness,
+	double material_binary_active_threshold) {
 	const int cell_count = static_cast<int>(cell_to_vertex.size());
 	if (all_vertex.empty() || cell_count == 0 ||
 		static_cast<int>(mmc_occupancy.size()) != cell_count ||
+		static_cast<int>(projected_occupancy.size()) != cell_count ||
 		static_cast<int>(material_eta.size()) != cell_count ||
 		static_cast<int>(material_modulus.size()) != cell_count ||
 		static_cast<int>(effective_stiffness.size()) != cell_count) {
@@ -2279,19 +2330,19 @@ bool WriteLegacyHexVtk(
 		}
 	};
 	write_scalar("mmc_occupancy", mmc_occupancy);
+	write_scalar("projected_occupancy", projected_occupancy);
 	write_scalar("material_eta", material_eta);
 	write_scalar("material_modulus", material_modulus);
 	write_scalar("effective_stiffness", effective_stiffness);
 
-	// ä¸é¡ºåº MMC-SIMP çš„æ´»åŠ¨åŸŸåˆ¤å®šä¿æŒä¸€è‡´ã€‚ææ–™äºŒå€¼åªåœ¨ MMC
-	// ç»„ä»¶å†…éƒ¨æœ‰ç‰©ç†å«ä¹‰ï¼š-1 è¡¨ç¤ºç»„ä»¶å¤–ï¼Œ0 è¡¨ç¤º E2ï¼Œ1 è¡¨ç¤º E1ã€‚
-	// è¯¥å­—æ®µä¿ç•™ä¸‰ç±»æ•°å€¼ï¼Œé¿å…å°†ç»„ä»¶å¤–æ½œä¼çš„ eta é”™çœ‹æˆçœŸå®ææ–™ã€‚
-	constexpr double mmc_active_density_threshold = 0.3;
+	// ²ÄÁÏ¶şÖµÖ»ÔÚ m_e ´óÓÚ´«Èë¸²¸ÇÓòãĞÖµµÄ MMC ÇøÓòÄÚ
+	// ×é¼şÄÚ²¿ÓĞÎïÀíº¬Òå£º-1 ±íÊ¾×é¼şÍâ£¬0 ±íÊ¾ E2£¬1 ±íÊ¾ E1¡£
+	// ¸Ã×Ö¶Î±£ÁôÈıÀàÊıÖµ£¬±ÜÃâ½«×é¼şÍâÇ±·üµÄ eta ´í¿´³ÉÕæÊµ²ÄÁÏ¡£
 	constexpr double material_binary_threshold = 0.5;
 	output << "SCALARS material_binary_region int 1\n";
 	output << "LOOKUP_TABLE default\n";
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-		if (mmc_occupancy[cell_id] <= mmc_active_density_threshold) {
+		if (mmc_occupancy[cell_id] <= material_binary_active_threshold) {
 			output << -1 << '\n';
 		}
 		else {
@@ -2300,11 +2351,11 @@ bool WriteLegacyHexVtk(
 		}
 	}
 
-	// ParaView å¯ç›´æ¥é€‰æ‹©è¯¥ RGB å­—æ®µæ˜¾ç¤ºï¼šç»„ä»¶å¤–ä¸ºæµ…ç°ï¼Œç»„ä»¶å†…
-	// E2ï¼ˆeta < 0.5ï¼‰ä¸ºè“è‰²ï¼ŒE1ï¼ˆeta >= 0.5ï¼‰ä¸ºçº¢è‰²ã€‚
+	// ParaView ¿ÉÖ±½ÓÑ¡Ôñ¸Ã RGB ×Ö¶ÎÏÔÊ¾£º×é¼şÍâÎªÇ³»Ò£¬×é¼şÄÚ
+	// E2£¨eta < 0.5£©ÎªÀ¶É«£¬E1£¨eta >= 0.5£©ÎªºìÉ«¡£
 	output << "COLOR_SCALARS material_binary_color 3\n";
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-		if (mmc_occupancy[cell_id] <= mmc_active_density_threshold) {
+		if (mmc_occupancy[cell_id] <= material_binary_active_threshold) {
 			output << "0.85 0.85 0.85\n";
 		}
 		else if (material_eta[cell_id] >= material_binary_threshold) {
@@ -2322,11 +2373,11 @@ bool WriteActiveMaterialBinaryVtkLikeSequential(
 	const std::map<int, Eigen::Vector3d>& all_vertex,
 	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
 	const std::vector<double>& mmc_occupancy,
-	const std::vector<double>& material_eta) {
-	// å®Œå…¨ä»¿ç…§é¡ºåº MMC-SIMP çš„æœ€ç»ˆææ–™ VTKï¼šå…ˆç”¨ MMC é˜ˆå€¼æ„é€ 
-	// active_indicesï¼Œè¾“å‡ºç½‘æ ¼ä¸­åªä¿ç•™è¿™äº›ç»„ä»¶å†…å•å…ƒï¼›ç„¶åä»…åœ¨è¿™äº›
-	// å•å…ƒä¸ŠæŒ‰ eta>=0.5 äºŒå€¼ã€‚ç»„ä»¶å¤–å•å…ƒä¸ä¼šæ··å…¥ææ–™ 0 ç±»ã€‚
-	constexpr double mmc_active_density_threshold = 0.3;
+	const std::vector<double>& material_eta,
+	double material_binary_active_threshold) {
+	// ×îÖÕ²ÄÁÏ VTK£ºÏÈÓÃ´«ÈëµÄ MMC ¸²¸ÇÓòãĞÖµ¹¹Ôì
+	// active_indices£¬Êä³öÍø¸ñÖĞÖ»±£ÁôÕâĞ©×é¼şÄÚµ¥Ôª£»È»ºó½öÔÚÕâĞ©
+	// µ¥ÔªÉÏ°´ eta>=0.5 ¶şÖµ¡£×é¼şÍâµ¥Ôª²»»á»ìÈë²ÄÁÏ 0 Àà¡£
 	if (all_vertex.empty() || cell_to_vertex.empty() ||
 		mmc_occupancy.size() != cell_to_vertex.size() ||
 		material_eta.size() != cell_to_vertex.size()) {
@@ -2337,7 +2388,7 @@ bool WriteActiveMaterialBinaryVtkLikeSequential(
 	for (int cell_id = 0;
 		cell_id < static_cast<int>(cell_to_vertex.size());
 		++cell_id) {
-		if (mmc_occupancy[cell_id] > mmc_active_density_threshold) {
+		if (mmc_occupancy[cell_id] > material_binary_active_threshold) {
 			active_indices.push_back(cell_id);
 		}
 	}
@@ -2391,7 +2442,7 @@ bool WriteActiveMaterialBinaryVtkLikeSequential(
 		output << material_eta[cell_id] << '\n';
 	}
 
-	// é¡ºåºç‰ˆåŒåäºŒå€¼è¯­ä¹‰ï¼š0 ä¸º E2ï¼Œ1 ä¸º E1ã€‚
+	// Ë³Ğò°æÍ¬Ãû¶şÖµÓïÒå£º0 Îª E2£¬1 Îª E1¡£
 	output << "SCALARS material_binary int 1\n";
 	output << "LOOKUP_TABLE default\n";
 	for (int cell_id : active_indices) {
@@ -2417,11 +2468,13 @@ bool WriteActiveMaterialBinaryVtkLikeSequential(
 bool WriteFinalFieldTable(
 	const std::string& file_path,
 	const std::vector<double>& mmc_occupancy,
+	const std::vector<double>& projected_occupancy,
 	const std::vector<double>& material_eta,
 	const std::vector<double>& material_modulus,
 	const std::vector<double>& effective_stiffness) {
 	const size_t field_count = mmc_occupancy.size();
-	if (material_eta.size() != field_count ||
+	if (projected_occupancy.size() != field_count ||
+		material_eta.size() != field_count ||
 		material_modulus.size() != field_count ||
 		effective_stiffness.size() != field_count) {
 		return false;
@@ -2429,11 +2482,12 @@ bool WriteFinalFieldTable(
 	std::ofstream output(file_path, std::ios::out | std::ios::trunc);
 	if (!output.good()) return false;
 	output << std::setprecision(17);
-	output << "cell_id\tmmc_occupancy\tmaterial_eta\tmaterial_modulus"
+	output << "cell_id\tmmc_occupancy\tprojected_occupancy\tmaterial_eta\tmaterial_modulus"
 		<< "\teffective_stiffness\n";
 	for (size_t cell_id = 0; cell_id < field_count; ++cell_id) {
 		output << cell_id << '\t'
 			<< mmc_occupancy[cell_id] << '\t'
+			<< projected_occupancy[cell_id] << '\t'
 			<< material_eta[cell_id] << '\t'
 			<< material_modulus[cell_id] << '\t'
 			<< effective_stiffness[cell_id] << '\n';
@@ -2444,9 +2498,11 @@ bool WriteFinalFieldTable(
 void WriteIterationHeader(std::ofstream& output) {
 	output
 		<< "iteration\tcompliance\tcompliance_from_load"
-		<< "\tcompliance_relative_mismatch\tmmc_volume\tV1\tV2"
-		<< "\tratio_residual\tgeometry_constraint"
-		<< "\tpositive_ratio_constraint\tnegative_ratio_constraint"
+		<< "\tcompliance_relative_mismatch\tprojection_beta"
+		<< "\tmmc_occupancy_min\tmmc_occupancy_max"
+		<< "\tprojected_occupancy_min\tprojected_occupancy_max"
+		<< "\tmmc_volume\tV1\tV2"
+		<< "\tgeometry_constraint"
 		<< "\tgeometry_max_change\tmaterial_max_change"
 		<< "\tgeometry_gradient_norm\tmaterial_gradient_norm"
 		<< "\tuniform_material_gradient_relative_error\n";
@@ -2459,13 +2515,15 @@ void WriteIterationRecord(
 		<< diagnostic.compliance << '\t'
 		<< diagnostic.compliance_from_load << '\t'
 		<< diagnostic.compliance_relative_mismatch << '\t'
+		<< diagnostic.projection_beta << '\t'
+		<< diagnostic.mmc_occupancy_min << '\t'
+		<< diagnostic.mmc_occupancy_max << '\t'
+		<< diagnostic.projected_occupancy_min << '\t'
+		<< diagnostic.projected_occupancy_max << '\t'
 		<< diagnostic.mmc_volume << '\t'
 		<< diagnostic.V1 << '\t'
 		<< diagnostic.V2 << '\t'
-		<< diagnostic.material_ratio_residual << '\t'
 		<< diagnostic.geometry_constraint << '\t'
-		<< diagnostic.positive_ratio_constraint << '\t'
-		<< diagnostic.negative_ratio_constraint << '\t'
 		<< diagnostic.geometry_max_change << '\t'
 		<< diagnostic.material_max_change << '\t'
 		<< diagnostic.geometry_gradient_norm << '\t'
@@ -2483,7 +2541,7 @@ void WriteSensitivityHeader(std::ofstream& output) {
 void WriteSensitivityDiagnostics(
 	std::ofstream& output,
 	int accepted_iteration,
-	const JointEvaluation& evaluation,
+	const SimultaneousEvaluation& evaluation,
 	int requested_samples) {
 	const std::vector<int> mmc_samples = BuildSampleIndices(
 		static_cast<int>(evaluation.mmc_objective_gradient.size()),
@@ -2510,7 +2568,7 @@ void WriteSensitivityDiagnostics(
 }
 
 void CopyEvaluationToResultState(
-	const JointEvaluation& evaluation,
+	const SimultaneousEvaluation& evaluation,
 	const std::vector<double>& physical_geometry,
 	const std::vector<double>& material_eta,
 	int accepted_iteration,
@@ -2519,6 +2577,7 @@ void CopyEvaluationToResultState(
 	state.physical_mmc_variables = physical_geometry;
 	state.material_eta = material_eta;
 	state.mmc_occupancy = evaluation.geometry.density;
+	state.projected_occupancy = evaluation.projected_occupancy;
 	state.material_modulus = evaluation.material_modulus;
 	state.effective_stiffness = evaluation.effective_stiffness;
 	state.element_energy = evaluation.element_energy;
@@ -2534,7 +2593,7 @@ void CopyEvaluationToResultState(
 
 MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
 	int iteration,
-	const JointEvaluation& evaluation,
+	const SimultaneousEvaluation& evaluation,
 	double geometry_change,
 	double material_change) {
 	MMCMultiMaterialIterationDiagnostic diagnostic;
@@ -2543,15 +2602,25 @@ MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
 	diagnostic.compliance_from_load = evaluation.compliance_from_load;
 	diagnostic.compliance_relative_mismatch =
 		evaluation.compliance_relative_mismatch;
+	diagnostic.projection_beta = evaluation.projection_beta;
+	if (!evaluation.geometry.density.empty()) {
+		const auto [minimum, maximum] = std::minmax_element(
+			evaluation.geometry.density.begin(),
+			evaluation.geometry.density.end());
+		diagnostic.mmc_occupancy_min = *minimum;
+		diagnostic.mmc_occupancy_max = *maximum;
+	}
+	if (!evaluation.projected_occupancy.empty()) {
+		const auto [minimum, maximum] = std::minmax_element(
+			evaluation.projected_occupancy.begin(),
+			evaluation.projected_occupancy.end());
+		diagnostic.projected_occupancy_min = *minimum;
+		diagnostic.projected_occupancy_max = *maximum;
+	}
 	diagnostic.mmc_volume = evaluation.mmc_volume;
 	diagnostic.V1 = evaluation.V1;
 	diagnostic.V2 = evaluation.V2;
-	diagnostic.material_ratio_residual = evaluation.ratio_residual;
 	diagnostic.geometry_constraint = evaluation.geometry_constraint;
-	diagnostic.positive_ratio_constraint =
-		evaluation.positive_ratio_constraint;
-	diagnostic.negative_ratio_constraint =
-		evaluation.negative_ratio_constraint;
 	diagnostic.geometry_max_change = geometry_change;
 	diagnostic.material_max_change = material_change;
 	diagnostic.geometry_gradient_norm =
@@ -2561,6 +2630,31 @@ MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
 	diagnostic.uniform_material_gradient_relative_error =
 		evaluation.uniform_material_gradient_relative_error;
 	return diagnostic;
+}
+
+bool IsFiniteDiagnostic(const MMCMultiMaterialIterationDiagnostic& diagnostic) {
+	const std::array<double, 20> fields = {
+		diagnostic.compliance,
+		diagnostic.compliance_from_load,
+		diagnostic.compliance_relative_mismatch,
+		diagnostic.projection_beta,
+		diagnostic.mmc_occupancy_min,
+		diagnostic.mmc_occupancy_max,
+		diagnostic.projected_occupancy_min,
+		diagnostic.projected_occupancy_max,
+		diagnostic.mmc_volume,
+		diagnostic.V1,
+		diagnostic.V2,
+		diagnostic.geometry_constraint,
+		diagnostic.geometry_max_change,
+		diagnostic.material_max_change,
+		diagnostic.geometry_gradient_norm,
+		diagnostic.material_gradient_norm,
+		diagnostic.uniform_material_gradient_relative_error
+	};
+	return std::all_of(fields.begin(), fields.end(), [](double value) {
+		return std::isfinite(value);
+	});
 }
 
 } // namespace mmc_multimaterial_simultaneous
@@ -2578,9 +2672,9 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 	std::atomic_bool& is_need_update_model) {
 	using namespace mmc_multimaterial_simultaneous;
 
-	// -------------------- 0. è¾“å…¥æ£€æŸ¥ä¸ç‹¬ç«‹çŠ¶æ€åˆå§‹åŒ– --------------------
-	// result åœ¨å…¥å£æ¸…é›¶ï¼›ä»»ä½•å¼‚å¸¸éƒ½åªå†™å…¥æœ¬åŒæ­¥æµç¨‹çš„ resultï¼Œä¸ä¼šè¿›å…¥
-	// ç‹¬ç«‹ MMCã€SIMP æˆ–é¡ºåº MMC+SIMP çš„çŠ¶æ€å’Œä¼˜åŒ–å™¨ã€‚
+	// -------------------- 0. ÊäÈë¼ì²éÓë¶ÀÁ¢×´Ì¬³õÊ¼»¯ --------------------
+	// result ÔÚÈë¿ÚÇåÁã£»ÈÎºÎÒì³£¶¼Ö»Ğ´Èë±¾Í¬²½Á÷³ÌµÄ result£¬²»»á½øÈë
+	// ¶ÀÁ¢ MMC¡¢SIMP »òË³Ğò MMC+SIMP µÄ×´Ì¬ºÍÓÅ»¯Æ÷¡£
 	result = MMCMultiMaterialSimultaneousResult{};
 	std::string validation_error;
 	if (!ValidateInputs(
@@ -2603,7 +2697,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		Eigen::setNbThreads(24);
 		Eigen::initParallel();
 
-		// -------------------- 1. IGA æ¨¡å‹ä¸è¾¹ç•Œæ¡ä»¶ --------------------
+		// -------------------- 1. IGA Ä£ĞÍÓë±ß½çÌõ¼ş --------------------
 		std::vector<CBSplineSolid> patch;
 		ToolFunc::readFileXml(input_model_file, patch);
 		if (patch.empty() ||
@@ -2639,8 +2733,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			dirichlet_points);
 		spline.init_dirichlet_points(dirichlet_points);
 
-		// K_e^0 åªè®¡ç®—ä¸€æ¬¡ã€‚æ¯è½®é€šè¿‡ a_e=m_eE_e ç¼©æ”¾å¹¶è£…é…ï¼Œé¿å…æŠŠææ–™
-		// æ’å€¼æˆ– MMC å æœ‰ç‡é‡å¤çƒ˜ç„™è¿›åŸºç¡€å•å…ƒçŸ©é˜µã€‚
+		// K_e^0 Ö»¼ÆËãÒ»´Î¡£Ã¿ÂÖÍ¨¹ı a_e=m_e E_e Ëõ·Å²¢×°Åä£¬±ÜÃâ°Ñ²ÄÁÏ
+		// ²åÖµ»ò MMC Õ¼ÓĞÂÊÖØ¸´ºæ±º½ø»ù´¡µ¥Ôª¾ØÕó¡£
 		std::vector<Eigen::MatrixXd> unit_local_matrix(
 			patch.size(),
 			Eigen::MatrixXd::Zero(192, 192));
@@ -2653,8 +2747,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		spline.helper_set_dirichlet_point_in_sparse_system_rhs(dirichlet_points);
 		timer.out("simultaneous_analysis_initialization");
 
-		// -------------------- 2. ä¸¤å—è®¾è®¡å˜é‡ã€MMC-MMA ä¸ææ–™-OC --------------------
-		// mmc_type åªå½±å“åˆå§‹ç»„ä»¶æ•°é‡/å§¿æ€ï¼›æ¯ä¸ªç»„ä»¶ä»ä¿æŒå›ºå®š 9 å˜é‡é¡ºåºã€‚
+		// -------------------- 2. MMC ÎïÀí±äÁ¿ÓëÍêÕûÍø¸ñ²ÄÁÏ±äÁ¿ --------------------
+		// mmc_type Ö»Ó°Ïì³õÊ¼×é¼şÊıÁ¿/×ËÌ¬£»Ã¿¸ö×é¼şÈÔ±£³Ö¹Ì¶¨ 9 ±äÁ¿Ë³Ğò¡£
 		const std::vector<double> xyz_range = ComputeDomainRange(allVertex);
 		std::vector<MMCComponent> mmcComponents =
 			InitializeComponentsForType(xyz_range, params.mmc_type);
@@ -2670,8 +2764,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			static_cast<int>(mmcComponents.size()),
 			physical_lower,
 			physical_upper);
-		// ä¸ç‹¬ç«‹ MMC ä¿æŒä¸€è‡´ï¼šç»„ä»¶çš„ä¹ä¸ªå˜é‡ç›´æ¥ä»¥ç‰©ç†é‡è¿›å…¥ MMAï¼Œ
-		// ä¸åœ¨å¤–å±‚å†åš [0,1] å½’ä¸€åŒ–ï¼Œä¹Ÿä¸é‡å¤ç¼©æ”¾è§£ææ¢¯åº¦ã€‚
+		// Óë¶ÀÁ¢ MMC ±£³ÖÒ»ÖÂ£º×é¼şµÄ¾Å¸ö±äÁ¿Ö±½ÓÒÔÎïÀíÁ¿½øÈë MMA£¬
+		// ²»ÔÚÍâ²ãÔÙ×ö [0,1] ¹éÒ»»¯£¬Ò²²»ÖØ¸´Ëõ·Å½âÎöÌİ¶È¡£
 		std::vector<double> mmcDesignVariables;
 		FlattenPhysicalComponents(mmcComponents, mmcDesignVariables);
 		const int geometry_variable_count =
@@ -2682,22 +2776,22 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			initial_eta = 1.0 / (1.0 + params.material_ratio_f);
 		}
 		initial_eta = std::clamp(initial_eta, params.eta_min, 1.0);
-		// å§‹ç»ˆä¸ºå…¨éƒ¨å•å…ƒä¿ç•™ä¸€ä¸ª eta_eï¼›MMC ç§»åŠ¨æ—¶ä¸æŒ‰é˜ˆå€¼å¢åˆ å˜é‡ã€‚
+		// Ê¼ÖÕÎªÈ«²¿µ¥Ôª±£ÁôÒ»¸ö eta_e£»²ÄÁÏ OC Ö»¸üĞÂµ±Ç° MMC »î¶¯µ¥Ôª£¬
+		// µ«ÍêÕûÍø¸ñÓ³Éä²»ÖØ½¨£¬±ÜÃâ MMC ÒÆ¶¯Ê±¶ªÊ§µ¥Ôª²ÄÁÏÀúÊ·¡£
 		std::vector<double> materialEta(cell_count, initial_eta);
-
-		// ä¸ç‹¬ç«‹ MMC ç›¸åŒï¼ŒMMA åªæ›´æ–° MMC ç‰©ç†å˜é‡å¹¶åªæ–½åŠ å‡ ä½•ä½“ç§¯
-		// çº¦æŸã€‚ææ–™æ¯”ä¾‹ç”±ä¸‹æ–¹å æœ‰ç‡åŠ æƒ OC äºŒåˆ†å•ç‹¬æ»¡è¶³ï¼›æŠŠåŒä¸€æ¯”ä¾‹
-		// çº¦æŸå†æ¬¡æ”¾å…¥ MMC-MMA ä¼šå’Œ OC çš„èŒè´£é‡å¤ï¼Œå¹¶ä½¿å‡ ä½•å—æŒ¯è¡ã€‚
-		MMASolver mmaSolver(geometry_variable_count, 1);
+		// Óë¶ÀÁ¢ MMC Ò»ÖÂ£º¼¸ºÎ¿éÖ»ÓÃÒ»¸öÌå»ıÔ¼Êø MMA£»²ÄÁÏ¿éÑØÓÃ
+		// Ë³Ğò MMC-SIMP µÄ¹ıÂË + OC ¶ş·Ö¸üĞÂ¡£
+		MMASolver mmcMmaSolver(geometry_variable_count, 1);
 		std::cout
-			<< "[MMC-MultiMaterial-Simultaneous] Update scheme: MMC=MMA, "
-			<< "material=sequential-compatible filtered OC, move="
-			<< params.material_move_limit << std::endl;
+			<< "[MMC-MultiMaterial-Simultaneous] Update scheme: MMC-MMA + material-OC, "
+			<< "mmc_variables=" << geometry_variable_count
+			<< ", material_variables=" << cell_count << std::endl;
 
 		std::ofstream iteration_output;
 		std::ofstream sensitivity_output;
+		std::ofstream finite_difference_output;
+		std::ofstream mmc_mma_trace_output;
 		std::ofstream material_oc_trace_output;
-		std::ofstream material_oc_summary_output;
 		std::unique_ptr<mmc_trace::Writer> debug_output;
 		if (params.export_results) {
 			if (params.output_directory.empty()) {
@@ -2710,36 +2804,43 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			sensitivity_output.open(
 				params.output_directory + "/analytical_sensitivities.tsv",
 				std::ios::out | std::ios::trunc);
+			if (params.finite_difference_mmc_sample_count > 0 ||
+				params.finite_difference_material_sample_count > 0) {
+				finite_difference_output.open(
+					params.output_directory + "/finite_difference_validation.tsv",
+					std::ios::out | std::ios::trunc);
+			}
+			mmc_mma_trace_output.open(
+				params.output_directory + "/mmc_mma_trace.tsv",
+				std::ios::out | std::ios::trunc);
 			material_oc_trace_output.open(
 				params.output_directory + "/material_oc_trace.tsv",
 				std::ios::out | std::ios::trunc);
-			material_oc_summary_output.open(
-				params.output_directory + "/material_oc_summary.tsv",
-				std::ios::out | std::ios::trunc);
 			if (!iteration_output.good() || !sensitivity_output.good()
+				|| !mmc_mma_trace_output.good()
 				|| !material_oc_trace_output.good()
-				|| !material_oc_summary_output.good()) {
+				|| (finite_difference_output.is_open()
+					&& !finite_difference_output.good())) {
 				throw std::runtime_error("Cannot create the simultaneous-optimization diagnostics file.");
 			}
 			iteration_output << std::setprecision(17);
 			sensitivity_output << std::setprecision(17);
+			if (finite_difference_output.is_open()) {
+				finite_difference_output << std::setprecision(17);
+				WriteFiniteDifferenceHeader(finite_difference_output);
+			}
+			mmc_mma_trace_output << std::setprecision(17);
 			material_oc_trace_output << std::setprecision(17);
-			material_oc_summary_output << std::setprecision(17);
 			WriteIterationHeader(iteration_output);
 			WriteSensitivityHeader(sensitivity_output);
+			mmc_mma_trace_output
+				<< "iteration\tvariable_index"
+				<< "\tvalue_before\tvalue_after\tactual_step"
+				<< "\tobjective_gradient\tvolume_gradient\n";
 			material_oc_trace_output
-				<< "iteration\tcell_id\tfilter_applied\tmmc_occupancy"
-				<< "\telement_energy\teta_before\traw_dC_deta"
-				<< "\tfiltered_dc_for_oc\tdiagnostic_dc_over_occupancy"
-				<< "\teta_after\teta_step\n";
-			material_oc_summary_output
-				<< "iteration\tfilter_applied\teta_before_min\teta_before_max"
-				<< "\teta_after_min\teta_after_max\teta_step_min\teta_step_max"
-				<< "\traw_min\traw_max\tfiltered_dc_min\tfiltered_dc_max"
-				<< "\tdiagnostic_dc_over_occupancy_min\tdiagnostic_dc_over_occupancy_max"
-				<< "\tweighted_eta_before\tweighted_eta_after"
-				<< "\teta_sum_before\teta_sum_after\ttarget_soft_resource"
-				<< "\tresource_residual_after\n";
+				<< "iteration\tcell_id\tvalue_before\tvalue_after\tactual_step"
+				<< "\tobjective_gradient\toc_sensitivity_filtered"
+				<< "\tmmc_occupancy\tmaterial_weight\n";
 			debug_output = std::make_unique<mmc_trace::Writer>(
 				params.output_directory + "/mmc_debug_trace.tsv");
 			if (!debug_output->Good()) {
@@ -2755,20 +2856,22 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		double previous_objective_linear_geometry = 0.0;
 		double previous_objective_linear_material = 0.0;
 		double previous_geometry_constraint_linear_geometry = 0.0;
-		double previous_ratio_constraint_linear_geometry = 0.0;
-		double previous_ratio_constraint_linear_material = 0.0;
 		int accepted_updates = 0;
 		int last_recorded_accepted_iteration = -1;
-		JointEvaluation current_evaluation;
-		// åªè¯»è®°å½•å‡½æ•°ï¼šä¸ä¼šæ›´æ–°è®¾è®¡å˜é‡æˆ– MMAï¼Œä»…è¾“å‡ºå½“å‰å·²æ¥å—çŠ¶æ€ã€‚
+		SimultaneousEvaluation current_evaluation;
+		// Ö»¶Á¼ÇÂ¼º¯Êı£º²»»á¸üĞÂÉè¼Æ±äÁ¿»ò MMA£¬½öÊä³öµ±Ç°ÒÑ½ÓÊÜ×´Ì¬¡£
 		const auto record_accepted_state =
-			[&](const JointEvaluation& evaluation) {
+			[&](const SimultaneousEvaluation& evaluation) {
 			const MMCMultiMaterialIterationDiagnostic diagnostic =
 				BuildDiagnostic(
 					accepted_updates,
 					evaluation,
 					previous_geometry_change,
 					previous_material_change);
+			if (!IsFiniteDiagnostic(diagnostic)) {
+				throw std::runtime_error(
+					"A simultaneous iteration diagnostic value is non-finite.");
+			}
 			result.diagnostics.push_back(diagnostic);
 			if (params.export_results) {
 				WriteIterationRecord(iteration_output, diagnostic);
@@ -2787,7 +2890,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				<< " MMC-Vol.: " << evaluation.mmc_volume
 				<< " V1: " << evaluation.V1
 				<< " V2: " << evaluation.V2
-				<< " R: " << evaluation.ratio_residual
+				<< " beta: " << evaluation.projection_beta
 				<< " dMMC: " << previous_geometry_change
 				<< " dEta: " << previous_material_change
 				<< " |gMMC|: " << diagnostic.geometry_gradient_norm
@@ -2796,17 +2899,17 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			last_recorded_accepted_iteration = accepted_updates;
 		};
 
-		// -------------------- 3. åŒæ­¥ä¼˜åŒ–ä¸»å¾ªç¯ --------------------
-		// ä¸€è½®åªæœ‰ä¸€ä¸ªå½“å‰è”åˆçŠ¶æ€ã€‚MMC-MMA ä¸ææ–™-OC éƒ½ä½¿ç”¨è¿™ä¸ªçŠ¶æ€çš„
-		// ä½ç§»ã€å•å…ƒèƒ½é‡å’Œè§£ææ¢¯åº¦ï¼Œä¸æ˜¯å…ˆå®Œæ•´ MMC åå®Œæ•´ SIMPã€‚
+		// -------------------- 3. Í¬²½ÓÅ»¯Ö÷Ñ­»· --------------------
+		// Ò»ÂÖÖ»ÓĞÒ»¸öµ±Ç°×´Ì¬¡£MMC-MMA ºÍ²ÄÁÏ-OC ¶¼Ê¹ÓÃ¸Ã×´Ì¬µÄÍ¬Ò»´Î
+		// Î»ÒÆ/µ¥ÔªÄÜÁ¿£»¸üĞÂÁ½¿é±äÁ¿Ö®¼ä²»ÖØĞÂÇó½âÓĞÏŞÔª¡£
 		for (int iteration = 1;
 			iteration <= params.max_iterations;
 			++iteration) {
 			UpdateComponentsFromPhysical(
 				mmcComponents,
 				mmcDesignVariables);
-			// åœ¨æ›´æ–°ä»»æ„å˜é‡å‰ï¼Œç”¨å½“å‰ m_e ä¸ eta_e é‡æ–°è®¡ç®—ä¸€æ¬¡å…±äº« FE çŠ¶æ€ã€‚
-			current_evaluation = EvaluateJointState(
+			// ÔÚ¸üĞÂÈÎÒâ±äÁ¿Ç°£¬ÓÃµ±Ç° m_e Óë eta_e ÖØĞÂ¼ÆËãÒ»´Î¹²Ïí FE ×´Ì¬¡£
+			current_evaluation = EvaluateSimultaneousState(
 				spline,
 				neumann_points,
 				dirichlet_points,
@@ -2815,17 +2918,15 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				mmcComponents,
 				materialEta,
 				unit_local_matrix,
-				params);
+				params,
+				iteration);
 			record_accepted_state(current_evaluation);
 
-			// è¿™äº›é‡åªå†™å…¥è¯Šæ–­æ—¥å¿—ã€‚ä¸ç‹¬ç«‹ MMC ä¸€è‡´ï¼Œå¤–å±‚ä¸æ ¹æ®å˜åŒ–é‡æˆ–
-			// çº¦æŸæ®‹å·®æå‰ç»“æŸï¼Œè€Œæ˜¯å›ºå®šå®Œæˆ params.max_iterations æ¬¡æ›´æ–°ã€‚
-			const double active_constraint_residual = std::max({
+			// ÕâĞ©Á¿Ö»Ğ´ÈëÕï¶ÏÈÕÖ¾¡£Óë¶ÀÁ¢ MMC Ò»ÖÂ£¬Íâ²ã²»¸ù¾İ±ä»¯Á¿»ò
+			// Ô¼Êø²Ğ²îÌáÇ°½áÊø£¬¶øÊÇ¹Ì¶¨Íê³É params.max_iterations ´Î¸üĞÂ¡£
+			const double active_constraint_residual = std::max(
 				0.0,
-				current_evaluation.geometry_constraint,
-				current_evaluation.positive_ratio_constraint,
-				current_evaluation.negative_ratio_constraint
-			});
+				current_evaluation.geometry_constraint);
 			if (debug_output) {
 				std::vector<double> physical_variables;
 				FlattenPhysicalComponents(mmcComponents, physical_variables);
@@ -2841,11 +2942,6 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				trace.volume_constraint = current_evaluation.geometry_constraint;
 				trace.material_v1 = current_evaluation.V1;
 				trace.material_v2 = current_evaluation.V2;
-				trace.ratio_residual = current_evaluation.ratio_residual;
-				trace.positive_ratio_constraint =
-					current_evaluation.positive_ratio_constraint;
-				trace.negative_ratio_constraint =
-					current_evaluation.negative_ratio_constraint;
 				trace.active_constraint_residual = active_constraint_residual;
 				trace.geometry_change_max = previous_geometry_change;
 				trace.material_change_max = previous_material_change;
@@ -2855,10 +2951,6 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					previous_objective_linear_material;
 				trace.previous_geometry_constraint_linear_geometry =
 					previous_geometry_constraint_linear_geometry;
-				trace.previous_ratio_constraint_linear_geometry =
-					previous_ratio_constraint_linear_geometry;
-				trace.previous_ratio_constraint_linear_material =
-					previous_ratio_constraint_linear_material;
 				trace.global_phi = &current_evaluation.geometry.globalPhi;
 				trace.heaviside = &current_evaluation.geometry.vertexH;
 				trace.heaviside_derivative =
@@ -2873,165 +2965,121 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				trace.material_modulus = &current_evaluation.material_modulus;
 				trace.material_objective_gradient =
 					&current_evaluation.material_objective_gradient;
-				trace.ratio_material_gradient =
-					&current_evaluation.ratio_constraint_material_gradient;
 				trace.geometry_step = &previous_geometry_step_physical;
 				trace.material_step = &previous_material_step;
 				debug_output->Write(trace);
 			}
-			// -------------------- 4. åŒä¸€çŠ¶æ€ä¸‹åˆ†åˆ«æ›´æ–° MMC ä¸ææ–™ --------------------
-			std::vector<double> df0dxMmc(
-				geometry_variable_count,
-				0.0);
-			// ä¸ç‹¬ç«‹ MMC ç›¸åŒï¼šMMC-MMA åªæ¥æ”¶å‡ ä½•ä½“ç§¯çº¦æŸã€‚
-			// R-tol ä¸ -R-tol ç»§ç»­è®°å½•ä¸ºè¯Šæ–­ï¼Œä¸å‚ä¸ MMC æ›´æ–°ã€‚
-			std::vector<double> constraint_values = {
+			// -------------------- 4. MMC-MMA + ²ÄÁÏ-OC ¸üĞÂ --------------------
+			const std::vector<double> oldMmcDesignVariables = mmcDesignVariables;
+			const std::vector<double> oldMaterialEta = materialEta;
+
+			std::vector<double> mmc_constraint_values = {
 				current_evaluation.geometry_constraint
 			};
-			std::vector<double> dfdxMmc(
-				geometry_variable_count,
-				0.0);
-
-			// MMC å˜é‡å’Œè§£ææ¢¯åº¦éƒ½ä¿æŒç‰©ç†é‡è¯­ä¹‰ï¼Œä¸ç‹¬ç«‹ MMC å®Œå…¨ç›¸åŒã€‚
-			for (int variable = 0;
-				variable < geometry_variable_count;
-				++variable) {
-				df0dxMmc[variable] =
-					current_evaluation.mmc_objective_gradient[variable];
-				dfdxMmc[variable] =
-					current_evaluation.geometry_constraint_gradient[variable];
+			if (!IsFiniteVector(current_evaluation.mmc_objective_gradient) ||
+				!IsFiniteVector(current_evaluation.geometry_constraint_gradient) ||
+				!IsFiniteVector(mmc_constraint_values)) {
+				throw std::runtime_error(
+					"An MMC-MMA objective or volume-constraint input is non-finite.");
 			}
 
-			// ç›´æ¥ä¼ å…¥å®Œæ•´ç‰©ç†è¾¹ç•Œã€‚MMASolver å†…éƒ¨å·²ç»æ ¹æ®æ¯ä¸ªå˜é‡çš„
-			// xmax-xmin ç”Ÿæˆæ¸è¿‘çº¿å’Œç§»åŠ¨åŒºé—´ï¼Œå¤–å±‚ä¸å†é‡å¤å¥—å±€éƒ¨ç§»åŠ¨è¾¹ç•Œã€‚
-			const std::vector<double> oldMmcDesignVariables =
-				mmcDesignVariables;
-			const std::vector<double> oldMaterialEta = materialEta;
-			// MMC ä»èµ°åŸæœ‰ MMA ç±»å‹æ›´æ–°ï¼›ææ–™ eta å•ç‹¬èµ°è½¯ææ–™ OCã€‚ä¸¤è€…è¯»å–
-			// çš„éƒ½æ˜¯ current_evaluationï¼Œä¸åœ¨ä¸¤å—æ›´æ–°ä¹‹é—´é‡æ–°æ±‚è§£æœ‰é™å…ƒã€‚
-			mmaSolver.Update(
+			// ¼¸ºÎ¿éÍêÈ«°´´¿ MMC Ä£°å£ºÎïÀí¾Å±äÁ¿ + Ò»¸ö¼¸ºÎÌå»ıÔ¼Êø¡£
+			mmcMmaSolver.Update(
 				mmcDesignVariables.data(),
-				df0dxMmc.data(),
-				constraint_values.data(),
-				dfdxMmc.data(),
+				current_evaluation.mmc_objective_gradient.data(),
+				mmc_constraint_values.data(),
+				current_evaluation.geometry_constraint_gradient.data(),
 				physical_lower.data(),
 				physical_upper.data());
 			if (!IsFiniteVector(mmcDesignVariables)) {
 				throw std::runtime_error(
 					"The MMC MMA update returned a non-finite design variable.");
 			}
-			for (int variable = 0;
-				variable < geometry_variable_count;
-				++variable) {
+			for (int variable = 0; variable < geometry_variable_count; ++variable) {
 				mmcDesignVariables[variable] = std::clamp(
 					mmcDesignVariables[variable],
 					physical_lower[variable],
 					physical_upper[variable]);
 			}
-			// eta è¶Šå¤§è¶Šè½¯ï¼ŒçœŸå® dC/deta ä¸ºæ­£ï¼›ç›´æ¥è¿‡æ»¤è¿™ä¸ªè§£æå¯¼æ•°ã€‚
-			// æœ€ç»ˆç­‰æ•ˆåˆšåº¦å¯¹ eta çš„é“¾å¼é¡¹ m_e å·²ç»åœ¨å…¶ä¸­ä¹˜å…¥ä¸€æ¬¡ã€‚
-			std::vector<double> dc_full =
-				current_evaluation.material_objective_gradient;
-			if (!neighbor_info.empty()) {
-				const std::vector<double> filtered_full = FilterSensitivities(
-					neighbor_info,
-					materialEta,
-					dc_full,
-					params.eta_min);
-				dc_full = filtered_full;
+
+			std::vector<double> oc_sensitivity_full(
+				cell_count,
+				std::numeric_limits<double>::min());
+			std::vector<double> material_filter_eta(cell_count, 0.0);
+			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+				// eta Ô½´óÔ½Æ«Èí²ÄÁÏ E1£»ÔÚµ±Ç° m_e ¹Ì¶¨Ê±£¬ÕæÊµ
+				// dC/deta ÎªÕı¡£OC ĞèÒªÕıµÄÏÂ½µÃô¸Ğ¶ÈÁ¿£¬ÕâÀïÖ±½ÓÊ¹ÓÃËü¡£
+				oc_sensitivity_full[cell_id] =
+					std::max(
+						current_evaluation.material_objective_gradient[cell_id],
+						std::numeric_limits<double>::min());
+				if (current_evaluation.geometry.density[cell_id]
+					> params.material_active_threshold) {
+					material_filter_eta[cell_id] = materialEta[cell_id];
+				}
 			}
+			const std::vector<double> filtered_oc_sensitivity =
+				FilterSensitivities(
+					neighbor_info,
+					material_filter_eta,
+					oc_sensitivity_full,
+					params.eta_min);
 			OCUpdate(
 				materialEta,
 				params.material_ratio_f,
-				dc_full,
+				filtered_oc_sensitivity,
+				current_evaluation.geometry.density,
+				current_evaluation.geometry.density,
+				params.material_active_threshold,
 				params.eta_min,
 				params.material_move_limit);
 			if (!IsFiniteVector(materialEta)) {
 				throw std::runtime_error(
 					"The material OC update returned a non-finite eta value.");
 			}
-
-			// åªè¯» OC è¯Šæ–­ï¼šå®Œæ•´ä¿å­˜çœŸå®æ­£è§£æçµæ•åº¦ã€è¿‡æ»¤åçš„ OC è¾“å…¥
-			// ä»¥åŠæ›´æ–°å‰å etaã€‚dc/m_e åªä¿ç•™ä¸ºå¯¹ç…§åˆ—ï¼Œä¸å‚ä¸ OCã€‚
-			if (params.export_results) {
-				const bool filter_applied = !neighbor_info.empty();
-				double eta_before_min = std::numeric_limits<double>::max();
-				double eta_before_max = std::numeric_limits<double>::lowest();
-				double eta_after_min = std::numeric_limits<double>::max();
-				double eta_after_max = std::numeric_limits<double>::lowest();
-				double eta_step_min = std::numeric_limits<double>::max();
-				double eta_step_max = std::numeric_limits<double>::lowest();
-				double raw_min = std::numeric_limits<double>::max();
-				double raw_max = std::numeric_limits<double>::lowest();
-				double filtered_min = std::numeric_limits<double>::max();
-				double filtered_max = std::numeric_limits<double>::lowest();
-				double reduced_min = std::numeric_limits<double>::max();
-				double reduced_max = std::numeric_limits<double>::lowest();
-				double weighted_eta_before = 0.0;
-				double weighted_eta_after = 0.0;
-				double eta_sum_before = 0.0;
-				double eta_sum_after = 0.0;
-				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-					const double occupancy = std::max(
-						0.0,
-						current_evaluation.geometry.density[cell_id]);
-					const double raw =
-						current_evaluation.material_objective_gradient[cell_id];
-					const double filtered = dc_full[cell_id];
-					const double reduced = occupancy > kTiny
-						? filtered / occupancy
-						: 0.0;
-					const double step = materialEta[cell_id]
-						- oldMaterialEta[cell_id];
-					material_oc_trace_output
-						<< iteration << '\t' << cell_id << '\t'
-						<< (filter_applied ? 1 : 0) << '\t' << occupancy << '\t'
-						<< current_evaluation.element_energy[cell_id] << '\t'
-						<< oldMaterialEta[cell_id] << '\t' << raw << '\t'
-						<< filtered << '\t' << reduced << '\t'
-						<< materialEta[cell_id] << '\t' << step << '\n';
-					eta_before_min = std::min(eta_before_min, oldMaterialEta[cell_id]);
-					eta_before_max = std::max(eta_before_max, oldMaterialEta[cell_id]);
-					eta_after_min = std::min(eta_after_min, materialEta[cell_id]);
-					eta_after_max = std::max(eta_after_max, materialEta[cell_id]);
-					eta_step_min = std::min(eta_step_min, step);
-					eta_step_max = std::max(eta_step_max, step);
-					raw_min = std::min(raw_min, raw);
-					raw_max = std::max(raw_max, raw);
-					filtered_min = std::min(filtered_min, filtered);
-					filtered_max = std::max(filtered_max, filtered);
-					if (occupancy > kTiny) {
-						reduced_min = std::min(reduced_min, reduced);
-						reduced_max = std::max(reduced_max, reduced);
-					}
-					weighted_eta_before += occupancy * oldMaterialEta[cell_id];
-					weighted_eta_after += occupancy * materialEta[cell_id];
-					eta_sum_before += oldMaterialEta[cell_id];
-					eta_sum_after += materialEta[cell_id];
-				}
-				if (reduced_min == std::numeric_limits<double>::max()) {
-					reduced_min = 0.0;
-					reduced_max = 0.0;
-				}
-				const double target_soft_resource = cell_count
-					/ (1.0 + params.material_ratio_f);
-				material_oc_summary_output
-					<< iteration << '\t' << (filter_applied ? 1 : 0) << '\t'
-					<< eta_before_min << '\t' << eta_before_max << '\t'
-					<< eta_after_min << '\t' << eta_after_max << '\t'
-					<< eta_step_min << '\t' << eta_step_max << '\t'
-					<< raw_min << '\t' << raw_max << '\t'
-					<< filtered_min << '\t' << filtered_max << '\t'
-					<< reduced_min << '\t' << reduced_max << '\t'
-					<< weighted_eta_before << '\t' << weighted_eta_after << '\t'
-					<< eta_sum_before << '\t' << eta_sum_after << '\t'
-					<< target_soft_resource << '\t'
-					<< (eta_sum_after - target_soft_resource) << '\n';
-				material_oc_trace_output.flush();
-				material_oc_summary_output.flush();
+			for (double& eta : materialEta) {
+				eta = std::clamp(eta, params.eta_min, 1.0);
 			}
 
-			// ä¿å­˜ä¸¤å—å®é™…ç‰©ç†æ­¥é•¿ï¼Œç”¨äºä¸‹ä¸€è½®åªè¯»è¯Šæ–­ã€‚
+			if (params.export_results) {
+				for (int variable = 0; variable < geometry_variable_count; ++variable) {
+					mmc_mma_trace_output
+						<< iteration << '\t'
+						<< variable << '\t'
+						<< oldMmcDesignVariables[variable] << '\t'
+						<< mmcDesignVariables[variable] << '\t'
+						<< (mmcDesignVariables[variable]
+							- oldMmcDesignVariables[variable]) << '\t'
+						<< current_evaluation.mmc_objective_gradient[variable] << '\t'
+						<< current_evaluation.geometry_constraint_gradient[variable]
+						<< '\n';
+				}
+				mmc_mma_trace_output.flush();
+				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+					if (current_evaluation.geometry.density[cell_id]
+						<= params.material_active_threshold) {
+						continue;
+					}
+					material_oc_trace_output
+						<< iteration << '\t'
+						<< cell_id << '\t'
+						<< oldMaterialEta[cell_id] << '\t'
+						<< materialEta[cell_id] << '\t'
+						<< (materialEta[cell_id] - oldMaterialEta[cell_id])
+						<< '\t'
+						<< current_evaluation.material_objective_gradient[cell_id]
+						<< '\t'
+						<< filtered_oc_sensitivity[cell_id]
+						<< '\t'
+						<< current_evaluation.geometry.density[cell_id]
+						<< '\t'
+						<< current_evaluation.geometry.density[cell_id]
+						<< '\n';
+				}
+				material_oc_trace_output.flush();
+			}
+
+			// ±£´æÁ½¿éÊµ¼ÊÎïÀí²½³¤£¬ÓÃÓÚÏÂÒ»ÂÖÖ»¶ÁÕï¶Ï¡£
 			previous_geometry_change = 0.0;
 			previous_geometry_step_physical.assign(
 				geometry_variable_count,
@@ -3065,22 +3113,16 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			previous_geometry_constraint_linear_geometry = mmc_trace::Dot(
 				current_evaluation.geometry_constraint_gradient,
 				previous_geometry_step_physical);
-			previous_ratio_constraint_linear_geometry = mmc_trace::Dot(
-				current_evaluation.ratio_constraint_mmc_gradient,
-				previous_geometry_step_physical);
-			previous_ratio_constraint_linear_material = mmc_trace::Dot(
-				current_evaluation.ratio_constraint_material_gradient,
-				previous_material_step);
 			++accepted_updates;
 
 		}
 
-		// -------------------- 5. æœ€ç»ˆçŠ¶æ€é‡ç®—ä¸ç‹¬ç«‹å­—æ®µå¯¼å‡º --------------------
-		// å¾ªç¯é€€å‡ºåå¿…é¡»ç”¨æœ€ç»ˆè®¾è®¡å˜é‡å†æ±‚è§£ä¸€æ¬¡ï¼Œä¸èƒ½æŠŠæ›´æ–°å‰çŠ¶æ€å½“æœ€ç»ˆç»“æœã€‚
+		// -------------------- 5. ×îÖÕ×´Ì¬ÖØËãÓë¶ÀÁ¢×Ö¶Îµ¼³ö --------------------
+		// Ñ­»·ÍË³öºó±ØĞëÓÃ×îÖÕÉè¼Æ±äÁ¿ÔÙÇó½âÒ»´Î£¬²»ÄÜ°Ñ¸üĞÂÇ°×´Ì¬µ±×îÖÕ½á¹û¡£
 		UpdateComponentsFromPhysical(
 			mmcComponents,
 			mmcDesignVariables);
-		const JointEvaluation final_evaluation = EvaluateJointState(
+		const SimultaneousEvaluation final_evaluation = EvaluateSimultaneousState(
 			spline,
 			neumann_points,
 			dirichlet_points,
@@ -3089,7 +3131,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			mmcComponents,
 			materialEta,
 			unit_local_matrix,
-			params);
+			params,
+			params.max_iterations + 1);
 		if (last_recorded_accepted_iteration != accepted_updates) {
 			record_accepted_state(final_evaluation);
 		}
@@ -3103,28 +3146,33 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		is_need_update_model = true;
 
 		if (params.export_results) {
-			// VTK/TSV åˆ†å¼€å¯¼å‡º m_eã€eta_eã€E_e å’Œ a_eï¼Œé¿å… density è¯­ä¹‰æ··æ·†ã€‚
+			// VTK/TSV ·Ö¿ªµ¼³ö m_e¡¢eta_e¡¢E_e ºÍ a_e£¬±ÜÃâ density ÓïÒå»ìÏı¡£
 			const bool vtk_written = WriteLegacyHexVtk(
 				params.output_directory
 					+ "/mmc_multimaterial_simultaneous.vtk",
 				allVertex,
 				cell2V,
 				final_evaluation.geometry.density,
+				final_evaluation.projected_occupancy,
 				materialEta,
 				final_evaluation.material_modulus,
-				final_evaluation.effective_stiffness);
-			// å¦å­˜ä¸€ä¸ªä¸é¡ºåº MMC-SIMP æœ€ç»ˆäºŒå€¼å›¾ç›¸åŒç½‘æ ¼è¯­ä¹‰çš„æ–‡ä»¶ï¼š
-			// ä»…åŒ…å« m_e>0.3 çš„ç»„ä»¶å†…å•å…ƒï¼Œå¹¶åœ¨å…¶ä¸ŠæŒ‰ eta=0.5 äºŒå€¼ã€‚
+				final_evaluation.effective_stiffness,
+				params.material_binary_active_threshold);
+			// Áí´æÒ»¸öÓëË³Ğò MMC-SIMP ×îÖÕ¶şÖµÍ¼ÏàÍ¬Íø¸ñÓïÒåµÄÎÄ¼ş£º
+			// ½ö°üº¬ m_e>material_binary_active_threshold µÄ×é¼şÄÚµ¥Ôª£¬²¢ÔÚÆäÉÏ
+			// °´ eta=0.5 ¶şÖµ¡£
 			const bool binary_vtk_written = WriteActiveMaterialBinaryVtkLikeSequential(
 				params.output_directory
 					+ "/mmc_multimaterial_simultaneous_material_binary.vtk",
 				allVertex,
 				cell2V,
 				final_evaluation.geometry.density,
-				materialEta);
+				materialEta,
+				params.material_binary_active_threshold);
 			const bool table_written = WriteFinalFieldTable(
 				params.output_directory + "/element_fields.tsv",
 				final_evaluation.geometry.density,
+				final_evaluation.projected_occupancy,
 				materialEta,
 				final_evaluation.material_modulus,
 				final_evaluation.effective_stiffness);

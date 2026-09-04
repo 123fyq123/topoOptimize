@@ -478,8 +478,8 @@ void TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
 	}
 
 	std::vector<std::vector<std::pair<int, double>>> neighbor_info;
-	// 与顺序 MMC+SIMP 入口使用同一套单元邻域和权重构造。同步求解器
-	// 的 FilterSensitivities 直接复用顺序材料阶段，因此不能只传空行。
+	// 保留与统一入口一致的邻域数据契约；联合 MMA 首版直接使用原始材料
+	// 梯度，不再把这些权重送入 OC 专用灵敏度过滤。
 	for (int i = 0;
 		i < static_cast<int>(solids.Local_V3f.size());
 		++i) {

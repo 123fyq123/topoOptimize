@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include <atomic>
 #include <map>
@@ -7,70 +7,85 @@
 
 #include <Eigen/Core>
 
-// MMC-åŒææ–™åŒæ­¥ä¼˜åŒ–çš„ç‹¬ç«‹å…¬å¼€æ¥å£ã€‚
+// MMC-Ë«²ÄÁÏÍ¬²½ÓÅ»¯µÄ¶ÀÁ¢¹«¿ª½Ó¿Ú¡£
 //
-// è®¾è®¡å˜é‡ç”±ä¸¤å—ç»„æˆï¼š
-//   1. æ¯ä¸ª MMC ç»„ä»¶çš„ 9 ä¸ªå‡ ä½•å˜é‡
-//      [x0, y0, z0, l1, l2, l3, alpha, beta, gamma]ï¼›
-//   2. å›ºå®šç½‘æ ¼ä¸Šæ¯ä¸ªå•å…ƒä¸€ä¸ªææ–™å˜é‡ eta_eã€‚
+// Éè¼Æ±äÁ¿ÓÉÁ½¿é×é³É£º
+//   1. Ã¿¸ö MMC ×é¼şµÄ 9 ¸ö¼¸ºÎ±äÁ¿
+//      [x0, y0, z0, l1, l2, l3, alpha, beta, gamma]£»
+//   2. ¹Ì¶¨Íø¸ñÉÏÃ¿¸öµ¥ÔªÒ»¸ö²ÄÁÏ±äÁ¿ eta_e¡£
 //
-// å•å…ƒè€¦åˆå…³ç³»ï¼š
+// µ¥ÔªñîºÏ¹ØÏµ£º
 //   E_e = eta_e^p E1 + (1 - eta_e^p) E2
 //   a_e = m_e E_e
 //   K_e = a_e K_e^0
-// å…¶ä¸­ m_e æ˜¯ MMC å æœ‰ç‡ï¼ŒK_e^0 æ˜¯å•ä½æ¨æ°æ¨¡é‡ä¸‹çš„å•å…ƒåˆšåº¦çŸ©é˜µã€‚
+// ÆäÖĞ m_e ÊÇÔ­Ê¼ MMC Õ¼ÓĞÂÊ£¬K_e^0 ÊÇµ¥Î»
+// ÑîÊÏÄ£Á¿ÏÂµÄµ¥Ôª¸Õ¶È¾ØÕó¡£
 struct MMCMultiMaterialSimultaneousParams {
-	// MMC å‡ ä½•ä½“ç§¯ä¸ç»„ä»¶åˆå§‹åŒ–å‚æ•°ã€‚
+	// MMC ¼¸ºÎÌå»ıÓë×é¼ş³õÊ¼»¯²ÎÊı¡£
 	double mmc_target_rate = 0.3;
 	int max_iterations = 100;
 	int mmc_type = 1;
 
-	// åŒææ–™æ’å€¼å‚æ•°ã€‚material_ratio_f è¡¨ç¤ºç›®æ ‡å…³ç³» V2 = f * V1ã€‚
+	// Ë«²ÄÁÏ²åÖµ²ÎÊı¡£material_ratio_f ±íÊ¾Ä¿±ê¹ØÏµ V2 = f * V1¡£
 	double material_ratio_f = 1.5;
 	double E1 = 1.0;
-	// ä¸ç°æœ‰é¡ºåº MMC-SIMP çš„å®é™…æ¯”è¾ƒå·¥å†µä¿æŒä¸€è‡´ã€‚
-	double E2 = 100.0;
+	// ÓëÏÖÓĞË³Ğò MMC-SIMP µÄÊµ¼Ê±È½Ï¹¤¿ö±£³ÖÒ»ÖÂ¡£
+	double E2 = 2.0;
 	double material_penalty = 3.0;
-	// initial_eta < 0 æ—¶è‡ªåŠ¨ä½¿ç”¨ 1 / (1 + material_ratio_f)ã€‚
+	// initial_eta < 0 Ê±×Ô¶¯Ê¹ÓÃ 1 / (1 + material_ratio_f)¡£
 	double initial_eta = -1.0;
 	double eta_min = 1e-3;
-	// ä¸é¡ºåºææ–™é˜¶æ®µé»˜è®¤å€¼ä¸€è‡´ï¼›ä»…é™åˆ¶åŒæ­¥ç‰ˆææ–™ OC çš„å•è½®å˜åŒ–ã€‚
+	// ²ÄÁÏ OC Ã¿ÂÖÔÊĞíµÄ×î´óÒÆ¶¯Á¿¡£
 	double material_move_limit = 0.2;
-
-	// æœ‰é™å…ƒä¸ MMC å¹³æ»‘å‡ ä½•å‚æ•°ã€‚
+	// Í¶Ó°²ÎÊı½öÎª¼æÈİ¾ÉÕï¶Ï×Ö¶Î±£Áô£»µ±Ç°Ö÷Ä£ĞÍÖ±½ÓÊ¹ÓÃ m_e¡£
+	// ÈôºóĞøÖØĞÂÆôÓÃ ProjectOccupancy()£¬ÕâĞ©²ÎÊıÈÔ¿É¸´ÓÃ¡£
+	double projection_threshold = 0.3;
+	double projection_beta_initial = 4.0;
+	double projection_beta_max = 32.0;
+	int projection_beta_update_interval = 20;
+	// ²ÄÁÏ OC Ö»ÔÚµ±Ç° MMC »î¶¯ÇøÓòÄÚ¸üĞÂ£¬ÓëË³Ğò°æÒ»Ñù°´ m_e>0.3 É¸Ñ¡¡£
+	double material_active_threshold = 0.3;
+	// Ö»ÓÃÓÚ½á¹ûÏÔÊ¾£ºÓëË³Ğò°æÒ»ÖÂ£¬½ö m_e>0.3 µÄµ¥Ôª½øÈë²ÄÁÏ¶şÖµÍ¼¡£
+	double material_binary_active_threshold = 0.3;
+	// ÓĞÏŞÔªÓë MMC Æ½»¬¼¸ºÎ²ÎÊı¡£
 	double Poissons = 0.3;
 	double heaviside_alpha = 1e-3;
 	double heaviside_epsilon = 0.20;
 	double ks_lambda = 100.0;
 
-	// åŒæ­¥æµç¨‹å›ºå®šè¿è¡Œ max_iterations æ¬¡ï¼Œå˜é‡å˜åŒ–é‡ä¸çº¦æŸæ®‹å·®åªä½œä¸º
-	// è¯Šæ–­ï¼Œä¸å‚ä¸æå‰ç»ˆæ­¢ã€‚MMC ä½¿ç”¨æŒä¹…åŒ– MMAï¼Œææ–™ eta ä½¿ç”¨ OCã€‚
-	double material_ratio_tolerance = 1e-4;
+	// Í¬²½Á÷³Ì¹Ì¶¨ÔËĞĞ max_iterations ´Î£¬±äÁ¿±ä»¯Á¿ÓëÔ¼Êø²Ğ²îÖ»×÷Îª
+	// Õï¶Ï£¬²»²ÎÓëÌáÇ°ÖÕÖ¹¡£MMC Ê¹ÓÃ³Ö¾Ã»¯ MMA£¬²ÄÁÏ eta Ê¹ÓÃ OC¡£
+	// ratio Ô¼ÊøÒÑ´ÓÍ¬²½Á÷³ÌÒÆ³ı£»¸Ã×Ö¶Î½öÎª¾ÉÕï¶Ï½Ó¿Ú¼æÈİ±£Áô¡£
 	double compliance_consistency_tolerance = 5e-3;
 	double sensitivity_consistency_tolerance = 1e-9;
 
-	// æ­£å¸¸è¿è¡Œåªè¾“å‡ºè§£æçµæ•åº¦ã€‚ä»¥ä¸‹æœ‰é™å·®åˆ†å‚æ•°æš‚æ—¶ä¿ç•™ç»™æºç ä¸­çš„
-	// è¯Šæ–­å¸®åŠ©å‡½æ•°ï¼Œä½†åŒæ­¥ä¼˜åŒ–å…¥å£ä¸å†è°ƒç”¨å®ƒä»¬ã€‚
+	// Õı³£ÔËĞĞÖ»Êä³ö½âÎöÁéÃô¶È¡£ÒÔÏÂÓĞÏŞ²î·Ö²ÎÊıÔİÊ±±£Áô¸øÔ´ÂëÖĞµÄ
+	// Õï¶Ï°ïÖúº¯Êı£¬µ«Í¬²½ÓÅ»¯Èë¿Ú²»ÔÙµ÷ÓÃËüÃÇ¡£
 	int sensitivity_sample_count = 8;
-	int finite_difference_mmc_sample_count = 1;
-	int finite_difference_material_sample_count = 1;
+	int finite_difference_mmc_sample_count = 0;
+	int finite_difference_material_sample_count = 0;
 	double finite_difference_step = 1e-4;
 	bool export_results = true;
 	std::string output_directory = "mmc_multimaterial_simultaneous_result";
 };
 
-// æ¯ä¸ªå·²æ¥å—è”åˆçŠ¶æ€çš„æ ‡é‡è¯Šæ–­ã€‚è¿™é‡Œçš„ iteration æ˜¯å·²æ¥å—æ›´æ–°æ¬¡æ•°ï¼Œ
-// ä¸æ˜¯æœ‰é™å…ƒå†…éƒ¨è¿­ä»£æ¬¡æ•°ã€‚
+// Ã¿¸öÒÑ½ÓÊÜÁªºÏ×´Ì¬µÄ±êÁ¿Õï¶Ï¡£ÕâÀïµÄ iteration ÊÇÒÑ½ÓÊÜ¸üĞÂ´ÎÊı£¬
+// ²»ÊÇÓĞÏŞÔªÄÚ²¿µü´ú´ÎÊı¡£
 struct MMCMultiMaterialIterationDiagnostic {
 	int iteration = 0;
 	double compliance = 0.0;
 	double compliance_from_load = 0.0;
 	double compliance_relative_mismatch = 0.0;
+	double projection_beta = 0.0;
+	double mmc_occupancy_min = 0.0;
+	double mmc_occupancy_max = 0.0;
+	double projected_occupancy_min = 0.0;
+	double projected_occupancy_max = 0.0;
 	double mmc_volume = 0.0;
-	// V1 = sum(m_e eta_e v_e), V2 = sum(m_e (1-eta_e) v_e)ã€‚
+	// V1 = sum(m_e eta_e v_e), V2 = sum(m_e (1-eta_e) v_e)¡£
 	double V1 = 0.0;
 	double V2 = 0.0;
-	// material_ratio_residual = V2 - material_ratio_f * V1ã€‚
+	// material_ratio_residual = V2 - material_ratio_f * V1¡£
 	double material_ratio_residual = 0.0;
 	double geometry_constraint = 0.0;
 	double positive_ratio_constraint = 0.0;
@@ -82,13 +97,14 @@ struct MMCMultiMaterialIterationDiagnostic {
 	double uniform_material_gradient_relative_error = 0.0;
 };
 
-// å¯¹å¤–ä¿ç•™çš„æœ€ç»ˆè”åˆçŠ¶æ€ã€‚å„æ•°ç»„å‡æŒ‰å›ºå®šç½‘æ ¼å•å…ƒæˆ–è”åˆè®¾è®¡å˜é‡é¡ºåºå­˜å‚¨ã€‚
+// ¶ÔÍâ±£ÁôµÄ×îÖÕÍ¬²½×´Ì¬¡£¸÷Êı×é¾ù°´¹Ì¶¨Íø¸ñµ¥Ôª»ò MMC Éè¼Æ±äÁ¿Ë³Ğò´æ´¢¡£
 struct MMCMultiMaterialSimultaneousState {
 	int accepted_iteration = 0;
 	std::vector<double> physical_mmc_variables;
 	std::vector<double> material_eta;
-	// m_eã€E_e å’Œ a_e=m_eE_e åˆ†å¼€ä¿å­˜ï¼Œé¿å…æŠŠä¸‰è€…éƒ½ç§°ä¸º densityã€‚
+	// m_e¡¢E_e ºÍ a_e ·Ö¿ª±£´æ£¬±ãÓÚ¼ì²éÔ­Ê¼¼¸ºÎ³¡ºÍÊµ¼Ê¸Õ¶È¡£
 	std::vector<double> mmc_occupancy;
+	std::vector<double> projected_occupancy;
 	std::vector<double> material_modulus;
 	std::vector<double> effective_stiffness;
 	std::vector<double> element_energy;
@@ -106,10 +122,11 @@ struct MMCMultiMaterialSimultaneousResult {
 	std::vector<MMCMultiMaterialIterationDiagnostic> diagnostics;
 };
 
-// è¿è¡Œä¸€æ¡å…¨æ–°çš„ã€ç‹¬ç«‹æŒæœ‰çŠ¶æ€çš„ MMC + åŒææ–™åŒæ­¥ä¼˜åŒ–å¾ªç¯ã€‚
-// æœ¬å‡½æ•°ä¸ä¼šè°ƒç”¨ç‹¬ç«‹ MMCã€ç‹¬ç«‹ SIMP æˆ–é¡ºåº MMC+SIMP çš„å®Œæ•´ä¼˜åŒ–å…¥å£ã€‚
-// protect_cell_ids å’Œ neighbor_info å½“å‰ä»…ç”¨äºç»´æŒç»Ÿä¸€å…¥å£å¥‘çº¦åŠè¾“å…¥æ£€æŸ¥ï¼›
-// ç¬¬ä¸€ç‰ˆåŒæ­¥ææ–™å˜é‡ä¸åšæ»¤æ³¢ï¼Œä¹Ÿä¸æŒ‰ MMC é˜ˆå€¼å¢åˆ ææ–™å˜é‡ã€‚
+// ÔËĞĞÒ»ÌõÈ«ĞÂµÄ¡¢¶ÀÁ¢³ÖÓĞ×´Ì¬µÄ MMC + Ë«²ÄÁÏÍ¬²½ÓÅ»¯Ñ­»·¡£
+// ±¾º¯Êı²»»áµ÷ÓÃ¶ÀÁ¢ MMC¡¢¶ÀÁ¢ SIMP »òË³Ğò MMC+SIMP µÄÍêÕûÓÅ»¯Èë¿Ú¡£
+// protect_cell_ids ºÍ neighbor_info µ±Ç°½öÓÃÓÚÎ¬³ÖÍ³Ò»Èë¿ÚÆõÔ¼¼°ÊäÈë¼ì²é£»
+// ²ÄÁÏ¿éÑØÓÃË³Ğò MMC-SIMP µÄ¹ıÂË + OC ¸üĞÂ£»²ÄÁÏ±äÁ¿Ê¼ÖÕ¹Ì¶¨ÔÚÍêÕû
+// Íø¸ñÉÏ£¬²»°´ MMC ãĞÖµÔöÉ¾¡£
 bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 	const std::map<int, Eigen::Vector3d>& allVertex,
 	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell2V,
