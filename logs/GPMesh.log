@@ -1,0 +1,9 @@
+[21:21:19] [info] GPMesh: GP Spline Geometry Init Success!
+[21:21:19] [info] GPMesh: GP Spline Dirichlet point Init Success!
+[21:21:19] [trace] GPMesh: GPMeshStatic::check_shared_memory() user function requires shared memory = 1536 (dynamic) + 0 (static) = 1536 (bytes) and 255 registers per thread
+[21:21:19] [trace] GPMesh: GPMeshStatic::check_shared_memory() available total shared memory per block = 49152 (bytes) = 48 (Kb)
+[21:21:20] [trace] GPMesh: GPMeshStatic::check_shared_memory() user function requires shared memory = 1536 (dynamic) + 0 (static) = 1536 (bytes) and 255 registers per thread
+[21:21:20] [trace] GPMesh: GPMeshStatic::check_shared_memory() available total shared memory per block = 49152 (bytes) = 48 (Kb)
+[21:21:21] [info] GPMesh: data all errors = 57468.588302992
+[21:21:21] [info] GPMesh: Delta_0 = 158.66322258761744
+[21:21:25] [info] GPMesh: GPU takes 5001 iterations

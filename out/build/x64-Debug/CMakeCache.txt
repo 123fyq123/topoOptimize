@@ -38,7 +38,7 @@ CMAKE_BUILD_TYPE:STRING=Debug
 CMAKE_CONFIGURATION_TYPES:STRING=Debug;Release
 
 //CUDA compiler
-CMAKE_CUDA_COMPILER:STRING=D:/apps/cuda/exe/bin/nvcc.exe
+CMAKE_CUDA_COMPILER:FILEPATH=D:/apps/cuda/exe/bin/nvcc.exe
 
 //Flags used by the CUDA compiler during all build types.
 CMAKE_CUDA_FLAGS:STRING=-D_WINDOWS -Xcompiler=" /GR /EHsc"
@@ -58,8 +58,8 @@ CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=-Xcompiler=" -Zi -O2 -Ob1" -DNDEBUG
 //Libraries linked by default with all CUDA applications.
 CMAKE_CUDA_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
 
-//No help, variable specified on the command line.
-CMAKE_CXX_COMPILER:FILEPATH=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
+//CXX compiler
+CMAKE_CXX_COMPILER:STRING=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /GR /EHsc
@@ -79,8 +79,8 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=/Zi /O2 /Ob1 /DNDEBUG
 //Libraries linked by default with all C++ applications.
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:FILEPATH=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
+//C compiler
+CMAKE_C_COMPILER:STRING=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=/DWIN32 /D_WINDOWS
@@ -185,7 +185,7 @@ CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 CMAKE_LINKER:FILEPATH=D:/apps/VS/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
 
 //No help, variable specified on the command line.
-CMAKE_MAKE_PROGRAM:UNINITIALIZED=D:\APPS\VS\COMMUNITY\COMMON7\IDE\COMMONEXTENSIONS\MICROSOFT\CMAKE\Ninja\ninja.exe
+CMAKE_MAKE_PROGRAM:UNINITIALIZED=d:\apps\vs\community\common7\ide\commonextensions\microsoft\cmake\Ninja\ninja.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -734,8 +734,6 @@ CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_STANDARD_LIBRARIES
 CMAKE_C_STANDARD_LIBRARIES-ADVANCED:INTERNAL=1
-//Path to cache edit program executable.
-CMAKE_EDIT_COMMAND:INTERNAL=D:/apps/Cmake/bin/cmake-gui.exe
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=Unknown
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS

@@ -29,6 +29,7 @@
 		"D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake",
 		"D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake",
 		"D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake",
+		"D:/labCode/LabViewer-Vsub/out/build/x64-Debug/extern/nlopt/fpclassify.c",
 		"D:/labCode/LabViewer-Vsub/extern/nlopt/nlopt_config.h.in",
 		"D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CPack.cmake",
 		"D:/apps/VS/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/CPackComponent.cmake",
