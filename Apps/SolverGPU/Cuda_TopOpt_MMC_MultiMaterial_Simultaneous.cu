@@ -1396,26 +1396,56 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 		throw std::runtime_error("A material modulus or effective stiffness value is non-finite.");
 	}
 
-	// 共享结构分析：当前联合状态只在此处求解一次位移。
+
+	// MMC 形状优化必须复用纯 MMC 的分析场：K_e = m_e K_e^0。
+	// 这套位移只用于 MMC 目标值和 MMC 形状灵敏度，避免材料分布反过来牵引形状。
+	Eigen::MatrixXd mmc_displacement;
+	spline.Solver_With_Density_MMC(
+		neumann_points,
+		dirichlet_points,
+		evaluation.geometry.density,
+		mmc_displacement);
+	if (!mmc_displacement.allFinite()) {
+		throw std::runtime_error("The pure-MMC finite-element solve returned a non-finite displacement.");
+	}
+
+	Eigen::MatrixXd mmc_displacement_by_patch;
+	BuildDisplacementByPatch(
+		spline,
+		mmc_displacement,
+		mmc_displacement_by_patch);
+
+	std::vector<double> mmc_element_energy(cell_count, 0.0);
+	evaluation.compliance = 0.0;
+	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+		const Eigen::VectorXd element_displacement =
+			mmc_displacement_by_patch.row(cell_id);
+		const double energy =
+			(element_displacement.transpose()
+				* unit_local_matrix[cell_id]
+				* element_displacement)(0, 0);
+		mmc_element_energy[cell_id] = energy;
+		evaluation.compliance += energy;
+	}
+
+	// SIMP 材料优化仍使用真实双材料刚度场：K_e = m_e E(eta_e) K_e^0。
+	// 这套位移只用于材料灵敏度和结果导出，不参与 MMC 形状梯度。
 	spline.Solver_With_Density_MMC(
 		neumann_points,
 		dirichlet_points,
 		evaluation.effective_stiffness,
 		evaluation.displacement);
 	if (!evaluation.displacement.allFinite()) {
-		throw std::runtime_error("The shared finite-element solve returned a non-finite displacement.");
+		throw std::runtime_error("The multimaterial finite-element solve returned a non-finite displacement.");
 	}
 
-	// 和纯MMC一样，把全局位移向量 U 重新整理成“每个单元/patch 一行”的局部位移矩阵。
 	Eigen::MatrixXd displacement_by_patch;
 	BuildDisplacementByPatch(
 		spline,
 		evaluation.displacement,
 		displacement_by_patch);
 
-	// q_e 使用单位模量局部矩阵 K_e^0。目标值累加方式与纯 MMC 保持一致：C = sum_e q_e。
 	evaluation.element_energy.resize(cell_count, 0.0);
-	evaluation.compliance = 0.0;
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 		const Eigen::VectorXd element_displacement =
 			displacement_by_patch.row(cell_id);
@@ -1424,21 +1454,19 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 				* unit_local_matrix[cell_id]
 				* element_displacement)(0, 0);
 		evaluation.element_energy[cell_id] = energy;
-		evaluation.compliance +=
-			energy;
 	}
 
-	// 保留旧诊断字段，但关闭 F^T U 尺度一致性检查；当前目标值按纯 MMC 的 sum_e q_e 记录。
+	// compliance 记录纯 MMC 形状场的 sum_e q_e；材料场 q_e 只用于 eta 更新。
 	evaluation.compliance_from_load = evaluation.compliance;
 	evaluation.compliance_relative_mismatch = 0.0;
 	if (!std::isfinite(evaluation.compliance) ||
+		!IsFiniteVector(mmc_element_energy) ||
 		!IsFiniteVector(evaluation.element_energy)) {
 		throw std::runtime_error("The compliance or an element energy value is non-finite.");
 	}
-
 	// 柔顺度伴随公式：dC/dx = -U^T(dK/dx)U。
-	// 对 MMC：dC/dm_e = -E_e q_e；
-	// 对材料：dC/deta_e = -m_e q_e dE_e/deta_e。
+	// 对 MMC：完全按纯 MMC，使用纯 MMC 位移场的 dC/dm_e = -q_e。
+	// 对材料：固定当前 m_e，使用多材料位移场的 dC/deta_e = -m_e q_e dE_e/deta_e。
 	std::vector<double> objective_element_weights(cell_count, 0.0);
 	std::vector<double> geometry_volume_weights(
 		cell_count,
@@ -1449,8 +1477,7 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 		const double normalized_cell_volume =
 			1.0 / static_cast<double>(cell_count);
 		objective_element_weights[cell_id] =
-			-evaluation.material_modulus[cell_id]
-			* evaluation.element_energy[cell_id];
+			-mmc_element_energy[cell_id];
 		evaluation.material_objective_gradient[cell_id] =
 			-evaluation.geometry.density[cell_id]
 			* evaluation.element_energy[cell_id]
