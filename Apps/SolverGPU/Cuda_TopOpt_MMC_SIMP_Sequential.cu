@@ -79,12 +79,9 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 	int mmcType) {
 	const std::string output_dir = "mmc_simp_result";
 	const std::string paper_iteration_path = output_dir + "/paper_iterations.tsv";
-	const double material_E1 = 1.0;
-	const double material_E2 = 100.0;
 	const auto sequential_run_start = std::chrono::steady_clock::now();
 	std::filesystem::create_directories(output_dir);
-	// 顺序流程实际在材料阶段固定使用 E1=1、E2=100；配置文件记录实际值，
-	// 避免界面传入值与内部覆盖值混淆。
+	// MMC 阶段沿用 E1 作为基准模量；后续材料阶段直接使用界面传入的 E1/E2。
 	if (!optimization_paper_record::WriteConfig(
 		output_dir + "/paper_run_config.tsv",
 		{
@@ -96,8 +93,8 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 			{ "material_max_iterations", optimization_paper_record::ToString(simp_max_iter) },
 			{ "mmc_youngs_modulus", optimization_paper_record::ToString(E1) },
 			{ "material_ratio_f", optimization_paper_record::ToString(material_ratio_f) },
-			{ "material_E1", optimization_paper_record::ToString(material_E1) },
-			{ "material_E2", optimization_paper_record::ToString(material_E2) },
+			{ "material_E1", optimization_paper_record::ToString(E1) },
+			{ "material_E2", optimization_paper_record::ToString(E2) },
 			{ "poissons_ratio", optimization_paper_record::ToString(Poissons) },
 			{ "material_penalty", "3" },
 			{ "material_active_threshold", "0.3" },
@@ -206,9 +203,9 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 
 	MultiMaterialSIMPParams params;
 	params.material_ratio_f = material_ratio_f;
-	// Paper comparison case: E1 is the basic/soft material and E2 is the reinforced/hard material.
-	params.E1 = material_E1;
-	params.E2 = material_E2;
+	// rho=1 对应 E1，rho 接近 0 对应 E2；两者均来自顺序优化界面。
+	params.E1 = E1;
+	params.E2 = E2;
 	// MATLAB convention: rho represents E1, so its feasible fraction is V1/(V1+V2).
 	params.initial_rho = 1.0 / (1.0 + material_ratio_f);
 	params.max_iter = static_cast<int>(simp_max_iter);

@@ -107,7 +107,8 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		QWidget* topopt_page = ui->TopOpt_MMC_type->parentWidget();
 		btn_generate_hex_mesh_ = new QPushButton("Generate Mesh", topopt_page);
 		btn_generate_hex_mesh_->setObjectName("btnGenerateHexMesh");
-		btn_generate_hex_mesh_->setGeometry(20, 305, 231, 27);
+		// 顺序材料参数占用上一行，网格生成及结果工具整体下移避免控件遮挡。
+		btn_generate_hex_mesh_->setGeometry(20, 335, 231, 27);
 	}
 
 	//	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
@@ -150,6 +151,11 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		// 与顺序 MMC-SIMP 内部实际使用的比较工况 E1=1、E2=100 对齐。
 		ui->TopOpt_Material_E2->setText("100.0");
 		ui->TopOpt_Material_E2->setValidator(validator_2);
+		// 顺序 MMC-SIMP 独立读取材料模量，默认值保持原顺序算例的 1/100。
+		ui->TopOpt_Sequential_E1->setText("1.0");
+		ui->TopOpt_Sequential_E1->setValidator(validator_2);
+		ui->TopOpt_Sequential_E2->setText("100.0");
+		ui->TopOpt_Sequential_E2->setValidator(validator_2);
 
 
 
@@ -2207,8 +2213,12 @@ void iGamePoster::TopOpt_Run_4() {
 }
 
 void iGamePoster::TopOpt_Run_Seq() {
+	const double material_E1 =
+		ui->TopOpt_Sequential_E1->text().toDouble();
+	const double material_E2 =
+		ui->TopOpt_Sequential_E2->text().toDouble();
 
-	QtConcurrent::run([&]() {
+	QtConcurrent::run([&, material_E1, material_E2]() {
 		ui->openGLWidget->analysis_flag = false;
 		TopOpt_GPU_MMC_SIMP_Sequential(poster_filename,
 			ui->openGLWidget->hexbdy,
@@ -2218,8 +2228,8 @@ void iGamePoster::TopOpt_Run_Seq() {
 			ui->TopOpt_Iters_2->text().toDouble(),
 			1.5,
 			ui->TopOpt_Iters_2->text().toDouble(),
-			1.0,
-			2.0,
+			material_E1,
+			material_E2,
 			ui->openGLWidget->PoissonsRatio,
 			ui->openGLWidget->hex_density,
 			ui->openGLWidget->is_need_update_topopt_model);

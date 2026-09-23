@@ -2818,7 +2818,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>60</x>
-                   <y>347</y>
+                   <y>370</y>
                    <width>161</width>
                    <height>10</height>
                   </rect>
@@ -2831,7 +2831,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>340</y>
+                   <y>363</y>
                    <width>31</width>
                    <height>21</height>
                   </rect>
@@ -2849,7 +2849,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>370</y>
+                   <y>390</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
@@ -2868,7 +2868,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>140</x>
-                   <y>410</y>
+                   <y>430</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
@@ -2887,7 +2887,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>410</y>
+                   <y>430</y>
                    <width>111</width>
                    <height>31</height>
                   </rect>
@@ -2919,7 +2919,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>140</x>
-                   <y>370</y>
+                   <y>390</y>
                    <width>111</width>
                    <height>27</height>
                   </rect>
@@ -2962,6 +2962,64 @@ background:#444444;
                    <width>111</width>
                    <height>26</height>
                   </rect>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="label_sequential_E1">
+                 <property name="geometry">
+                  <rect>
+                   <x>20</x>
+                   <y>307</y>
+                   <width>31</width>
+                   <height>21</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>E1：</string>
+                 </property>
+                 <property name="toolTip">
+                  <string>顺序 MMC-SIMP 的材料 1 弹性模量</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="TopOpt_Sequential_E1">
+                 <property name="geometry">
+                  <rect>
+                   <x>50</x>
+                   <y>304</y>
+                   <width>71</width>
+                   <height>26</height>
+                  </rect>
+                 </property>
+                 <property name="toolTip">
+                  <string>顺序 MMC-SIMP 的材料 1 弹性模量</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="label_sequential_E2">
+                 <property name="geometry">
+                  <rect>
+                   <x>140</x>
+                   <y>307</y>
+                   <width>31</width>
+                   <height>21</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>E2：</string>
+                 </property>
+                 <property name="toolTip">
+                  <string>顺序 MMC-SIMP 的材料 2 弹性模量</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="TopOpt_Sequential_E2">
+                 <property name="geometry">
+                  <rect>
+                   <x>170</x>
+                   <y>304</y>
+                   <width>81</width>
+                   <height>26</height>
+                  </rect>
+                 </property>
+                 <property name="toolTip">
+                  <string>顺序 MMC-SIMP 的材料 2 弹性模量</string>
                  </property>
                 </widget>
                 <widget class="QLabel" name="label_40">

@@ -1399,46 +1399,15 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 	}
 
 
-	// MMC 形状优化必须复用纯 MMC 的分析场：K_e = m_e K_e^0。
-	// 这套位移只用于 MMC 目标值和 MMC 形状灵敏度，避免材料分布反过来牵引形状。
-	Eigen::MatrixXd mmc_displacement;
-	spline.Solver_With_Density_MMC(
-		neumann_points,
-		dirichlet_points,
-		evaluation.geometry.density,
-		mmc_displacement);
-	if (!mmc_displacement.allFinite()) {
-		throw std::runtime_error("The pure-MMC finite-element solve returned a non-finite displacement.");
-	}
-
-	Eigen::MatrixXd mmc_displacement_by_patch;
-	BuildDisplacementByPatch(
-		spline,
-		mmc_displacement,
-		mmc_displacement_by_patch);
-
-	std::vector<double> mmc_element_energy(cell_count, 0.0);
-	evaluation.compliance = 0.0;
-	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-		const Eigen::VectorXd element_displacement =
-			mmc_displacement_by_patch.row(cell_id);
-		const double energy =
-			(element_displacement.transpose()
-				* unit_local_matrix[cell_id]
-				* element_displacement)(0, 0);
-		mmc_element_energy[cell_id] = energy;
-		evaluation.compliance += energy;
-	}
-
-	// SIMP 材料优化仍使用真实双材料刚度场：K_e = m_e E(eta_e) K_e^0。
-	// 这套位移只用于材料灵敏度和结果导出，不参与 MMC 形状梯度。
-	spline.Solver_With_Density_MMC(
+	// MMC 与材料变量共享唯一的耦合物理场：K_e = m_e E(eta_e) K_e^0。
+	// 同一套位移和单元能量同时用于两组目标灵敏度，保证它们对应同一个柔度目标。
+	spline.Solver_With_CellScale(
 		neumann_points,
 		dirichlet_points,
 		evaluation.effective_stiffness,
 		evaluation.displacement);
 	if (!evaluation.displacement.allFinite()) {
-		throw std::runtime_error("The multimaterial finite-element solve returned a non-finite displacement.");
+		throw std::runtime_error("The coupled multimaterial finite-element solve returned a non-finite displacement.");
 	}
 
 	Eigen::MatrixXd displacement_by_patch;
@@ -1448,6 +1417,7 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 		displacement_by_patch);
 
 	evaluation.element_energy.resize(cell_count, 0.0);
+	evaluation.compliance = 0.0;
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 		const Eigen::VectorXd element_displacement =
 			displacement_by_patch.row(cell_id);
@@ -1456,19 +1426,20 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 				* unit_local_matrix[cell_id]
 				* element_displacement)(0, 0);
 		evaluation.element_energy[cell_id] = energy;
+		evaluation.compliance +=
+			evaluation.effective_stiffness[cell_id] * energy;
 	}
 
-	// compliance 记录纯 MMC 形状场的 sum_e q_e；材料场 q_e 只用于 eta 更新。
+	// 唯一柔度目标 C = sum_e m_e E(eta_e) q_e，两个变量块均对它求偏导。
 	evaluation.compliance_from_load = evaluation.compliance;
 	evaluation.compliance_relative_mismatch = 0.0;
 	if (!std::isfinite(evaluation.compliance) ||
-		!IsFiniteVector(mmc_element_energy) ||
 		!IsFiniteVector(evaluation.element_energy)) {
-		throw std::runtime_error("The compliance or an element energy value is non-finite.");
+		throw std::runtime_error("The coupled compliance or an element energy value is non-finite.");
 	}
 	// 柔顺度伴随公式：dC/dx = -U^T(dK/dx)U。
-	// 对 MMC：完全按纯 MMC，使用纯 MMC 位移场的 dC/dm_e = -q_e。
-	// 对材料：固定当前 m_e，使用多材料位移场的 dC/deta_e = -m_e q_e dE_e/deta_e。
+	// 对 MMC 固定 eta：dC/dd_j = -sum_e E_e q_e dm_e/dd_j。
+	// 对材料固定 m：dC/deta_e = -m_e q_e dE_e/deta_e。
 	std::vector<double> objective_element_weights(cell_count, 0.0);
 	std::vector<double> geometry_volume_weights(
 		cell_count,
@@ -1479,13 +1450,13 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 		const double normalized_cell_volume =
 			1.0 / static_cast<double>(cell_count);
 		objective_element_weights[cell_id] =
-			-mmc_element_energy[cell_id];
+			-evaluation.material_modulus[cell_id]
+			* evaluation.element_energy[cell_id];
 		evaluation.material_objective_gradient[cell_id] =
 			-evaluation.geometry.density[cell_id]
 			* evaluation.element_energy[cell_id]
 			* evaluation.material_modulus_derivative[cell_id];
-
-		// MMC 占有率加权的材料资源：
+	// MMC 占有率加权的材料资源：
 		//   V1 = sum_e m_e eta_e / N
 		//   V2 = sum_e m_e (1-eta_e) / N
 		//   R  = V2 - f V1。
@@ -2860,7 +2831,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					{ "ks_lambda", optimization_paper_record::ToString(params.ks_lambda) },
 					{ "cell_count", optimization_paper_record::ToString(cell_count) },
 					{ "component_count", optimization_paper_record::ToString(mmcComponents.size()) },
-					{ "fe_solves_per_state_evaluation", "2" }
+					{ "fe_solves_per_state_evaluation", "1" }
 				})) {
 				throw std::runtime_error("Cannot create the simultaneous paper run configuration.");
 			}
@@ -2949,26 +2920,19 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					evaluation,
 					params.sensitivity_sample_count);
 
-				// 论文比较使用真实耦合刚度 a_e=m_e E_e 对应的柔顺度；
-				// shape_compliance 单独保留 MMC 形状子问题的目标值。
-				double coupled_compliance = 0.0;
-				double material_v1 = 0.0;
-				double material_v2 = 0.0;
+				// 柔度字段统一记录同一个耦合目标；材料比例与 OC 一致，
+				// 在全部单元上按 MMC 占有率 m_e 加权统计。
+				double material_v1 = evaluation.V1;
+				double material_v2 = evaluation.V2;
 				double mean_material_variable = 0.0;
 				double material_grayness = 0.0;
 				int active_cell_count = 0;
 				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-					coupled_compliance += evaluation.effective_stiffness[cell_id]
-						* evaluation.element_energy[cell_id];
 					if (evaluation.geometry.density[cell_id]
 						<= params.material_active_threshold) {
 						continue;
 					}
 					const double eta = materialEta[cell_id];
-					material_v1 += evaluation.geometry.density[cell_id] * eta
-						/ static_cast<double>(cell_count);
-					material_v2 += evaluation.geometry.density[cell_id] * (1.0 - eta)
-						/ static_cast<double>(cell_count);
 					mean_material_variable += eta;
 					material_grayness += 4.0 * eta * (1.0 - eta);
 					++active_cell_count;
@@ -2983,7 +2947,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				paper_record.stage = "simultaneous";
 				paper_record.global_iteration = accepted_updates;
 				paper_record.stage_iteration = accepted_updates;
-				paper_record.compliance = coupled_compliance;
+				paper_record.compliance = evaluation.compliance;
 				paper_record.shape_compliance = evaluation.compliance;
 				paper_record.mmc_volume = evaluation.mmc_volume;
 				paper_record.material_v1 = material_v1;
@@ -3046,7 +3010,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				unit_local_matrix,
 				params,
 				iteration);
-			paper_fe_solve_count += 2;
+			paper_fe_solve_count += 1;
 			record_accepted_state(current_evaluation);
 
 			// 这些量只写入诊断日志。与独立 MMC 一致，外层不根据变化量或
@@ -3129,6 +3093,22 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					physical_upper[variable]);
 			}
 
+			// OC 的资源约束必须对应 MMA 更新后的下一几何状态 m^{k+1}；
+			// 这里只重算 MMC 几何占有率，不增加有限元求解。
+			std::vector<MMCComponent> oc_geometry_components = mmcComponents;
+			UpdateComponentsFromPhysical(
+				oc_geometry_components,
+				mmcDesignVariables);
+			const GeometryEvaluation oc_geometry = EvaluateGeometry(
+				allVertex,
+				cell2V,
+				oc_geometry_components,
+				params);
+			if (!IsFiniteVector(oc_geometry.density)) {
+				throw std::runtime_error(
+					"The post-MMA MMC occupancy used by material OC is non-finite.");
+			}
+
 			std::vector<double> oc_sensitivity_full(
 				cell_count,
 				std::numeric_limits<double>::min());
@@ -3140,7 +3120,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					std::max(
 						current_evaluation.material_objective_gradient[cell_id],
 						std::numeric_limits<double>::min());
-				if (current_evaluation.geometry.density[cell_id]
+				if (oc_geometry.density[cell_id]
 					> params.material_active_threshold) {
 					material_filter_eta[cell_id] = materialEta[cell_id];
 				}
@@ -3155,8 +3135,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				materialEta,
 				params.material_ratio_f,
 				filtered_oc_sensitivity,
-				current_evaluation.geometry.density,
-				current_evaluation.geometry.density,
+				oc_geometry.density,
+				oc_geometry.density,
 				params.material_active_threshold,
 				params.eta_min,
 				params.material_move_limit);
@@ -3183,7 +3163,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				}
 				mmc_mma_trace_output.flush();
 				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-					if (current_evaluation.geometry.density[cell_id]
+					if (oc_geometry.density[cell_id]
 						<= params.material_active_threshold) {
 						continue;
 					}
@@ -3198,9 +3178,9 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 						<< '\t'
 						<< filtered_oc_sensitivity[cell_id]
 						<< '\t'
-						<< current_evaluation.geometry.density[cell_id]
+						<< oc_geometry.density[cell_id]
 						<< '\t'
-						<< current_evaluation.geometry.density[cell_id]
+						<< oc_geometry.density[cell_id]
 						<< '\n';
 				}
 				material_oc_trace_output.flush();
@@ -3262,7 +3242,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			unit_local_matrix,
 			params,
 			params.max_iterations + 1);
-		paper_fe_solve_count += 2;
+		paper_fe_solve_count += 1;
 		if (last_recorded_accepted_iteration != accepted_updates) {
 			record_accepted_state(final_evaluation);
 		}
