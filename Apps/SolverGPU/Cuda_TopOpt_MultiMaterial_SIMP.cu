@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
@@ -10,6 +11,9 @@
 #include <limits>
 #include <map>
 #include <numeric>
+#include <stdexcept>
+
+#include "OptimizationPaperRecorder.h"
 
 namespace {
 
@@ -262,7 +266,10 @@ void RunMultiMaterialSIMPStage(
 	const MultiMaterialSIMPParams& params,
 	const std::string& output_dir,
 	std::vector<double>& material_density_full,
-	std::atomic_bool& is_need_update_model) {
+	std::atomic_bool& is_need_update_model,
+	int initial_global_iteration,
+	int initial_fe_solve_count,
+	double elapsed_time_offset_seconds) {
 	const int grid_size = static_cast<int>(mmc_density.size());
 	material_density_full.assign(grid_size, 0.0);
 	if (active_indices.empty()) {
@@ -270,6 +277,13 @@ void RunMultiMaterialSIMPStage(
 	}
 
 	std::filesystem::create_directories(output_dir);
+	optimization_paper_record::IterationWriter paper_output(
+		output_dir + "/paper_iterations.tsv",
+		true);
+	if (!paper_output.Good()) {
+		throw std::runtime_error("Cannot create the sequential paper iteration record.");
+	}
+	const auto material_stage_start = std::chrono::steady_clock::now();
 	std::ofstream analytical_out(output_dir + "/analytical_sensitivities.txt", std::ios::out | std::ios::trunc);
 	std::ofstream finite_difference_out(output_dir + "/finite_difference_sensitivities.txt", std::ios::out | std::ios::trunc);
 	analytical_out << std::setprecision(17);
@@ -290,6 +304,7 @@ void RunMultiMaterialSIMPStage(
 	std::vector<double> final_rho_full(grid_size, 0.0);
 
 	for (int iter = 0; iter < params.max_iter; ++iter) {
+		const auto iteration_start = std::chrono::steady_clock::now();
 		std::vector<double> rho_full(grid_size, 0.0);
 		std::vector<double> stiffness_coeff(grid_size, 0.0);
 		for (int local_id = 0; local_id < static_cast<int>(active_indices.size()); ++local_id) {
@@ -438,6 +453,54 @@ void RunMultiMaterialSIMPStage(
 			material_density_full[cell_id] = mmc_density[cell_id];
 			final_rho_full[cell_id] = active_rho[local_id];
 		}
+
+		// 论文记录统一采用 MMC 占有率加权的两种材料体积，且只统计顺序法
+		// 固定的材料设计域；这些统计不参与 OC 更新。
+		double material_v1 = 0.0;
+		double material_v2 = 0.0;
+		double mean_material_variable = 0.0;
+		double material_grayness = 0.0;
+		for (int local_id = 0; local_id < static_cast<int>(active_indices.size()); ++local_id) {
+			const int cell_id = active_indices[local_id];
+			// 柔顺度和梯度均对应 OC 更新前状态，因此材料统计也使用 old_rho。
+			const double rho = old_rho[local_id];
+			material_v1 += mmc_density[cell_id] * rho / static_cast<double>(grid_size);
+			material_v2 += mmc_density[cell_id] * (1.0 - rho) / static_cast<double>(grid_size);
+			mean_material_variable += rho;
+			material_grayness += 4.0 * rho * (1.0 - rho);
+		}
+		mean_material_variable /= static_cast<double>(active_indices.size());
+		material_grayness /= static_cast<double>(active_indices.size());
+		const double mmc_volume = std::accumulate(
+			mmc_density.begin(), mmc_density.end(), 0.0)
+			/ static_cast<double>(grid_size);
+
+		optimization_paper_record::IterationRecord paper_record;
+		paper_record.method = "sequential";
+		paper_record.stage = "simp_material";
+		paper_record.global_iteration = initial_global_iteration + iter + 1;
+		paper_record.stage_iteration = iter + 1;
+		paper_record.compliance = comp;
+		paper_record.mmc_volume = mmc_volume;
+		paper_record.material_v1 = material_v1;
+		paper_record.material_v2 = material_v2;
+		paper_record.material_ratio = material_v1 > 1e-15
+			? material_v2 / material_v1
+			: optimization_paper_record::NaN();
+		paper_record.ratio_residual =
+			material_v2 - params.material_ratio_f * material_v1;
+		paper_record.mean_material_variable = mean_material_variable;
+		paper_record.material_grayness = material_grayness;
+		paper_record.material_change = change;
+		paper_record.material_gradient_norm =
+			optimization_paper_record::L2Norm(objective_gradient_active);
+		paper_record.active_cell_count = static_cast<int>(active_indices.size());
+		paper_record.cumulative_fe_solves = initial_fe_solve_count + iter + 1;
+		paper_record.iteration_seconds =
+			optimization_paper_record::ElapsedSeconds(iteration_start);
+		paper_record.elapsed_seconds = elapsed_time_offset_seconds
+			+ optimization_paper_record::ElapsedSeconds(material_stage_start);
+		paper_output.Write(paper_record);
 
 		std::cout << "[MMC+SIMP] It.: " << iter + 1
 			<< " Obj.: " << comp

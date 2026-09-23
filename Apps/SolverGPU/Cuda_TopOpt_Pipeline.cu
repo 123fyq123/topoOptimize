@@ -33,6 +33,7 @@
 #include <Eigen/Dense>
 #include "MMASolver.h"
 #include "MMC_Trace_Diagnostics.h"
+#include "OptimizationPaperRecorder.h"
 #include <fstream>
 namespace Cuda_TopOpt_Pipeline_nsp {
 	using namespace nanoflann;
@@ -1680,8 +1681,19 @@ void Cuda_TopOpt_MMC_Node(
 	double Poissons,
 	std::vector<double>& density,
 	std::atomic_bool& is_need_update_model,
-	int mmcType) {
+	int mmcType,
+	const std::string& paper_record_path,
+	int* completed_iterations) {
 	Timer timer;
+	const auto paper_run_start = std::chrono::steady_clock::now();
+	optimization_paper_record::IterationWriter paper_output(paper_record_path, false);
+	if (!paper_record_path.empty() && !paper_output.Good()) {
+		throw std::runtime_error("Cannot create the sequential MMC paper iteration record.");
+	}
+	int paper_completed_iterations = 0;
+	if (completed_iterations != nullptr) {
+		*completed_iterations = 0;
+	}
 	Eigen::setNbThreads(24);
 	Eigen::initParallel();
 
@@ -1942,6 +1954,7 @@ void Cuda_TopOpt_MMC_Node(
 	globalPhi.resize(nVertex);
 	std::vector<double> delta_H;
 	while (topopt_iter < max_iter) {
+		const auto paper_iteration_start = std::chrono::steady_clock::now();
 		std::cout << topopt_iter++ << std::endl;
 		int reduce_num = (int)(0.02 * (exist_num - tot_num * target_rate));
 		if (reduce_num < 1) break;
@@ -2149,6 +2162,31 @@ void Cuda_TopOpt_MMC_Node(
 		trace.geometry_constraint_gradient = &dfdx;
 		trace.geometry_step = &geometry_step;
 		mmc_debug_trace.Write(trace);
+
+		// 顺序法 MMC 阶段的论文记录只读取当前状态，不改变 MMA 更新。
+		optimization_paper_record::IterationRecord paper_record;
+		paper_record.method = "sequential";
+		paper_record.stage = "mmc_shape";
+		paper_record.global_iteration = paper_completed_iterations + 1;
+		paper_record.stage_iteration = paper_completed_iterations + 1;
+		paper_record.compliance = allCe;
+		paper_record.shape_compliance = allCe;
+		paper_record.mmc_volume = vol;
+		paper_record.geometry_change = geometry_change_max;
+		paper_record.geometry_gradient_norm =
+			optimization_paper_record::L2Norm(df0dx);
+		paper_record.active_cell_count = static_cast<int>(std::count_if(
+			density.begin(), density.end(), [](double value) { return value > 0.3; }));
+		paper_record.cumulative_fe_solves = paper_completed_iterations + 1;
+		paper_record.iteration_seconds =
+			optimization_paper_record::ElapsedSeconds(paper_iteration_start);
+		paper_record.elapsed_seconds =
+			optimization_paper_record::ElapsedSeconds(paper_run_start);
+		paper_output.Write(paper_record);
+		++paper_completed_iterations;
+		if (completed_iterations != nullptr) {
+			*completed_iterations = paper_completed_iterations;
+		}
 		is_need_update_model = true;
 	}
 }

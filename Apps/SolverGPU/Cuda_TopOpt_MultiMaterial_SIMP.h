@@ -36,4 +36,7 @@ void RunMultiMaterialSIMPStage(
 	const MultiMaterialSIMPParams& params,
 	const std::string& output_dir,
 	std::vector<double>& material_density_full,
-	std::atomic_bool& is_need_update_model);
+	std::atomic_bool& is_need_update_model,
+	int initial_global_iteration = 0,
+	int initial_fe_solve_count = 0,
+	double elapsed_time_offset_seconds = 0.0);

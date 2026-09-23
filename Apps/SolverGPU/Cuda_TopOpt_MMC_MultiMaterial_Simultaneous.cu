@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
@@ -20,6 +21,7 @@
 #include "GP_Spline_v0.h"
 #include "MMASolver.h"
 #include "MMC_Trace_Diagnostics.h"
+#include "OptimizationPaperRecorder.h"
 #include "Poster/source/Timer.h"
 #include "Poster/source/nanoflann.h"
 #include "Util/GP_Log.h"
@@ -1523,6 +1525,9 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 			evaluation.geometry.density.end(),
 			0.0)
 		/ static_cast<double>(cell_count);
+	// MMC-MMA 使用 g_V = V_MMC - V_target <= 0 维持几何体积分数。
+	evaluation.geometry_constraint =
+		evaluation.mmc_volume - params.mmc_target_rate;
 	// 材料比例由 OC 二分直接维持；ratio 约束不再作为同步优化约束参与流程。
 	evaluation.ratio_residual = 0.0;
 	evaluation.positive_ratio_constraint = 0.0;
@@ -2719,6 +2724,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 	}
 
 	try {
+		const auto paper_run_start = std::chrono::steady_clock::now();
 		RunClosedFormSelfChecks(params);
 		Timer timer;
 		Eigen::setNbThreads(24);
@@ -2820,11 +2826,44 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		std::ofstream mmc_mma_trace_output;
 		std::ofstream material_oc_trace_output;
 		std::unique_ptr<mmc_trace::Writer> debug_output;
+		std::unique_ptr<optimization_paper_record::IterationWriter> paper_output;
 		if (params.export_results) {
 			if (params.output_directory.empty()) {
 				throw std::runtime_error("The result output directory cannot be empty.");
 			}
 			std::filesystem::create_directories(params.output_directory);
+			paper_output = std::make_unique<optimization_paper_record::IterationWriter>(
+				params.output_directory + "/paper_iterations.tsv",
+				false);
+			if (!paper_output->Good()) {
+				throw std::runtime_error("Cannot create the simultaneous paper iteration record.");
+			}
+			if (!optimization_paper_record::WriteConfig(
+				params.output_directory + "/paper_run_config.tsv",
+				{
+					{ "method", "simultaneous" },
+					{ "input_model_file", input_model_file },
+					{ "mmc_type", optimization_paper_record::ToString(params.mmc_type) },
+					{ "mmc_target_rate", optimization_paper_record::ToString(params.mmc_target_rate) },
+					{ "max_iterations", optimization_paper_record::ToString(params.max_iterations) },
+					{ "material_ratio_f", optimization_paper_record::ToString(params.material_ratio_f) },
+					{ "material_E1", optimization_paper_record::ToString(params.E1) },
+					{ "material_E2", optimization_paper_record::ToString(params.E2) },
+					{ "material_penalty", optimization_paper_record::ToString(params.material_penalty) },
+					{ "initial_eta", optimization_paper_record::ToString(initial_eta) },
+					{ "eta_min", optimization_paper_record::ToString(params.eta_min) },
+					{ "material_move_limit", optimization_paper_record::ToString(params.material_move_limit) },
+					{ "material_active_threshold", optimization_paper_record::ToString(params.material_active_threshold) },
+					{ "poissons_ratio", optimization_paper_record::ToString(params.Poissons) },
+					{ "heaviside_alpha", optimization_paper_record::ToString(params.heaviside_alpha) },
+					{ "heaviside_epsilon", optimization_paper_record::ToString(params.heaviside_epsilon) },
+					{ "ks_lambda", optimization_paper_record::ToString(params.ks_lambda) },
+					{ "cell_count", optimization_paper_record::ToString(cell_count) },
+					{ "component_count", optimization_paper_record::ToString(mmcComponents.size()) },
+					{ "fe_solves_per_state_evaluation", "2" }
+				})) {
+				throw std::runtime_error("Cannot create the simultaneous paper run configuration.");
+			}
 			iteration_output.open(
 				params.output_directory + "/iterations.tsv",
 				std::ios::out | std::ios::trunc);
@@ -2883,6 +2922,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		double previous_objective_linear_geometry = 0.0;
 		double previous_objective_linear_material = 0.0;
 		double previous_geometry_constraint_linear_geometry = 0.0;
+		double previous_iteration_seconds = 0.0;
+		int paper_fe_solve_count = 0;
 		int accepted_updates = 0;
 		int last_recorded_accepted_iteration = -1;
 		SimultaneousEvaluation current_evaluation;
@@ -2907,6 +2948,63 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					accepted_updates,
 					evaluation,
 					params.sensitivity_sample_count);
+
+				// 论文比较使用真实耦合刚度 a_e=m_e E_e 对应的柔顺度；
+				// shape_compliance 单独保留 MMC 形状子问题的目标值。
+				double coupled_compliance = 0.0;
+				double material_v1 = 0.0;
+				double material_v2 = 0.0;
+				double mean_material_variable = 0.0;
+				double material_grayness = 0.0;
+				int active_cell_count = 0;
+				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+					coupled_compliance += evaluation.effective_stiffness[cell_id]
+						* evaluation.element_energy[cell_id];
+					if (evaluation.geometry.density[cell_id]
+						<= params.material_active_threshold) {
+						continue;
+					}
+					const double eta = materialEta[cell_id];
+					material_v1 += evaluation.geometry.density[cell_id] * eta
+						/ static_cast<double>(cell_count);
+					material_v2 += evaluation.geometry.density[cell_id] * (1.0 - eta)
+						/ static_cast<double>(cell_count);
+					mean_material_variable += eta;
+					material_grayness += 4.0 * eta * (1.0 - eta);
+					++active_cell_count;
+				}
+				if (active_cell_count > 0) {
+					mean_material_variable /= static_cast<double>(active_cell_count);
+					material_grayness /= static_cast<double>(active_cell_count);
+				}
+
+				optimization_paper_record::IterationRecord paper_record;
+				paper_record.method = "simultaneous";
+				paper_record.stage = "simultaneous";
+				paper_record.global_iteration = accepted_updates;
+				paper_record.stage_iteration = accepted_updates;
+				paper_record.compliance = coupled_compliance;
+				paper_record.shape_compliance = evaluation.compliance;
+				paper_record.mmc_volume = evaluation.mmc_volume;
+				paper_record.material_v1 = material_v1;
+				paper_record.material_v2 = material_v2;
+				paper_record.material_ratio = material_v1 > 1e-15
+					? material_v2 / material_v1
+					: optimization_paper_record::NaN();
+				paper_record.ratio_residual =
+					material_v2 - params.material_ratio_f * material_v1;
+				paper_record.mean_material_variable = mean_material_variable;
+				paper_record.material_grayness = material_grayness;
+				paper_record.geometry_change = previous_geometry_change;
+				paper_record.material_change = previous_material_change;
+				paper_record.geometry_gradient_norm = diagnostic.geometry_gradient_norm;
+				paper_record.material_gradient_norm = diagnostic.material_gradient_norm;
+				paper_record.active_cell_count = active_cell_count;
+				paper_record.cumulative_fe_solves = paper_fe_solve_count;
+				paper_record.iteration_seconds = previous_iteration_seconds;
+				paper_record.elapsed_seconds =
+					optimization_paper_record::ElapsedSeconds(paper_run_start);
+				paper_output->Write(paper_record);
 			}
 			density = evaluation.geometry.density;
 			is_need_update_model = true;
@@ -2932,6 +3030,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		for (int iteration = 1;
 			iteration <= params.max_iterations;
 			++iteration) {
+			const auto paper_iteration_start = std::chrono::steady_clock::now();
 			UpdateComponentsFromPhysical(
 				mmcComponents,
 				mmcDesignVariables);
@@ -2947,6 +3046,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				unit_local_matrix,
 				params,
 				iteration);
+			paper_fe_solve_count += 2;
 			record_accepted_state(current_evaluation);
 
 			// 这些量只写入诊断日志。与独立 MMC 一致，外层不根据变化量或
@@ -3141,6 +3241,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				current_evaluation.geometry_constraint_gradient,
 				previous_geometry_step_physical);
 			++accepted_updates;
+			previous_iteration_seconds =
+				optimization_paper_record::ElapsedSeconds(paper_iteration_start);
 
 		}
 
@@ -3160,6 +3262,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			unit_local_matrix,
 			params,
 			params.max_iterations + 1);
+		paper_fe_solve_count += 2;
 		if (last_recorded_accepted_iteration != accepted_updates) {
 			record_accepted_state(final_evaluation);
 		}

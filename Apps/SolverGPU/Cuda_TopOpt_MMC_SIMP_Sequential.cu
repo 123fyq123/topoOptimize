@@ -1,12 +1,16 @@
 ﻿#include "Cuda_TopOpt_MMC_SIMP_Sequential.h"
 
 #include <algorithm>
+#include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #include "Cuda_TopOpt_MultiMaterial_SIMP.h"
 #include "Cuda_TopOpt_Pipeline.h"
+#include "OptimizationPaperRecorder.h"
 #include "Poster/source/Timer.h"
 #include "Poster/source/nanoflann.h"
 #include "Util/GP_Log.h"
@@ -73,8 +77,43 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 	std::vector<double>& density,
 	std::atomic_bool& is_need_update_model,
 	int mmcType) {
+	const std::string output_dir = "mmc_simp_result";
+	const std::string paper_iteration_path = output_dir + "/paper_iterations.tsv";
+	const double material_E1 = 1.0;
+	const double material_E2 = 100.0;
+	const auto sequential_run_start = std::chrono::steady_clock::now();
+	std::filesystem::create_directories(output_dir);
+	// 顺序流程实际在材料阶段固定使用 E1=1、E2=100；配置文件记录实际值，
+	// 避免界面传入值与内部覆盖值混淆。
+	if (!optimization_paper_record::WriteConfig(
+		output_dir + "/paper_run_config.tsv",
+		{
+			{ "method", "sequential" },
+			{ "input_model_file", input_model_file },
+			{ "mmc_type", optimization_paper_record::ToString(mmcType) },
+			{ "mmc_target_rate", optimization_paper_record::ToString(mmc_target_rate) },
+			{ "mmc_max_iterations", optimization_paper_record::ToString(mmc_max_iter) },
+			{ "material_max_iterations", optimization_paper_record::ToString(simp_max_iter) },
+			{ "mmc_youngs_modulus", optimization_paper_record::ToString(E1) },
+			{ "material_ratio_f", optimization_paper_record::ToString(material_ratio_f) },
+			{ "material_E1", optimization_paper_record::ToString(material_E1) },
+			{ "material_E2", optimization_paper_record::ToString(material_E2) },
+			{ "poissons_ratio", optimization_paper_record::ToString(Poissons) },
+			{ "material_penalty", "3" },
+			{ "material_active_threshold", "0.3" },
+			{ "material_rho_min", "0.001" },
+			{ "material_move_limit", "0.2" },
+			{ "mmc_fe_solves_per_iteration", "1" },
+			{ "material_fe_solves_per_iteration", "1" }
+		})) {
+		throw std::runtime_error("Cannot create the sequential paper run configuration.");
+	}
+	int mmc_completed_iterations = 0;
 	Cuda_TopOpt_MMC_Node(allVertex, cell2V, input_model_file, bdy_file, protect_cell_ids, neighbor_info,
-		mmc_target_rate, mmc_max_iter, E1, Poissons, density, is_need_update_model, mmcType);
+		mmc_target_rate, mmc_max_iter, E1, Poissons, density, is_need_update_model, mmcType,
+		paper_iteration_path, &mmc_completed_iterations);
+	const double mmc_elapsed_seconds =
+		optimization_paper_record::ElapsedSeconds(sequential_run_start);
 	std::vector<double> mmc_density = density;
 
 	// MMC 阶段结束后，只截取实体占有率足够高的单元作为 SIMP 第二阶段设计域。
@@ -168,14 +207,13 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 	MultiMaterialSIMPParams params;
 	params.material_ratio_f = material_ratio_f;
 	// Paper comparison case: E1 is the basic/soft material and E2 is the reinforced/hard material.
-	E1 = 1;
-	E2 = 100;
-	params.E1 = E1;
-	params.E2 = E2;
+	params.E1 = material_E1;
+	params.E2 = material_E2;
 	// MATLAB convention: rho represents E1, so its feasible fraction is V1/(V1+V2).
 	params.initial_rho = 1.0 / (1.0 + material_ratio_f);
 	params.max_iter = static_cast<int>(simp_max_iter);
 
 	RunMultiMaterialSIMPStage(spline, neumann_points, dirichlet_points, neighbor_info, allVertex, cell2V,
-		mmc_density, active_indices, unit_local_matrix, params, "mmc_simp_result", density, is_need_update_model);
+		mmc_density, active_indices, unit_local_matrix, params, output_dir, density, is_need_update_model,
+		mmc_completed_iterations, mmc_completed_iterations, mmc_elapsed_seconds);
 }

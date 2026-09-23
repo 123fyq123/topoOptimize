@@ -35,7 +35,9 @@ void Cuda_TopOpt_MMC_Node(
 	double Poissons,
 	std::vector<double>& density,
 	std::atomic_bool& is_need_update_model,
-	int mmcType);
+	int mmcType,
+	const std::string& paper_record_path = std::string(),
+	int* completed_iterations = nullptr);
 
 //0-1¿Î…¢Õÿ∆À”≈ªØ
 void Cuda_TopOpt_Discrete(const std::string& input_model_file,
