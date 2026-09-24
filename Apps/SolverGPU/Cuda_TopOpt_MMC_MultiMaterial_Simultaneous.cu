@@ -374,22 +374,25 @@ double HeavisideDerivative(double phi, double alpha, double epsilon) {
 }
 
 double InterpolateYoungsModulus(
-	double rho,
+	double eta,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// 与顺序版同名函数保持 rho/rho_power_p 命名；同步流程中的 rho 即 eta。
-	const double rho_power_p = std::pow(rho, params.material_penalty);
-	return rho_power_p * params.E1 + (1.0 - rho_power_p) * params.E2;
+	// xi=1-eta 是硬材料 E2 的设计变量。对 xi 使用标准 SIMP：
+	// E_e = E1 + xi^p (E2-E1)，从而惩罚中间材料而非奖励灰度。
+	const double hard_fraction = 1.0 - eta;
+	const double hard_fraction_power =
+		std::pow(hard_fraction, params.material_penalty);
+	return params.E1
+		+ hard_fraction_power * (params.E2 - params.E1);
 }
 
 double InterpolateYoungsModulusDerivative(
-	double rho,
+	double eta,
 	const MMCMultiMaterialSimultaneousParams& params) {
-	// dE_e/deta_e = p eta_e^(p-1) (E1-E2)。
-	return params.material_penalty
-		* std::pow(rho, params.material_penalty - 1.0)
-		* (params.E1 - params.E2);
+	// dE_e/deta_e = -p (1-eta_e)^(p-1) (E2-E1)。
+	return -params.material_penalty
+		* std::pow(1.0 - eta, params.material_penalty - 1.0)
+		* (params.E2 - params.E1);
 }
-
 // 与顺序 MMC-SIMP 保持一致：材料 OC 更新前先做 Sigmund 灵敏度过滤。
 std::vector<double> FilterSensitivities(
 	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
@@ -473,26 +476,51 @@ void OCUpdate(
 	}
 	std::vector<double> xnew(x);
 	std::vector<unsigned char> active(nn, 0);
-	double inactive_soft_resource = 0.0;
+	double inactive_hard_resource = 0.0;
 	double total_material_weight = 0.0;
+	double active_hard_resource_min = 0.0;
+	double active_hard_resource_max = 0.0;
 	for (int i = 0; i < nn; ++i) {
 		total_material_weight += material_weight[i];
 		if (raw_occupancy[i] > active_threshold) {
 			active[i] = 1;
+			const double hard_before = 1.0 - x[i];
+			active_hard_resource_min += material_weight[i]
+				* std::max(0.0, hard_before - move_limit);
+			active_hard_resource_max += material_weight[i]
+				* std::min(1.0 - rho_min, hard_before + move_limit);
 		}
 		else {
-			inactive_soft_resource += material_weight[i] * x[i];
+			inactive_hard_resource += material_weight[i] * (1.0 - x[i]);
 		}
 	}
-	const double target_soft_resource = total_material_weight
-		/ (1.0 + material_ratio_f);
-	const double target_active_soft_resource =
-		std::max(0.0, target_soft_resource - inactive_soft_resource);
+	// eta=1 对应软材料 E1。OC 内部改用硬材料变量 xi=1-eta，
+	// 使变量增大时柔顺度降低的方向与标准 OC 更新保持一致。
+	const double target_hard_resource = total_material_weight
+		* material_ratio_f / (1.0 + material_ratio_f);
+	const double requested_active_hard_resource =
+		target_hard_resource - inactive_hard_resource;
+	// 活跃集冻结与 move limit 可能使本轮目标不可达。显式报告并投影到
+	// 当前一步可达区间，避免 max(0, target) 静默掩盖比例约束不可行。
+	if (requested_active_hard_resource < active_hard_resource_min - 1e-12 ||
+		requested_active_hard_resource > active_hard_resource_max + 1e-12) {
+		std::cerr
+			<< "[MMC-MultiMaterial-Simultaneous] Material OC target is outside "
+			<< "the reachable interval: requested="
+			<< requested_active_hard_resource
+			<< ", reachable=[" << active_hard_resource_min
+			<< ", " << active_hard_resource_max << "]."
+			<< std::endl;
+	}
+	const double target_active_hard_resource = std::clamp(
+		requested_active_hard_resource,
+		active_hard_resource_min,
+		active_hard_resource_max);
 	double lambda_low = 0.0;
 	double lambda_high = 100000.0;
 	while ((lambda_high - lambda_low) / (lambda_low + lambda_high) > 1e-4) {
 		const double lmid = 0.5 * (lambda_low + lambda_high);
-		double active_soft_resource = 0.0;
+		double active_hard_resource = 0.0;
 		for (int i = 0; i < nn; ++i) {
 			if (!active[i]) {
 				continue;
@@ -500,11 +528,26 @@ void OCUpdate(
 			const double positive_dc = std::max(
 				dc[i],
 				std::numeric_limits<double>::min());
-			const double candidate = x[i] * std::sqrt(positive_dc / lmid);
-			xnew[i] = std::max(rho_min, std::max(x[i] - move_limit, std::min(1.0, std::min(x[i] + move_limit, candidate))));
-			active_soft_resource += material_weight[i] * xnew[i];
+			const double positive_weight = std::max(
+				material_weight[i],
+				std::numeric_limits<double>::min());
+			const double hard_before = 1.0 - x[i];
+			// dC/dxi=-dC/deta，故 -dC/dxi=positive_dc。材料资源约束
+			// 对 xi 的导数为 m_e，标准 OC 比值必须除以该权重。
+			const double hard_candidate =
+				std::max(hard_before, rho_min)
+				* std::sqrt(positive_dc / (lmid * positive_weight));
+			const double hard_after = std::max(
+				0.0,
+				std::max(
+					hard_before - move_limit,
+					std::min(
+						1.0 - rho_min,
+						std::min(hard_before + move_limit, hard_candidate))));
+			xnew[i] = 1.0 - hard_after;
+			active_hard_resource += material_weight[i] * hard_after;
 		}
-		if (active_soft_resource > target_active_soft_resource) {
+		if (active_hard_resource > target_active_hard_resource) {
 			lambda_low = lmid;
 		}
 		else {
@@ -1262,9 +1305,9 @@ void RunClosedFormSelfChecks(
 	const double modulus_at_zero = InterpolateYoungsModulus(0.0, params);
 	const double modulus_at_one = InterpolateYoungsModulus(1.0, params);
 	const double middle_eta = 0.5;
-	const double expected_middle =
-		std::pow(middle_eta, params.material_penalty) * params.E1
-		+ (1.0 - std::pow(middle_eta, params.material_penalty)) * params.E2;
+	const double expected_middle = params.E1
+		+ std::pow(1.0 - middle_eta, params.material_penalty)
+		* (params.E2 - params.E1);
 	if (RelativeDifference(modulus_at_zero, params.E2) > 1e-13 ||
 		RelativeDifference(modulus_at_one, params.E1) > 1e-13 ||
 		RelativeDifference(
@@ -1275,9 +1318,9 @@ void RunClosedFormSelfChecks(
 
 	for (double sample_eta : { 0.0, 0.37, 1.0 }) {
 		const double expected_derivative =
-			params.material_penalty
-			* std::pow(sample_eta, params.material_penalty - 1.0)
-			* (params.E1 - params.E2);
+			-params.material_penalty
+			* std::pow(1.0 - sample_eta, params.material_penalty - 1.0)
+			* (params.E2 - params.E1);
 		if (RelativeDifference(
 			InterpolateYoungsModulusDerivative(sample_eta, params),
 			expected_derivative) > 1e-13) {
@@ -3093,26 +3136,14 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					physical_upper[variable]);
 			}
 
-			// OC 的资源约束必须对应 MMA 更新后的下一几何状态 m^{k+1}；
-			// 这里只重算 MMC 几何占有率，不增加有限元求解。
-			std::vector<MMCComponent> oc_geometry_components = mmcComponents;
-			UpdateComponentsFromPhysical(
-				oc_geometry_components,
-				mmcDesignVariables);
-			const GeometryEvaluation oc_geometry = EvaluateGeometry(
-				allVertex,
-				cell2V,
-				oc_geometry_components,
-				params);
-			if (!IsFiniteVector(oc_geometry.density)) {
-				throw std::runtime_error(
-					"The post-MMA MMC occupancy used by material OC is non-finite.");
-			}
-
+			// 最小修复采用 Jacobi 状态：材料灵敏度、活跃集、资源权重均使用
+			// 同一次耦合求解得到的 m^k，避免把 dC/deta(m^k) 与 m^{k+1} 混用。
+			const std::vector<double>& oc_occupancy =
+				current_evaluation.geometry.density;
 			std::vector<double> oc_sensitivity_full(
 				cell_count,
 				std::numeric_limits<double>::min());
-			std::vector<double> material_filter_eta(cell_count, 0.0);
+			std::vector<double> material_filter_hard(cell_count, 0.0);
 			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
 				// eta 越大越偏软材料 E1；在当前 m_e 固定时，真实
 				// dC/deta 为正。OC 需要正的下降敏感度量，这里直接使用它。
@@ -3120,23 +3151,26 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					std::max(
 						current_evaluation.material_objective_gradient[cell_id],
 						std::numeric_limits<double>::min());
-				if (oc_geometry.density[cell_id]
+				if (oc_occupancy[cell_id]
 					> params.material_active_threshold) {
-					material_filter_eta[cell_id] = materialEta[cell_id];
+					// OC 实际更新 xi=1-eta，Sigmund 滤波也必须使用同一变量。
+					material_filter_hard[cell_id] = std::max(
+						1.0 - materialEta[cell_id],
+						params.eta_min);
 				}
 			}
 			const std::vector<double> filtered_oc_sensitivity =
 				FilterSensitivities(
 					neighbor_info,
-					material_filter_eta,
+					material_filter_hard,
 					oc_sensitivity_full,
 					params.eta_min);
 			OCUpdate(
 				materialEta,
 				params.material_ratio_f,
 				filtered_oc_sensitivity,
-				oc_geometry.density,
-				oc_geometry.density,
+				oc_occupancy,
+				oc_occupancy,
 				params.material_active_threshold,
 				params.eta_min,
 				params.material_move_limit);
@@ -3163,7 +3197,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				}
 				mmc_mma_trace_output.flush();
 				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-					if (oc_geometry.density[cell_id]
+					if (oc_occupancy[cell_id]
 						<= params.material_active_threshold) {
 						continue;
 					}
@@ -3178,9 +3212,9 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 						<< '\t'
 						<< filtered_oc_sensitivity[cell_id]
 						<< '\t'
-						<< oc_geometry.density[cell_id]
+						<< oc_occupancy[cell_id]
 						<< '\t'
-						<< oc_geometry.density[cell_id]
+						<< oc_occupancy[cell_id]
 						<< '\n';
 				}
 				material_oc_trace_output.flush();

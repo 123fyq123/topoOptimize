@@ -15,7 +15,7 @@
 //   2. 固定网格上每个单元一个材料变量 eta_e。
 //
 // 单元耦合关系：
-//   E_e = eta_e^p E1 + (1 - eta_e^p) E2
+//   xi_e = 1 - eta_e，E_e = E1 + xi_e^p (E2 - E1)
 //   a_e = m_e E_e
 //   K_e = a_e K_e^0
 // 其中 m_e 是原始 MMC 占有率，K_e^0 是单位
@@ -43,10 +43,11 @@ struct MMCMultiMaterialSimultaneousParams {
 	double projection_beta_initial = 4.0;
 	double projection_beta_max = 32.0;
 	int projection_beta_update_interval = 20;
-	// 材料 OC 只在当前 MMC 活动区域内更新，与顺序版一样按 m_e>0.3 筛选。
-	double material_active_threshold = 0.3;
-	// 只用于结果显示：与顺序版一致，仅 m_e>0.3 的单元进入材料二值图。
-	double material_binary_active_threshold = 0.3;
+	// 同步版材料 OC 与最终二值图使用同一 MMC 活跃区域：m_e>0.01。
+	double material_active_threshold = 0.01;
+	// 最终二值 VTK 保留所有 MMC 占有率大于 0.01 的组件内单元；
+	// 该阈值只控制导出显示，不参与材料 OC 活跃集判定。
+	double material_binary_active_threshold = 0.01;
 	// 有限元与 MMC 平滑几何参数。
 	double Poissons = 0.3;
 	double heaviside_alpha = 1e-3;

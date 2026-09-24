@@ -33,9 +33,12 @@ void BuildDisplacementByPatch(
 	}
 }
 
-double InterpolateYoungsModulus(double rho, const MultiMaterialSIMPParams& params) {
-	const double rho_power_p = std::pow(rho, params.penalty);
-	return rho_power_p * params.E1 + (1.0 - rho_power_p) * params.E2;
+double InterpolateYoungsModulus(double eta, const MultiMaterialSIMPParams& params) {
+	// xi=1-eta 是硬材料 E2 的设计变量。对 xi 使用标准 SIMP，
+	// 避免旧公式在高模量反差下奖励 0.4~0.6 的中间材料。
+	const double hard_fraction = 1.0 - eta;
+	return params.E1
+		+ std::pow(hard_fraction, params.penalty) * (params.E2 - params.E1);
 }
 
 double EvaluateCompliance(
@@ -95,12 +98,12 @@ std::vector<int> BuildFiniteDifferenceSampleIds(int active_count, int requested_
 
 std::vector<double> FilterSensitivities(
 	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
-	const std::vector<double>& rho_full,
+	const std::vector<double>& design_variable_full,
 	const std::vector<double>& dc_full,
 	double rho_min) {
 	std::vector<double> filtered(dc_full.size(), 0.0);
 	for (int i = 0; i < static_cast<int>(dc_full.size()); ++i) {
-		if (rho_full[i] <= 0.0) {
+		if (design_variable_full[i] <= 0.0) {
 			continue;
 		}
 		double sum_weight = 0.0;
@@ -109,16 +112,17 @@ std::vector<double> FilterSensitivities(
 			if (j < 0 || j >= static_cast<int>(dc_full.size())) {
 				continue;
 			}
-			if (rho_full[j] <= 0.0) {
+			if (design_variable_full[j] <= 0.0) {
 				continue;
 			}
 			const double clamped_weight = std::max(0.0, weight);
 			sum_weight += clamped_weight;
-			accum += clamped_weight * rho_full[j] * dc_full[j];
+			accum += clamped_weight * design_variable_full[j] * dc_full[j];
 		}
 		// Sigmund 灵敏度过滤：
 		//   dc_hat_i = sum_j(w_ij * rho_j * dc_j) / (rho_i * sum_j(w_ij))
-		const double denom = std::max(rho_full[i], rho_min) * std::max(sum_weight, 1e-12);
+		const double denom = std::max(design_variable_full[i], rho_min)
+			* std::max(sum_weight, 1e-12);
 		filtered[i] = accum / denom;
 	}
 	return filtered;
@@ -221,27 +225,53 @@ void OCUpdate(
 	std::vector<double>& x,
 	double material_ratio_f,
 	const std::vector<double>& dc,
+	const std::vector<double>& material_weight,
 	double rho_min,
 	double move_limit) {
 	double l1 = 0.0;
 	double l2 = 100000.0;
 	const int nn = static_cast<int>(x.size());
-	std::vector<double> xnew(nn, rho_min);
+	if (static_cast<int>(dc.size()) != nn ||
+		static_cast<int>(material_weight.size()) != nn) {
+		throw std::runtime_error(
+			"The sequential material OC input sizes do not match.");
+	}
+	std::vector<double> xnew(x);
+	const double total_material_weight = std::accumulate(
+		material_weight.begin(),
+		material_weight.end(),
+		0.0);
+	const double target_hard_volume =
+		total_material_weight * material_ratio_f
+		/ (1.0 + material_ratio_f);
 	while ((l2 - l1) / (l1 + l2) > 1e-4) {
 		const double lmid = 0.5 * (l1 + l2);
+		double hard_volume = 0.0;
 		for (int i = 0; i < nn; ++i) {
-			// MATLAB reference:
-			// xnew = max(0.001, max(x-move, min(1., min(x+move, x.*sqrt(-dc./lmid)))));
-			const double candidate = x[i] * std::sqrt(-dc[i] / lmid);
-			xnew[i] = std::max(rho_min, std::max(x[i] - move_limit, std::min(1.0, std::min(x[i] + move_limit, candidate))));
+			// dc=dC/dxi<0。OC 在硬材料变量 xi=1-eta 上更新，
+			// 外部仍保存 eta，以保持文件字段和红蓝材料语义不变。
+			const double hard_before = 1.0 - x[i];
+			const double positive_weight = std::max(
+				material_weight[i],
+				std::numeric_limits<double>::min());
+			// 材料资源对 xi 的导数为 m_e，标准 OC 比值必须除以该权重。
+			const double hard_candidate =
+				std::max(hard_before, rho_min)
+				* std::sqrt(
+					std::max(-dc[i], std::numeric_limits<double>::min())
+					/ (lmid * positive_weight));
+			const double hard_after = std::max(
+				0.0,
+				std::max(
+					hard_before - move_limit,
+					std::min(
+						1.0 - rho_min,
+						std::min(hard_before + move_limit, hard_candidate))));
+			xnew[i] = 1.0 - hard_after;
+			hard_volume += material_weight[i] * hard_after;
 		}
-		double sum_x = 0.0;
-		for (double value : xnew) {
-			sum_x += value;
-		}
-		// MATLAB: x represents E1 and f = V2 / V1, hence sum(x) = nn / (1 + f).
-		const double target_soft_volume = nn / (1.0 + material_ratio_f);
-		if (sum_x - target_soft_volume > 0.0) {
+		// f=V2/V1，因此 MMC 加权硬材料目标为 sum(m_e)*f/(1+f)。
+		if (hard_volume > target_hard_volume) {
 			l1 = lmid;
 		}
 		else {
@@ -301,21 +331,27 @@ void RunMultiMaterialSIMPStage(
 	// rho close to 1 selects E1; rho close to rho_min selects E2.
 	// active_rho:是真正参与 SIMP 优化的材料选择变量，只在 MMC 筛出来的有效单元里存在。
 	std::vector<double> active_rho(active_indices.size(), std::clamp(params.initial_rho, params.rho_min, 1.0));
+	std::vector<double> active_material_weight(active_indices.size(), 0.0);
+	for (int local_id = 0;
+		local_id < static_cast<int>(active_indices.size());
+		++local_id) {
+		active_material_weight[local_id] = mmc_density[active_indices[local_id]];
+	}
 	std::vector<double> final_rho_full(grid_size, 0.0);
 
 	for (int iter = 0; iter < params.max_iter; ++iter) {
 		const auto iteration_start = std::chrono::steady_clock::now();
-		std::vector<double> rho_full(grid_size, 0.0);
+		std::vector<double> hard_fraction_full(grid_size, 0.0);
 		std::vector<double> stiffness_coeff(grid_size, 0.0);
 		for (int local_id = 0; local_id < static_cast<int>(active_indices.size()); ++local_id) {
 			const int cell_id = active_indices[local_id];
 			assert(cell_id >= 0 && cell_id < grid_size);
 			const double rho = active_rho[local_id];
 
-			// MATLAB two-material interpolation:
-			// E(rho_e) = rho_e^p * E1 + (1 - rho_e^p) * E2
+			// eta=rho 仍表示软材料 E1，xi=1-eta 表示硬材料 E2：
+			// E(eta_e) = E1 + (1-eta_e)^p * (E2-E1)。
 			const double interpolated_E = InterpolateYoungsModulus(rho, params);
-			rho_full[cell_id] = rho;
+			hard_fraction_full[cell_id] = std::max(1.0 - rho, params.rho_min);
 
 			// 顺序 MMC + SIMP 的单元刚度系数：
 			// k_e = rho_e^M * E(rho_e) * k0
@@ -330,7 +366,8 @@ void RunMultiMaterialSIMPStage(
 		BuildDisplacementByPatch(spline, U, UU);
 
 		double comp = 0.0;
-		// dc_active follows MATLAB's OC convention and stores -dC/drho, so it is negative.
+		// objective_gradient_active=dC/deta>0；由于 xi=1-eta，
+		// dc_active=dC/dxi=-dC/deta<0，可直接用于标准 OC。
 		std::vector<double> dc_active(active_indices.size(), 0.0);
 		std::vector<double> objective_gradient_active(active_indices.size(), 0.0);
 		std::vector<double> energy_active(active_indices.size(), 0.0);
@@ -343,11 +380,11 @@ void RunMultiMaterialSIMPStage(
 			const double energy = (Ue.transpose() * unit_local_matrix[cell_id] * Ue)(0, 0);
 			energy_active[local_id] = energy;
 			comp += stiffness_coeff[cell_id] * energy;
-			// Since E1 < E2, the true derivative dC/drho is positive. MATLAB feeds its
-			// negative into OC so that the standard sqrt(-dc/lambda) update remains valid.
+			// dE/deta=-p(1-eta)^(p-1)(E2-E1)，故柔顺度伴随导数
+			// dC/deta=-m*q*dE/deta 为正。
 			objective_gradient_active[local_id] = mmc_density[cell_id]
 				* params.penalty
-				* std::pow(active_rho[local_id], params.penalty - 1.0)
+				* std::pow(1.0 - active_rho[local_id], params.penalty - 1.0)
 				* (params.E2 - params.E1)
 				* energy;
 			dc_active[local_id] = -objective_gradient_active[local_id];
@@ -355,7 +392,11 @@ void RunMultiMaterialSIMPStage(
 		}
 		const std::vector<double> raw_dc_active = dc_active;
 
-		const std::vector<double> filtered_full = FilterSensitivities(neighbor_info, rho_full, dc_full, params.rho_min);
+		const std::vector<double> filtered_full = FilterSensitivities(
+			neighbor_info,
+			hard_fraction_full,
+			dc_full,
+			params.rho_min);
 		for (int local_id = 0; local_id < static_cast<int>(active_indices.size()); ++local_id) {
 			dc_active[local_id] = filtered_full[active_indices[local_id]];
 		}
@@ -442,7 +483,13 @@ void RunMultiMaterialSIMPStage(
 		}
 
 		const std::vector<double> old_rho = active_rho;
-		OCUpdate(active_rho, params.material_ratio_f, dc_active, params.rho_min, params.move_limit);
+		OCUpdate(
+			active_rho,
+			params.material_ratio_f,
+			dc_active,
+			active_material_weight,
+			params.rho_min,
+			params.move_limit);
 
 		double change = 0.0;
 		material_density_full.assign(grid_size, 0.0);
@@ -454,8 +501,8 @@ void RunMultiMaterialSIMPStage(
 			final_rho_full[cell_id] = active_rho[local_id];
 		}
 
-		// 论文记录统一采用 MMC 占有率加权的两种材料体积，且只统计顺序法
-		// 固定的材料设计域；这些统计不参与 OC 更新。
+		// 论文记录与 OC 资源约束统一采用 MMC 占有率加权的材料体积，
+		// 保证记录的 V2/V1 与优化器实际维持的比例完全同义。
 		double material_v1 = 0.0;
 		double material_v2 = 0.0;
 		double mean_material_variable = 0.0;
