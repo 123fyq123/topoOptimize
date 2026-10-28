@@ -108,7 +108,7 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		btn_generate_hex_mesh_ = new QPushButton("Generate Mesh", topopt_page);
 		btn_generate_hex_mesh_->setObjectName("btnGenerateHexMesh");
 		// 顺序材料参数占用上一行，网格生成及结果工具整体下移避免控件遮挡。
-		btn_generate_hex_mesh_->setGeometry(20, 335, 231, 27);
+		btn_generate_hex_mesh_->setGeometry(20, 363, 231, 27);
 	}
 
 	//	ui->tabWidget->removeTab(0);  // 删除Tab，实际效果是隐藏Tab
@@ -143,7 +143,7 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		ui->TopOpt_Iters_Simultaneous->setValidator(validator_2);
 		ui->TopOpt_MMC_type_Simultaneous->setText("1");
 		ui->TopOpt_MMC_type_Simultaneous->setValidator(
-			new QIntValidator(1, 11, ui->TopOpt_MMC_type_Simultaneous));
+			new QIntValidator(1, 12, ui->TopOpt_MMC_type_Simultaneous));
 		ui->TopOpt_Material_Ratio->setText("1.5");
 		ui->TopOpt_Material_Ratio->setValidator(validator_2);
 		ui->TopOpt_Material_E1->setText("1.0");
@@ -156,6 +156,8 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		ui->TopOpt_Sequential_E1->setValidator(validator_2);
 		ui->TopOpt_Sequential_E2->setText("100.0");
 		ui->TopOpt_Sequential_E2->setValidator(validator_2);
+		ui->TopOpt_Sequential_Ratio->setText("1.5");
+		ui->TopOpt_Sequential_Ratio->setValidator(validator_2);
 
 
 
@@ -1562,8 +1564,7 @@ bool iGamePoster::ConvertToIGES_2(void) {
 	else {
 		ui->openGLWidget->loadHexMesh(filename);
 	}
-	Sleep(1000);
-	int spend = clock() - t1;
+	Sleep(1000);	int spend = clock() - t1;
 
 	if (!ui->openGLWidget->isVaildHexMesh()) {
 		ui->info->printString("hexmesh model is null");
@@ -2213,12 +2214,14 @@ void iGamePoster::TopOpt_Run_4() {
 }
 
 void iGamePoster::TopOpt_Run_Seq() {
+	const double material_ratio =
+		ui->TopOpt_Sequential_Ratio->text().toDouble();
 	const double material_E1 =
 		ui->TopOpt_Sequential_E1->text().toDouble();
 	const double material_E2 =
 		ui->TopOpt_Sequential_E2->text().toDouble();
 
-	QtConcurrent::run([&, material_E1, material_E2]() {
+	QtConcurrent::run([&, material_ratio, material_E1, material_E2]() {
 		ui->openGLWidget->analysis_flag = false;
 		TopOpt_GPU_MMC_SIMP_Sequential(poster_filename,
 			ui->openGLWidget->hexbdy,
@@ -2226,7 +2229,7 @@ void iGamePoster::TopOpt_Run_Seq() {
 			ui->TopOpt_MMC_type->text().toInt(),
 			ui->TopOpt_Rate_2->text().toDouble(),
 			ui->TopOpt_Iters_2->text().toDouble(),
-			1.5,
+			material_ratio,
 			ui->TopOpt_Iters_2->text().toDouble(),
 			material_E1,
 			material_E2,

@@ -35,6 +35,7 @@ void RunMultiMaterialSIMPStage(
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
 	const MultiMaterialSIMPParams& params,
 	const std::string& output_dir,
+	const std::string& record_dir,
 	std::vector<double>& material_density_full,
 	std::atomic_bool& is_need_update_model,
 	int initial_global_iteration = 0,

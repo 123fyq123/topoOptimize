@@ -295,6 +295,7 @@ void RunMultiMaterialSIMPStage(
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
 	const MultiMaterialSIMPParams& params,
 	const std::string& output_dir,
+	const std::string& record_dir,
 	std::vector<double>& material_density_full,
 	std::atomic_bool& is_need_update_model,
 	int initial_global_iteration,
@@ -307,15 +308,16 @@ void RunMultiMaterialSIMPStage(
 	}
 
 	std::filesystem::create_directories(output_dir);
+	std::filesystem::create_directories(record_dir);
 	optimization_paper_record::IterationWriter paper_output(
-		output_dir + "/paper_iterations.tsv",
+		record_dir + "/paper_iterations.tsv",
 		true);
 	if (!paper_output.Good()) {
 		throw std::runtime_error("Cannot create the sequential paper iteration record.");
 	}
 	const auto material_stage_start = std::chrono::steady_clock::now();
-	std::ofstream analytical_out(output_dir + "/analytical_sensitivities.txt", std::ios::out | std::ios::trunc);
-	std::ofstream finite_difference_out(output_dir + "/finite_difference_sensitivities.txt", std::ios::out | std::ios::trunc);
+	std::ofstream analytical_out(record_dir + "/analytical_sensitivities.txt", std::ios::out | std::ios::trunc);
+	std::ofstream finite_difference_out(record_dir + "/finite_difference_sensitivities.txt", std::ios::out | std::ios::trunc);
 	analytical_out << std::setprecision(17);
 	finite_difference_out << std::setprecision(17);
 	analytical_out

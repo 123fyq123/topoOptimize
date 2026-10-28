@@ -24,6 +24,9 @@ struct MMCMultiMaterialSimultaneousParams {
 	// MMC 几何体积与组件初始化参数。
 	double mmc_target_rate = 0.3;
 	int max_iterations = 100;
+	// 前若干次更新只使用 E=1 的纯 MMC 物理场并冻结材料变量；
+	// 该次数计入 max_iterations，设为 0 可关闭暖启动。
+	int pure_mmc_warmup_iterations = 0;
 	int mmc_type = 1;
 
 	// 双材料插值参数。material_ratio_f 表示目标关系 V2 = f * V1。
@@ -47,11 +50,14 @@ struct MMCMultiMaterialSimultaneousParams {
 	double material_active_threshold = 0.01;
 	// 最终二值 VTK 保留所有 MMC 占有率大于 0.01 的组件内单元；
 	// 该阈值只控制导出显示，不参与材料 OC 活跃集判定。
-	double material_binary_active_threshold = 0.01;
+	double material_binary_active_threshold = 0.5;
 	// 有限元与 MMC 平滑几何参数。
 	double Poissons = 0.3;
 	double heaviside_alpha = 1e-3;
+	// 三阶段 Heaviside 延续：暖启动/中期/后期逐步收窄边界过渡带。
 	double heaviside_epsilon = 0.20;
+	double heaviside_epsilon_middle = 0.20;
+	double heaviside_epsilon_final = 0.20;
 	double ks_lambda = 100.0;
 
 	// 同步流程固定运行 max_iterations 次，变量变化量与约束残差只作为
@@ -78,6 +84,7 @@ struct MMCMultiMaterialIterationDiagnostic {
 	double compliance_from_load = 0.0;
 	double compliance_relative_mismatch = 0.0;
 	double projection_beta = 0.0;
+	double heaviside_epsilon = 0.0;
 	double mmc_occupancy_min = 0.0;
 	double mmc_occupancy_max = 0.0;
 	double projected_occupancy_min = 0.0;

@@ -1830,7 +1830,118 @@ void Cuda_TopOpt_MMC_Node(
 		BaseComponent = { 9, 2, 2, atan(1.0), atan(1.0), atan(1.0) };
 		mmcComponents = init(xyzRange, 6, 6, 6, BaseComponent, mmcType);
 	}
-	else {
+	else if (mmcType == 12) {
+		// 48 * 24 * 8：从 Z 方向把 XY 平面划分为 2 * 2 个小块，
+		// 每块放置一个二维“米”字；沿 Z 方向在对称位置放置两层。
+		const double center_x = 0.5 * (xmin + xmax);
+		const double center_y = 0.5 * (ymin + ymax);
+		const double center_z = 0.5 * (zmin + zmax);
+		const double block_half_x = 0.25 * DL;
+		const double block_half_y = 0.25 * DW;
+		const double layer_offset = 0.25 * DH;
+		const double component_radius = 0.075 * std::min({ DL, DW, DH });
+		mmcComponents.reserve(37);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_y,
+			double component_center_z,
+			double direction_x,
+			double direction_y,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_y * direction_y
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			// MMC 的长轴是局部 x 轴；beta/gamma 将其旋转到给定空间方向。
+			const double beta = -std::asin(normalized_z);
+			const double gamma = std::atan2(direction_y, direction_x);
+			mmcComponents.emplace_back(
+				component_center_x,
+				component_center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				gamma);
+		};
+
+		const double block_x_centers[2] = {
+			center_x - block_half_x,
+			center_x + block_half_x
+		};
+		const double block_y_centers[2] = {
+			center_y - block_half_y,
+			center_y + block_half_y
+		};
+		const double layer_centers[2] = {
+			center_z - layer_offset,
+			center_z + layer_offset
+		};
+		const double space_diagonal_half_length = std::sqrt(
+			block_half_x * block_half_x
+			+ block_half_y * block_half_y
+			+ layer_offset * layer_offset);
+
+		// 两个 Z 层仅放置每个分块的 X/Y 主杆。
+		for (double layer_z : layer_centers) {
+			for (double block_y : block_y_centers) {
+				for (double block_x : block_x_centers) {
+					add_component(
+						block_x, block_y, layer_z,
+						1.0, 0.0, 0.0,
+						block_half_x);
+					add_component(
+						block_x, block_y, layer_z,
+						0.0, 1.0, 0.0,
+						block_half_y);
+				}
+			}
+		}
+
+		// 每个分块放置四根带 Z 分量的空间斜杆。其 Z 向投影仍为“米”字
+		// 对角线，但杆件跨越 z=-layer_offset 与 z=+layer_offset，填充中间层。
+		for (double block_y : block_y_centers) {
+			for (double block_x : block_x_centers) {
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, -layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, -layer_offset,
+					space_diagonal_half_length);
+
+				// Z 向中心杆连接两层主杆，并与四根空间斜杆在分块中心相交。
+				add_component(
+					block_x, block_y, center_z,
+					0.0, 0.0, 1.0,
+					layer_offset);
+			}
+		}
+
+		// 当前工况的载荷沿 x=xmax、y=ymin、z∈[zmin,zmax] 分布；
+		// 加载边构件与右下分块的两层“米”字相交，将分布载荷传入主体。
+		add_component(
+			xmax, ymin, center_z,
+			0.0, 0.0, 1.0,
+			0.50 * DH);
+	}
+	else{
 		BaseComponent = { 0.6, 8, 1, atan(1.0), 0, 0 };
 		mmcComponents = init(xyzRange, 0.5, 5, 5, BaseComponent, -1);
 	}
@@ -1940,7 +2051,10 @@ void Cuda_TopOpt_MMC_Node(
 	std::vector<std::vector<double>> allPhis;   // 所有组件的TDF nVertex * nComponent
 	std::vector<std::vector<std::vector<double>>> allPhiDrv; // 所有组件的TDF对设计变量的导数 nVertex * nComponent * 9
 	std::vector<double> globalPhi; // 全局TDF nGrid * 1
-	const double alhpa = 1e-3, epsilon = 0.20; // Heaviside 函数参数
+	const double alhpa = 1e-3;
+	// 全程保持宽过渡带，避免迭代后期因 epsilon 收窄而突然改变
+	// MMC 边界厚度和形状灵敏度分布。
+	constexpr double epsilon = 0.20;
 	MMASolver mmaSolver(9 * mmcComponents.size(), 1); // 1个约束（体积）
 	// Diagnostic-only instrumentation. It observes the existing standalone MMC
 	// state without changing its variables, update order, or termination rules.

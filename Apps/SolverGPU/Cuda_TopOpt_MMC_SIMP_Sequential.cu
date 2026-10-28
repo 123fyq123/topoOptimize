@@ -78,14 +78,21 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 	std::atomic_bool& is_need_update_model,
 	int mmcType) {
 	const std::string output_dir = "mmc_simp_result";
-	const std::string paper_iteration_path = output_dir + "/paper_iterations.tsv";
+	const optimization_paper_record::RunMetadata run_metadata =
+		optimization_paper_record::CreateRunMetadata(
+			output_dir,
+			"sequential",
+			input_model_file,
+			bdy_file);
+	const std::string record_dir = run_metadata.record_directory;
+	const std::string paper_iteration_path = record_dir + "/paper_iterations.tsv";
 	const auto sequential_run_start = std::chrono::steady_clock::now();
 	std::filesystem::create_directories(output_dir);
-	// MMC 阶段沿用 E1 作为基准模量；后续材料阶段直接使用界面传入的 E1/E2。
-	if (!optimization_paper_record::WriteConfig(
-		output_dir + "/paper_run_config.tsv",
+	// 顺序版 MMC 阶段复用纯 MMC，Heaviside 平滑宽度全程固定为 0.2。
+	auto config_entries = optimization_paper_record::MetadataEntries(run_metadata);
+	config_entries.insert(
+		config_entries.end(),
 		{
-			{ "method", "sequential" },
 			{ "input_model_file", input_model_file },
 			{ "mmc_type", optimization_paper_record::ToString(mmcType) },
 			{ "mmc_target_rate", optimization_paper_record::ToString(mmc_target_rate) },
@@ -96,15 +103,29 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 			{ "material_E1", optimization_paper_record::ToString(E1) },
 			{ "material_E2", optimization_paper_record::ToString(E2) },
 			{ "poissons_ratio", optimization_paper_record::ToString(Poissons) },
+			{ "heaviside_epsilon_mode", "fixed" },
+			{ "heaviside_epsilon_initial", "0.2" },
+			{ "heaviside_epsilon_middle", "0.2" },
+			{ "heaviside_epsilon_final", "0.2" },
 			{ "material_penalty", "3" },
-			{ "material_active_threshold", "0.3" },
+			{ "material_active_threshold", "0.01" },
 			{ "material_rho_min", "0.001" },
 			{ "material_move_limit", "0.2" },
 			{ "mmc_fe_solves_per_iteration", "1" },
 			{ "material_fe_solves_per_iteration", "1" }
-		})) {
+		});
+	// MMC 阶段沿用 E1 作为基准模量；后续材料阶段直接使用界面传入的 E1/E2。
+	if (!optimization_paper_record::WriteConfig(
+		record_dir + "/paper_run_config.tsv",
+		config_entries)) {
 		throw std::runtime_error("Cannot create the sequential paper run configuration.");
 	}
+	optimization_paper_record::WriteConfig(
+		output_dir + "/latest_run.tsv",
+		{
+			{ "run_id", run_metadata.run_id },
+			{ "record_directory", record_dir }
+		});
 	int mmc_completed_iterations = 0;
 	Cuda_TopOpt_MMC_Node(allVertex, cell2V, input_model_file, bdy_file, protect_cell_ids, neighbor_info,
 		mmc_target_rate, mmc_max_iter, E1, Poissons, density, is_need_update_model, mmcType,
@@ -115,7 +136,8 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 
 	// MMC 阶段结束后，只截取实体占有率足够高的单元作为 SIMP 第二阶段设计域。
 	// 当前 3D MMC 输出的 mmc_density 是八节点 Heaviside 平均值，因此这里直接按密度阈值筛选。
-	const double mmc_active_density_threshold = 0.3;
+	// 与同步版保持一致：MMC 占有率超过 0.01 的单元均进入材料优化域和最终 VTK。
+	const double mmc_active_density_threshold = 0.01;
 	std::vector<int> active_indices;
 	for (int i = 0; i < static_cast<int>(mmc_density.size()); ++i) {
 		if (mmc_density[i] > mmc_active_density_threshold) {
@@ -211,6 +233,15 @@ void Cuda_TopOpt_MMC_SIMP_Sequential(
 	params.max_iter = static_cast<int>(simp_max_iter);
 
 	RunMultiMaterialSIMPStage(spline, neumann_points, dirichlet_points, neighbor_info, allVertex, cell2V,
-		mmc_density, active_indices, unit_local_matrix, params, output_dir, density, is_need_update_model,
+		mmc_density, active_indices, unit_local_matrix, params, output_dir, record_dir, density, is_need_update_model,
 		mmc_completed_iterations, mmc_completed_iterations, mmc_elapsed_seconds);
+	// 固定目录保留最新结果供界面读取，独立运行目录保存与本次参数严格对应的结果。
+	const std::filesystem::path latest_vtk =
+		std::filesystem::path(output_dir) / "mmc_simp_result.vtk";
+	if (std::filesystem::exists(latest_vtk)) {
+		std::filesystem::copy_file(
+			latest_vtk,
+			std::filesystem::path(record_dir) / latest_vtk.filename(),
+			std::filesystem::copy_options::overwrite_existing);
+	}
 }

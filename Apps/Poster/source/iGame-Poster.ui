@@ -2818,7 +2818,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>60</x>
-                   <y>370</y>
+                   <y>397</y>
                    <width>161</width>
                    <height>10</height>
                   </rect>
@@ -2831,7 +2831,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>363</y>
+                   <y>390</y>
                    <width>31</width>
                    <height>21</height>
                   </rect>
@@ -2849,9 +2849,9 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>390</y>
+                   <y>412</y>
                    <width>111</width>
-                   <height>31</height>
+                   <height>27</height>
                   </rect>
                  </property>
                  <property name="font">
@@ -2868,9 +2868,9 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>140</x>
-                   <y>430</y>
+                   <y>444</y>
                    <width>111</width>
-                   <height>31</height>
+                   <height>27</height>
                   </rect>
                  </property>
                  <property name="font">
@@ -2887,9 +2887,9 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>20</x>
-                   <y>430</y>
+                   <y>444</y>
                    <width>111</width>
-                   <height>31</height>
+                   <height>27</height>
                   </rect>
                  </property>
                  <property name="font">
@@ -2919,7 +2919,7 @@ background:#444444;
                  <property name="geometry">
                   <rect>
                    <x>140</x>
-                   <y>390</y>
+                   <y>412</y>
                    <width>111</width>
                    <height>27</height>
                   </rect>
@@ -3020,6 +3020,35 @@ background:#444444;
                  </property>
                  <property name="toolTip">
                   <string>顺序 MMC-SIMP 的材料 2 弹性模量</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="label_sequential_ratio">
+                 <property name="geometry">
+                  <rect>
+                   <x>20</x>
+                   <y>335</y>
+                   <width>131</width>
+                   <height>21</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>材料比 V2/V1：</string>
+                 </property>
+                 <property name="toolTip">
+                  <string>顺序 MMC-SIMP 的目标硬材料/软材料体积比</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="TopOpt_Sequential_Ratio">
+                 <property name="geometry">
+                  <rect>
+                   <x>160</x>
+                   <y>332</y>
+                   <width>85</width>
+                   <height>26</height>
+                  </rect>
+                 </property>
+                 <property name="toolTip">
+                  <string>目标关系 V2 = (V2/V1) × V1</string>
                  </property>
                 </widget>
                 <widget class="QLabel" name="label_40">

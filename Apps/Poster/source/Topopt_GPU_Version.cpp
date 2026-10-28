@@ -518,6 +518,10 @@ void TopOpt_GPU_MMC_MultiMaterial_Simultaneous(
 	params.mmc_type = mmcType;
 	params.mmc_target_rate = mmc_target_rate;
 	params.max_iterations = std::max(1, static_cast<int>(max_iter));
+	// 暖启动计入同步优化总预算：前 25%（最多 20 轮）固定 eta，
+	// 仅用 E=1 的纯 MMC 物理场建立主传力路径。
+	params.pure_mmc_warmup_iterations =
+		std::min(20, params.max_iterations / 4);
 	params.material_ratio_f = material_ratio_f;
 	params.E1 = E1;
 	params.E2 = E2;

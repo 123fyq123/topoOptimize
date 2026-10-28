@@ -151,6 +151,7 @@ struct SimultaneousEvaluation {
 	std::vector<double> projected_occupancy; // 兼容旧输出字段；当前数值路径中 chi_e == m_e
 	std::vector<double> projected_occupancy_derivative;
 	double projection_beta = 0.0;
+	double heaviside_epsilon = 0.0;
 	std::vector<double> effective_stiffness; // a_e = m_e E_e
 	std::vector<double> element_energy;      // q_e = U_e^T K_e^0 U_e
 	std::vector<double> mmc_objective_gradient;
@@ -252,6 +253,12 @@ bool ValidateInputs(
 		error = "The maximum iteration count must be positive.";
 		return false;
 	}
+	if (params.pure_mmc_warmup_iterations < 0 ||
+		params.pure_mmc_warmup_iterations >= params.max_iterations) {
+		error =
+			"The pure-MMC warmup count must be nonnegative and smaller than max_iterations.";
+		return false;
+	}
 	if (!(params.E1 > 0.0) || !(params.E2 > 0.0) ||
 		!std::isfinite(params.E1) || !std::isfinite(params.E2)) {
 		error = "Both material moduli must be finite and positive.";
@@ -315,10 +322,17 @@ bool ValidateInputs(
 		return false;
 	}
 	if (!(params.heaviside_epsilon > 0.0) ||
+		!(params.heaviside_epsilon_middle > 0.0) ||
+		!(params.heaviside_epsilon_final > 0.0) ||
+		!(params.heaviside_epsilon >= params.heaviside_epsilon_middle) ||
+		!(params.heaviside_epsilon_middle >= params.heaviside_epsilon_final) ||
 		!(params.ks_lambda > 0.0) ||
 		!std::isfinite(params.heaviside_epsilon) ||
+		!std::isfinite(params.heaviside_epsilon_middle) ||
+		!std::isfinite(params.heaviside_epsilon_final) ||
 		!std::isfinite(params.ks_lambda)) {
-		error = "Heaviside epsilon and KS lambda must be positive.";
+		error =
+			"Heaviside epsilons must be finite, positive, and nonincreasing; KS lambda must be positive.";
 		return false;
 	}
 	if (params.finite_difference_mmc_sample_count < 0 ||
@@ -433,6 +447,22 @@ double ProjectionBetaForIteration(
 	return std::min(
 		params.projection_beta_max,
 		params.projection_beta_initial * std::pow(2.0, continuation_stage));
+}
+
+double HeavisideEpsilonForIteration(
+	const MMCMultiMaterialSimultaneousParams& params,
+	int evaluation_iteration) {
+	const int initial_iterations = std::max(
+		1, std::min(20, params.max_iterations / 4));
+	const int remaining_iterations = params.max_iterations - initial_iterations;
+	const int middle_iterations = (remaining_iterations + 1) / 2;
+	if (evaluation_iteration <= initial_iterations) {
+		return params.heaviside_epsilon;
+	}
+	if (evaluation_iteration <= initial_iterations + middle_iterations) {
+		return params.heaviside_epsilon_middle;
+	}
+	return params.heaviside_epsilon_final;
 }
 
 double ProjectOccupancy(
@@ -730,6 +760,133 @@ std::vector<MMCComponent> InitializeComponentsForType(
 		y_interval = 6.0;
 		z_interval = 6.0;
 		break;
+	case 12: {
+		// 48 * 24 * 8：从 Z 方向把 XY 平面划分为 2 * 2 个小块，
+		// 每块的空间斜杆跨越两个 Z 层，使投影为“米”字且中间不镂空。
+		std::vector<MMCComponent> components;
+		if (xyz_range.size() < 6) {
+			return components;
+		}
+		const double xmin = xyz_range[0];
+		const double xmax = xyz_range[1];
+		const double ymin = xyz_range[2];
+		const double ymax = xyz_range[3];
+		const double zmin = xyz_range[4];
+		const double zmax = xyz_range[5];
+		const double dx = xmax - xmin;
+		const double dy = ymax - ymin;
+		const double dz = zmax - zmin;
+		if (!(dx > 0.0) || !(dy > 0.0) || !(dz > 0.0)) {
+			return components;
+		}
+		const double center_x = 0.5 * (xmin + xmax);
+		const double center_y = 0.5 * (ymin + ymax);
+		const double center_z = 0.5 * (zmin + zmax);
+		const double block_half_x = 0.25 * dx;
+		const double block_half_y = 0.25 * dy;
+		const double layer_offset = 0.25 * dz;
+		const double component_radius = 0.075 * std::min({ dx, dy, dz });
+		components.reserve(37);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_y,
+			double component_center_z,
+			double direction_x,
+			double direction_y,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_y * direction_y
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			const double beta = -std::asin(normalized_z);
+			const double gamma = std::atan2(direction_y, direction_x);
+			components.emplace_back(
+				component_center_x,
+				component_center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				gamma);
+		};
+
+		const double block_x_centers[2] = {
+			center_x - block_half_x,
+			center_x + block_half_x
+		};
+		const double block_y_centers[2] = {
+			center_y - block_half_y,
+			center_y + block_half_y
+		};
+		const double layer_centers[2] = {
+			center_z - layer_offset,
+			center_z + layer_offset
+		};
+		const double space_diagonal_half_length = std::sqrt(
+			block_half_x * block_half_x
+			+ block_half_y * block_half_y
+			+ layer_offset * layer_offset);
+
+		// 两个 Z 层只放置每个分块的 X/Y 主杆。
+		for (double layer_z : layer_centers) {
+			for (double block_y : block_y_centers) {
+				for (double block_x : block_x_centers) {
+					add_component(
+						block_x, block_y, layer_z,
+						1.0, 0.0, 0.0,
+						block_half_x);
+					add_component(
+						block_x, block_y, layer_z,
+						0.0, 1.0, 0.0,
+						block_half_y);
+				}
+			}
+		}
+
+		// 每个分块放置四根跨层空间斜杆；Z 向投影仍是两条对角线，
+		// 但杆件连接 z=-layer_offset 与 z=+layer_offset，并穿过 z=0。
+		for (double block_y : block_y_centers) {
+			for (double block_x : block_x_centers) {
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, -layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, -layer_offset,
+					space_diagonal_half_length);
+
+				// Z 向中心杆连接两层主杆，并在分块中心与空间斜杆相交。
+				add_component(
+					block_x, block_y, center_z,
+					0.0, 0.0, 1.0,
+					layer_offset);
+			}
+		}
+
+		// 加载边构件覆盖 x=xmax、y=ymin 的整条厚度方向边界，
+		// 并与右下分块的跨层空间斜杆相交，将分布载荷传入主体。
+		add_component(
+			xmax, ymin, center_z,
+			0.0, 0.0, 1.0,
+			0.50 * dz);
+		return components;
+	}
 	default:
 		base_component = { 0.6, 8.0, 1.0, std::atan(1.0), 0.0, 0.0 };
 		x_interval = 0.5;
@@ -917,7 +1074,8 @@ GeometryEvaluation EvaluateGeometry(
 	const std::map<int, Eigen::Vector3d>& allVertex,
 	const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell2V,
 	const std::vector<MMCComponent>& mmcComponents,
-	const MMCMultiMaterialSimultaneousParams& params) {
+	const MMCMultiMaterialSimultaneousParams& params,
+	double heaviside_epsilon) {
 	// 完整几何映射：
 	//   d_ir -> phi_i -> KS全局Phi -> H(Phi) -> 单元占有率m_e。
 	// 本函数只计算几何场和链式因子，不进行有限元求解。
@@ -939,7 +1097,7 @@ GeometryEvaluation EvaluateGeometry(
 			componentPhiDrv,
 			i,
 			kTdfPower,
-			params.heaviside_epsilon);
+			heaviside_epsilon);
 		evaluation.allPhiDrv[i] = componentPhiDrv;
 		evaluation.allPhis[i] = componentPhi;
 	}
@@ -956,11 +1114,11 @@ GeometryEvaluation EvaluateGeometry(
 		evaluation.vertexH[i] = Heaviside(
 			evaluation.globalPhi[i],
 			params.heaviside_alpha,
-			params.heaviside_epsilon);
+			heaviside_epsilon);
 		evaluation.delta_H[i] = HeavisideDerivative(
 			evaluation.globalPhi[i],
 			params.heaviside_alpha,
-			params.heaviside_epsilon);
+			heaviside_epsilon);
 	}
 
 	// 六面体单元占有率取 8 个顶点 Heaviside 值的算术平均：
@@ -1392,7 +1550,8 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 	const std::vector<double>& material_eta,
 	const std::vector<Eigen::MatrixXd>& unit_local_matrix,
 	const MMCMultiMaterialSimultaneousParams& params,
-	int projection_iteration = 1) {
+	int projection_iteration = 1,
+	bool pure_mmc_warmup = false) {
 	// 单轮联合状态计算器。给定当前 MMC 组件和完整网格 eta 向量，按以下顺序：
 	//   1. 计算 MMC 单元占有率 m_e；
 	//   2. 计算 E_e(eta_e) 和 a_e=m_e E_e；
@@ -1408,11 +1567,15 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 	}
 
 	SimultaneousEvaluation evaluation;
+	const double active_heaviside_epsilon = HeavisideEpsilonForIteration(
+		params, projection_iteration);
+	evaluation.heaviside_epsilon = active_heaviside_epsilon;
 	evaluation.geometry = EvaluateGeometry(
 		all_vertex,
 		cell_to_vertex,
-			components,
-	params);
+		components,
+		params,
+		active_heaviside_epsilon);
 	// 为了与纯 MMC 模板保持一致，有限元装配直接使用原始占有率 m_e。
 	// projected_occupancy 仅作为兼容旧导出字段的拷贝，不再参与投影模型。
 	evaluation.material_modulus.resize(cell_count, 0.0);
@@ -1423,10 +1586,18 @@ SimultaneousEvaluation EvaluateSimultaneousState(
 	evaluation.projection_beta = ProjectionBetaForIteration(
 		params, projection_iteration);
 	for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-		evaluation.material_modulus[cell_id] = // \(\eta_e\)SIMP 多材料设计变量。决定当前单元偏向材料 E1 还是 E2。
-			InterpolateYoungsModulus(material_eta[cell_id], params);
-		evaluation.material_modulus_derivative[cell_id] = // 多材料插值导数
-			InterpolateYoungsModulusDerivative(material_eta[cell_id], params);
+		// 暖启动严格复用纯 MMC 的单位模量场：K_e=m_e K_e^0。
+		// 材料导数置零并在外层冻结 eta，避免材料在纯 MMC 阶段影响形状。
+		if (pure_mmc_warmup) {
+			evaluation.material_modulus[cell_id] = 1.0;
+			evaluation.material_modulus_derivative[cell_id] = 0.0;
+		}
+		else {
+			evaluation.material_modulus[cell_id] =
+				InterpolateYoungsModulus(material_eta[cell_id], params);
+			evaluation.material_modulus_derivative[cell_id] =
+				InterpolateYoungsModulusDerivative(material_eta[cell_id], params);
+		}
 		evaluation.projected_occupancy[cell_id] = // 旧字段，原来是投影
 			evaluation.geometry.density[cell_id];
 		evaluation.projected_occupancy_derivative[cell_id] = 1.0; // 旧字段，原来是投影
@@ -2544,7 +2715,7 @@ bool WriteFinalFieldTable(
 void WriteIterationHeader(std::ofstream& output) {
 	output
 		<< "iteration\tcompliance\tcompliance_from_load"
-		<< "\tcompliance_relative_mismatch\tprojection_beta"
+		<< "\tcompliance_relative_mismatch\tprojection_beta\theaviside_epsilon"
 		<< "\tmmc_occupancy_min\tmmc_occupancy_max"
 		<< "\tprojected_occupancy_min\tprojected_occupancy_max"
 		<< "\tmmc_volume\tV1\tV2"
@@ -2562,6 +2733,7 @@ void WriteIterationRecord(
 		<< diagnostic.compliance_from_load << '\t'
 		<< diagnostic.compliance_relative_mismatch << '\t'
 		<< diagnostic.projection_beta << '\t'
+		<< diagnostic.heaviside_epsilon << '\t'
 		<< diagnostic.mmc_occupancy_min << '\t'
 		<< diagnostic.mmc_occupancy_max << '\t'
 		<< diagnostic.projected_occupancy_min << '\t'
@@ -2649,6 +2821,7 @@ MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
 	diagnostic.compliance_relative_mismatch =
 		evaluation.compliance_relative_mismatch;
 	diagnostic.projection_beta = evaluation.projection_beta;
+	diagnostic.heaviside_epsilon = evaluation.heaviside_epsilon;
 	if (!evaluation.geometry.density.empty()) {
 		const auto [minimum, maximum] = std::minmax_element(
 			evaluation.geometry.density.begin(),
@@ -2679,11 +2852,12 @@ MMCMultiMaterialIterationDiagnostic BuildDiagnostic(
 }
 
 bool IsFiniteDiagnostic(const MMCMultiMaterialIterationDiagnostic& diagnostic) {
-	const std::array<double, 20> fields = {
+	const std::array<double, 18> fields = {
 		diagnostic.compliance,
 		diagnostic.compliance_from_load,
 		diagnostic.compliance_relative_mismatch,
 		diagnostic.projection_beta,
+		diagnostic.heaviside_epsilon,
 		diagnostic.mmc_occupancy_min,
 		diagnostic.mmc_occupancy_max,
 		diagnostic.projected_occupancy_min,
@@ -2712,11 +2886,22 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 	const std::string& bdy_file,
 	const std::vector<int>& protect_cell_ids,
 	const std::vector<std::vector<std::pair<int, double>>>& neighbor_info,
-	const MMCMultiMaterialSimultaneousParams& params,
+	const MMCMultiMaterialSimultaneousParams& input_params,
 	MMCMultiMaterialSimultaneousResult& result,
 	std::vector<double>& density,
 	std::atomic_bool& is_need_update_model) {
 	using namespace mmc_multimaterial_simultaneous;
+
+	MMCMultiMaterialSimultaneousParams params = input_params;
+	// 当两种材料均为单位模量时，材料变量不再影响刚度，将同步优化最多限制为 10 轮。
+	if (std::abs(params.E1 - 1.0) <= 1e-12 &&
+		std::abs(params.E2 - 1.0) <= 1e-12) {
+		params.max_iterations = std::min(params.max_iterations, 10);
+		// 同时收紧暖启动轮数，避免暖启动上限超过新的总迭代次数。
+		params.pure_mmc_warmup_iterations = std::min(
+			params.pure_mmc_warmup_iterations,
+			std::max(0, params.max_iterations - 1));
+	}
 
 	// -------------------- 0. 输入检查与独立状态初始化 --------------------
 	// result 在入口清零；任何异常都只写入本同步流程的 result，不会进入
@@ -2739,6 +2924,17 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 
 	try {
 		const auto paper_run_start = std::chrono::steady_clock::now();
+		optimization_paper_record::RunMetadata run_metadata;
+		std::string record_directory = params.output_directory;
+		if (params.export_results && !params.output_directory.empty()) {
+			// 每次运行建立独立记录目录，避免新实验覆盖旧 TSV。
+			run_metadata = optimization_paper_record::CreateRunMetadata(
+				params.output_directory,
+				"simultaneous",
+				input_model_file,
+				bdy_file);
+			record_directory = run_metadata.record_directory;
+		}
 		RunClosedFormSelfChecks(params);
 		Timer timer;
 		Eigen::setNbThreads(24);
@@ -2832,7 +3028,9 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 		std::cout
 			<< "[MMC-MultiMaterial-Simultaneous] Update scheme: MMC-MMA + material-OC, "
 			<< "mmc_variables=" << geometry_variable_count
-			<< ", material_variables=" << cell_count << std::endl;
+			<< ", material_variables=" << cell_count
+			<< ", pure_mmc_warmup_iterations="
+			<< params.pure_mmc_warmup_iterations << std::endl;
 
 		std::ofstream iteration_output;
 		std::ofstream sensitivity_output;
@@ -2847,19 +3045,40 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			}
 			std::filesystem::create_directories(params.output_directory);
 			paper_output = std::make_unique<optimization_paper_record::IterationWriter>(
-				params.output_directory + "/paper_iterations.tsv",
+				record_directory + "/paper_iterations.tsv",
 				false);
 			if (!paper_output->Good()) {
 				throw std::runtime_error("Cannot create the simultaneous paper iteration record.");
 			}
 			if (!optimization_paper_record::WriteConfig(
-				params.output_directory + "/paper_run_config.tsv",
+				record_directory + "/paper_run_config.tsv",
 				{
-					{ "method", "simultaneous" },
+					{ "record_schema_version", run_metadata.schema_version },
+					{ "run_id", run_metadata.run_id },
+					{ "started_at_utc", run_metadata.started_at_utc },
+					{ "method", run_metadata.method },
+					{ "model_id", run_metadata.model_id },
+					{ "model_signature", run_metadata.model_signature },
+					{ "boundary_file", run_metadata.boundary_file },
+					{ "boundary_signature", run_metadata.boundary_signature },
+					{ "boundary_point_count", optimization_paper_record::ToString(run_metadata.boundary.point_count) },
+					{ "dirichlet_point_count", optimization_paper_record::ToString(run_metadata.boundary.dirichlet_count) },
+					{ "dirichlet_centroid_x", optimization_paper_record::ToString(run_metadata.boundary.dirichlet_centroid_x) },
+					{ "dirichlet_centroid_y", optimization_paper_record::ToString(run_metadata.boundary.dirichlet_centroid_y) },
+					{ "dirichlet_centroid_z", optimization_paper_record::ToString(run_metadata.boundary.dirichlet_centroid_z) },
+					{ "neumann_point_count", optimization_paper_record::ToString(run_metadata.boundary.neumann_count) },
+					{ "neumann_centroid_x", optimization_paper_record::ToString(run_metadata.boundary.neumann_centroid_x) },
+					{ "neumann_centroid_y", optimization_paper_record::ToString(run_metadata.boundary.neumann_centroid_y) },
+					{ "neumann_centroid_z", optimization_paper_record::ToString(run_metadata.boundary.neumann_centroid_z) },
+					{ "load_resultant_x", optimization_paper_record::ToString(run_metadata.boundary.resultant_x) },
+					{ "load_resultant_y", optimization_paper_record::ToString(run_metadata.boundary.resultant_y) },
+					{ "load_resultant_z", optimization_paper_record::ToString(run_metadata.boundary.resultant_z) },
+					{ "record_directory", record_directory },
 					{ "input_model_file", input_model_file },
 					{ "mmc_type", optimization_paper_record::ToString(params.mmc_type) },
 					{ "mmc_target_rate", optimization_paper_record::ToString(params.mmc_target_rate) },
 					{ "max_iterations", optimization_paper_record::ToString(params.max_iterations) },
+					{ "pure_mmc_warmup_iterations", optimization_paper_record::ToString(params.pure_mmc_warmup_iterations) },
 					{ "material_ratio_f", optimization_paper_record::ToString(params.material_ratio_f) },
 					{ "material_E1", optimization_paper_record::ToString(params.E1) },
 					{ "material_E2", optimization_paper_record::ToString(params.E2) },
@@ -2871,6 +3090,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 					{ "poissons_ratio", optimization_paper_record::ToString(params.Poissons) },
 					{ "heaviside_alpha", optimization_paper_record::ToString(params.heaviside_alpha) },
 					{ "heaviside_epsilon", optimization_paper_record::ToString(params.heaviside_epsilon) },
+					{ "heaviside_epsilon_middle", optimization_paper_record::ToString(params.heaviside_epsilon_middle) },
+					{ "heaviside_epsilon_final", optimization_paper_record::ToString(params.heaviside_epsilon_final) },
 					{ "ks_lambda", optimization_paper_record::ToString(params.ks_lambda) },
 					{ "cell_count", optimization_paper_record::ToString(cell_count) },
 					{ "component_count", optimization_paper_record::ToString(mmcComponents.size()) },
@@ -2878,23 +3099,29 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				})) {
 				throw std::runtime_error("Cannot create the simultaneous paper run configuration.");
 			}
+			optimization_paper_record::WriteConfig(
+				params.output_directory + "/latest_run.tsv",
+				{
+					{ "run_id", run_metadata.run_id },
+					{ "record_directory", record_directory }
+				});
 			iteration_output.open(
-				params.output_directory + "/iterations.tsv",
+				record_directory + "/iterations.tsv",
 				std::ios::out | std::ios::trunc);
 			sensitivity_output.open(
-				params.output_directory + "/analytical_sensitivities.tsv",
+				record_directory + "/analytical_sensitivities.tsv",
 				std::ios::out | std::ios::trunc);
 			if (params.finite_difference_mmc_sample_count > 0 ||
 				params.finite_difference_material_sample_count > 0) {
 				finite_difference_output.open(
-					params.output_directory + "/finite_difference_validation.tsv",
+					record_directory + "/finite_difference_validation.tsv",
 					std::ios::out | std::ios::trunc);
 			}
 			mmc_mma_trace_output.open(
-				params.output_directory + "/mmc_mma_trace.tsv",
+				record_directory + "/mmc_mma_trace.tsv",
 				std::ios::out | std::ios::trunc);
 			material_oc_trace_output.open(
-				params.output_directory + "/material_oc_trace.tsv",
+				record_directory + "/material_oc_trace.tsv",
 				std::ios::out | std::ios::trunc);
 			if (!iteration_output.good() || !sensitivity_output.good()
 				|| !mmc_mma_trace_output.good()
@@ -2922,7 +3149,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				<< "\tobjective_gradient\toc_sensitivity_filtered"
 				<< "\tmmc_occupancy\tmaterial_weight\n";
 			debug_output = std::make_unique<mmc_trace::Writer>(
-				params.output_directory + "/mmc_debug_trace.tsv");
+				record_directory + "/mmc_debug_trace.tsv");
 			if (!debug_output->Good()) {
 				throw std::runtime_error(
 					"Cannot create the simultaneous MMC debug trace file.");
@@ -2986,10 +3213,15 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				}
 
 				optimization_paper_record::IterationRecord paper_record;
+				const bool is_warmup_record =
+					accepted_updates < params.pure_mmc_warmup_iterations;
 				paper_record.method = "simultaneous";
-				paper_record.stage = "simultaneous";
+				paper_record.stage =
+					is_warmup_record ? "mmc_warmup" : "simultaneous";
 				paper_record.global_iteration = accepted_updates;
-				paper_record.stage_iteration = accepted_updates;
+				paper_record.stage_iteration = is_warmup_record
+					? accepted_updates
+					: accepted_updates - params.pure_mmc_warmup_iterations;
 				paper_record.compliance = evaluation.compliance;
 				paper_record.shape_compliance = evaluation.compliance;
 				paper_record.mmc_volume = evaluation.mmc_volume;
@@ -3023,6 +3255,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				<< " V1: " << evaluation.V1
 				<< " V2: " << evaluation.V2
 				<< " beta: " << evaluation.projection_beta
+				<< " epsilon: " << evaluation.heaviside_epsilon
 				<< " dMMC: " << previous_geometry_change
 				<< " dEta: " << previous_material_change
 				<< " |gMMC|: " << diagnostic.geometry_gradient_norm
@@ -3038,6 +3271,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			iteration <= params.max_iterations;
 			++iteration) {
 			const auto paper_iteration_start = std::chrono::steady_clock::now();
+			const bool pure_mmc_warmup =
+				iteration <= params.pure_mmc_warmup_iterations;
 			UpdateComponentsFromPhysical(
 				mmcComponents,
 				mmcDesignVariables);
@@ -3052,7 +3287,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				materialEta,
 				unit_local_matrix,
 				params,
-				iteration);
+				iteration,
+				pure_mmc_warmup);
 			paper_fe_solve_count += 1;
 			record_accepted_state(current_evaluation);
 
@@ -3065,7 +3301,8 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				std::vector<double> physical_variables;
 				FlattenPhysicalComponents(mmcComponents, physical_variables);
 				mmc_trace::Record trace;
-				trace.mode = "simultaneous";
+				trace.mode =
+					pure_mmc_warmup ? "mmc_warmup" : "simultaneous";
 				trace.action = "evaluate";
 				trace.iteration = accepted_updates;
 				trace.component_count = static_cast<int>(mmcComponents.size());
@@ -3140,46 +3377,50 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			// 同一次耦合求解得到的 m^k，避免把 dC/deta(m^k) 与 m^{k+1} 混用。
 			const std::vector<double>& oc_occupancy =
 				current_evaluation.geometry.density;
-			std::vector<double> oc_sensitivity_full(
-				cell_count,
-				std::numeric_limits<double>::min());
-			std::vector<double> material_filter_hard(cell_count, 0.0);
-			for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-				// eta 越大越偏软材料 E1；在当前 m_e 固定时，真实
-				// dC/deta 为正。OC 需要正的下降敏感度量，这里直接使用它。
-				oc_sensitivity_full[cell_id] =
-					std::max(
-						current_evaluation.material_objective_gradient[cell_id],
-						std::numeric_limits<double>::min());
-				if (oc_occupancy[cell_id]
-					> params.material_active_threshold) {
-					// OC 实际更新 xi=1-eta，Sigmund 滤波也必须使用同一变量。
-					material_filter_hard[cell_id] = std::max(
-						1.0 - materialEta[cell_id],
-						params.eta_min);
+			std::vector<double> filtered_oc_sensitivity(cell_count, 0.0);
+			// 暖启动阶段冻结 eta；进入同步阶段后才执行材料过滤与 OC 更新。
+			if (!pure_mmc_warmup) {
+				std::vector<double> oc_sensitivity_full(
+					cell_count,
+					std::numeric_limits<double>::min());
+				std::vector<double> material_filter_hard(cell_count, 0.0);
+				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+					// eta 越大越偏软材料 E1；在当前 m_e 固定时，真实
+					// dC/deta 为正。OC 需要正的下降敏感度量，这里直接使用它。
+					oc_sensitivity_full[cell_id] =
+						std::max(
+							current_evaluation.material_objective_gradient[cell_id],
+							std::numeric_limits<double>::min());
+					if (oc_occupancy[cell_id]
+						> params.material_active_threshold) {
+						// OC 实际更新 xi=1-eta，Sigmund 滤波也必须使用同一变量。
+						material_filter_hard[cell_id] = std::max(
+							1.0 - materialEta[cell_id],
+							params.eta_min);
+					}
 				}
-			}
-			const std::vector<double> filtered_oc_sensitivity =
-				FilterSensitivities(
-					neighbor_info,
-					material_filter_hard,
-					oc_sensitivity_full,
-					params.eta_min);
-			OCUpdate(
-				materialEta,
-				params.material_ratio_f,
-				filtered_oc_sensitivity,
-				oc_occupancy,
-				oc_occupancy,
-				params.material_active_threshold,
-				params.eta_min,
-				params.material_move_limit);
-			if (!IsFiniteVector(materialEta)) {
-				throw std::runtime_error(
-					"The material OC update returned a non-finite eta value.");
-			}
-			for (double& eta : materialEta) {
-				eta = std::clamp(eta, params.eta_min, 1.0);
+				filtered_oc_sensitivity =
+					FilterSensitivities(
+						neighbor_info,
+						material_filter_hard,
+						oc_sensitivity_full,
+						params.eta_min);
+				OCUpdate(
+					materialEta,
+					params.material_ratio_f,
+					filtered_oc_sensitivity,
+					oc_occupancy,
+					oc_occupancy,
+					params.material_active_threshold,
+					params.eta_min,
+					params.material_move_limit);
+				if (!IsFiniteVector(materialEta)) {
+					throw std::runtime_error(
+						"The material OC update returned a non-finite eta value.");
+				}
+				for (double& eta : materialEta) {
+					eta = std::clamp(eta, params.eta_min, 1.0);
+				}
 			}
 
 			if (params.export_results) {
@@ -3196,28 +3437,30 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 						<< '\n';
 				}
 				mmc_mma_trace_output.flush();
-				for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
-					if (oc_occupancy[cell_id]
-						<= params.material_active_threshold) {
-						continue;
+				if (!pure_mmc_warmup) {
+					for (int cell_id = 0; cell_id < cell_count; ++cell_id) {
+						if (oc_occupancy[cell_id]
+							<= params.material_active_threshold) {
+							continue;
+						}
+						material_oc_trace_output
+							<< iteration << '\t'
+							<< cell_id << '\t'
+							<< oldMaterialEta[cell_id] << '\t'
+							<< materialEta[cell_id] << '\t'
+							<< (materialEta[cell_id] - oldMaterialEta[cell_id])
+							<< '\t'
+							<< current_evaluation.material_objective_gradient[cell_id]
+							<< '\t'
+							<< filtered_oc_sensitivity[cell_id]
+							<< '\t'
+							<< oc_occupancy[cell_id]
+							<< '\t'
+							<< oc_occupancy[cell_id]
+							<< '\n';
 					}
-					material_oc_trace_output
-						<< iteration << '\t'
-						<< cell_id << '\t'
-						<< oldMaterialEta[cell_id] << '\t'
-						<< materialEta[cell_id] << '\t'
-						<< (materialEta[cell_id] - oldMaterialEta[cell_id])
-						<< '\t'
-						<< current_evaluation.material_objective_gradient[cell_id]
-						<< '\t'
-						<< filtered_oc_sensitivity[cell_id]
-						<< '\t'
-						<< oc_occupancy[cell_id]
-						<< '\t'
-						<< oc_occupancy[cell_id]
-						<< '\n';
+					material_oc_trace_output.flush();
 				}
-				material_oc_trace_output.flush();
 			}
 
 			// 保存两块实际物理步长，用于下一轮只读诊断。
@@ -3314,7 +3557,7 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 				materialEta,
 				params.material_binary_active_threshold);
 			const bool table_written = WriteFinalFieldTable(
-				params.output_directory + "/element_fields.tsv",
+				record_directory + "/element_fields.tsv",
 				final_evaluation.geometry.density,
 				final_evaluation.projected_occupancy,
 				materialEta,
@@ -3323,6 +3566,25 @@ bool Cuda_TopOpt_MMC_MultiMaterial_Simultaneous(
 			if (!vtk_written || !binary_vtk_written || !table_written) {
 				throw std::runtime_error("Failed to export the final simultaneous-optimization fields.");
 			}
+			// 固定目录保存最新结果；运行目录保存与本次 TSV 一一对应的最终场。
+			const std::filesystem::path latest_vtk =
+				std::filesystem::path(params.output_directory)
+				/ "mmc_multimaterial_simultaneous.vtk";
+			const std::filesystem::path latest_binary_vtk =
+				std::filesystem::path(params.output_directory)
+				/ "mmc_multimaterial_simultaneous_material_binary.vtk";
+			std::filesystem::copy_file(
+				latest_vtk,
+				std::filesystem::path(record_directory) / latest_vtk.filename(),
+				std::filesystem::copy_options::overwrite_existing);
+			std::filesystem::copy_file(
+				latest_binary_vtk,
+				std::filesystem::path(record_directory) / latest_binary_vtk.filename(),
+				std::filesystem::copy_options::overwrite_existing);
+			std::filesystem::copy_file(
+				std::filesystem::path(record_directory) / "element_fields.tsv",
+				std::filesystem::path(params.output_directory) / "element_fields.tsv",
+				std::filesystem::copy_options::overwrite_existing);
 		}
 
 		result.success = true;
