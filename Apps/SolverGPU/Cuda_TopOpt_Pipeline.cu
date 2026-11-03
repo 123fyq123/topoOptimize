@@ -1811,9 +1811,110 @@ void Cuda_TopOpt_MMC_Node(
 		mmcComponents = init(xyzRange, 8, 0.5, 8, BaseComponent, mmcType);
 	}
 	else if (mmcType == 8) {
-		// L型
-		BaseComponent = { 16, 3.5, 3, 0, atan(1.0), 0 };
-		mmcComponents = init(xyzRange, 10, 0.5, 10, BaseComponent, mmcType);
+		// 64 * 1 * 64、臂宽 24 的 2.5D L 型梁。薄壁中面为 XZ 平面，
+		// 参考连续 X 型晶格：臂宽方向两格，臂长延伸方向三格。
+		const double arm_width = std::min({ 24.0, DL, DH });
+		constexpr int cells_across_arm = 2;
+		constexpr int extension_cell_count = 3;
+		const double arm_cell_size =
+			arm_width / static_cast<double>(cells_across_arm);
+		const double horizontal_extension_cell_size =
+			(DL - arm_width) / static_cast<double>(extension_cell_count);
+		const double vertical_extension_cell_size =
+			(DH - arm_width) / static_cast<double>(extension_cell_count);
+		if (!(horizontal_extension_cell_size > 0.0)
+			|| !(vertical_extension_cell_size > 0.0)) {
+			throw std::runtime_error(
+				"MMC type 8 requires an L-shaped domain larger than its arm width.");
+		}
+
+		const double center_y = 0.5 * (ymin + ymax);
+		const double corner_center_x = xmin + 0.5 * arm_width;
+		const double corner_center_z = zmin + 0.5 * arm_width;
+		const double component_radius = 0.04 * arm_width;
+		mmcComponents.reserve(34);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_z,
+			double direction_x,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			// MMC 长轴由局部 x 轴旋转而来；保持 gamma=0，使组件位于 XZ 平面。
+			const double beta = -std::asin(normalized_z);
+			mmcComponents.emplace_back(
+				component_center_x,
+				center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				0.0);
+		};
+
+		const auto add_x_cell = [&](double cell_center_x,
+			double cell_center_z,
+			double cell_size_x,
+			double cell_size_z) {
+			const double half_x = 0.5 * cell_size_x;
+			const double half_z = 0.5 * cell_size_z;
+			const double diagonal_half_length = std::sqrt(
+				half_x * half_x + half_z * half_z);
+			add_component(
+				cell_center_x, cell_center_z,
+				half_x, half_z, diagonal_half_length);
+			add_component(
+				cell_center_x, cell_center_z,
+				half_x, -half_z, diagonal_half_length);
+		};
+
+		const auto add_x_grid = [&](double origin_x,
+			double origin_z,
+			double cell_size_x,
+			double cell_size_z,
+			int column_count,
+			int row_count) {
+			for (int row = 0; row < row_count; ++row) {
+				for (int column = 0; column < column_count; ++column) {
+					add_x_cell(
+						origin_x + (static_cast<double>(column) + 0.5) * cell_size_x,
+						origin_z + (static_cast<double>(row) + 0.5) * cell_size_z,
+						cell_size_x,
+						cell_size_z);
+				}
+			}
+		};
+
+		// 左下 24 * 24 转角区为 2 * 2 晶格，两个延伸臂分别为 2 * 3
+		// 和 3 * 2 晶格；三块只在边界共节点，不重复生成转角区组件。
+		add_x_grid(
+			xmin, zmin,
+			arm_cell_size, arm_cell_size,
+			cells_across_arm, cells_across_arm);
+		add_x_grid(
+			xmin, zmin + arm_width,
+			arm_cell_size, vertical_extension_cell_size,
+			cells_across_arm, extension_cell_count);
+		add_x_grid(
+			xmin + arm_width, zmin,
+			horizontal_extension_cell_size, arm_cell_size,
+			extension_cell_count, cells_across_arm);
+
+		// 固定端和加载端各增加一根边界收集杆，保证初始结构直接连接边界条件。
+		add_component(
+			corner_center_x, zmax,
+			1.0, 0.0, 0.5 * arm_width);
+		add_component(
+			xmax, corner_center_z,
+			0.0, 1.0, 0.5 * arm_width);
 	}
 	else if (mmcType == 9) {
 		// 64 * 1 * 64
@@ -2050,6 +2151,113 @@ void Cuda_TopOpt_MMC_Node(
 			xmax, ymin, center_z,
 			0.0, 0.0, 1.0,
 			0.50 * DH);
+	}
+	else if (mmcType == 14) {
+		// 128 * 1 * 128、臂宽 48 的 2.5D L 型梁。保持与 type 8
+		// 相近的晶格物理尺寸，使用 4 格臂宽和 6 格延伸区。
+		const double arm_width = std::min({ 48.0, DL, DH });
+		constexpr int cells_across_arm = 4;
+		constexpr int extension_cell_count = 6;
+		const double arm_cell_size =
+			arm_width / static_cast<double>(cells_across_arm);
+		const double horizontal_extension_cell_size =
+			(DL - arm_width) / static_cast<double>(extension_cell_count);
+		const double vertical_extension_cell_size =
+			(DH - arm_width) / static_cast<double>(extension_cell_count);
+		if (!(horizontal_extension_cell_size > 0.0)
+			|| !(vertical_extension_cell_size > 0.0)) {
+			throw std::runtime_error(
+				"MMC type 14 requires an L-shaped domain larger than its arm width.");
+		}
+
+		const double center_y = 0.5 * (ymin + ymax);
+		const double corner_center_x = xmin + 0.5 * arm_width;
+		const double corner_center_z = zmin + 0.5 * arm_width;
+		// 半径按单格尺寸计算，避免模型放大后组件也整体变粗。
+		const double component_radius = 0.08 * arm_cell_size;
+		mmcComponents.reserve(130);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_z,
+			double direction_x,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			// MMC 长轴保持在 XZ 中面内，gamma 初始值固定为零。
+			const double beta = -std::asin(normalized_z);
+			mmcComponents.emplace_back(
+				component_center_x,
+				center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				0.0);
+		};
+
+		const auto add_x_cell = [&](double cell_center_x,
+			double cell_center_z,
+			double cell_size_x,
+			double cell_size_z) {
+			const double half_x = 0.5 * cell_size_x;
+			const double half_z = 0.5 * cell_size_z;
+			const double diagonal_half_length = std::sqrt(
+				half_x * half_x + half_z * half_z);
+			add_component(
+				cell_center_x, cell_center_z,
+				half_x, half_z, diagonal_half_length);
+			add_component(
+				cell_center_x, cell_center_z,
+				half_x, -half_z, diagonal_half_length);
+		};
+
+		const auto add_x_grid = [&](double origin_x,
+			double origin_z,
+			double cell_size_x,
+			double cell_size_z,
+			int column_count,
+			int row_count) {
+			for (int row = 0; row < row_count; ++row) {
+				for (int column = 0; column < column_count; ++column) {
+					add_x_cell(
+						origin_x + (static_cast<double>(column) + 0.5) * cell_size_x,
+						origin_z + (static_cast<double>(row) + 0.5) * cell_size_z,
+						cell_size_x,
+						cell_size_z);
+				}
+			}
+		};
+
+		// 左下转角区为 4 * 4 晶格；竖臂和横臂延伸区分别为
+		// 4 * 6 与 6 * 4 晶格，共 64 个 X 单元。
+		add_x_grid(
+			xmin, zmin,
+			arm_cell_size, arm_cell_size,
+			cells_across_arm, cells_across_arm);
+		add_x_grid(
+			xmin, zmin + arm_width,
+			arm_cell_size, vertical_extension_cell_size,
+			cells_across_arm, extension_cell_count);
+		add_x_grid(
+			xmin + arm_width, zmin,
+			horizontal_extension_cell_size, arm_cell_size,
+			extension_cell_count, cells_across_arm);
+
+		// 边界收集杆连接顶部固定边以及右端加载位置。
+		add_component(
+			corner_center_x, zmax,
+			1.0, 0.0, 0.5 * arm_width);
+		add_component(
+			xmax, corner_center_z,
+			0.0, 1.0, 0.5 * arm_width);
 	}
 	else{
 		BaseComponent = { 0.6, 8, 1, atan(1.0), 0, 0 };
