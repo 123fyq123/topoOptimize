@@ -887,6 +887,133 @@ std::vector<MMCComponent> InitializeComponentsForType(
 			0.50 * dz);
 		return components;
 	}
+	case 13: {
+		// 48 * 16 * 16：从 Z 方向把 XY 平面划分为 2 * 2 个小块，
+		// 每块的空间斜杆跨越两个 Z 层，使投影为“米”字且中间不镂空。
+		std::vector<MMCComponent> components;
+		if (xyz_range.size() < 6) {
+			return components;
+		}
+		const double xmin = xyz_range[0];
+		const double xmax = xyz_range[1];
+		const double ymin = xyz_range[2];
+		const double ymax = xyz_range[3];
+		const double zmin = xyz_range[4];
+		const double zmax = xyz_range[5];
+		const double dx = xmax - xmin;
+		const double dy = ymax - ymin;
+		const double dz = zmax - zmin;
+		if (!(dx > 0.0) || !(dy > 0.0) || !(dz > 0.0)) {
+			return components;
+		}
+		const double center_x = 0.5 * (xmin + xmax);
+		const double center_y = 0.5 * (ymin + ymax);
+		const double center_z = 0.5 * (zmin + zmax);
+		const double block_half_x = 0.25 * dx;
+		const double block_half_y = 0.25 * dy;
+		const double layer_offset = 0.25 * dz;
+		const double component_radius = 0.075 * std::min({ dx, dy, dz });
+		components.reserve(37);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_y,
+			double component_center_z,
+			double direction_x,
+			double direction_y,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_y * direction_y
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			const double beta = -std::asin(normalized_z);
+			const double gamma = std::atan2(direction_y, direction_x);
+			components.emplace_back(
+				component_center_x,
+				component_center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				gamma);
+		};
+
+		const double block_x_centers[2] = {
+			center_x - block_half_x,
+			center_x + block_half_x
+		};
+		const double block_y_centers[2] = {
+			center_y - block_half_y,
+			center_y + block_half_y
+		};
+		const double layer_centers[2] = {
+			center_z - layer_offset,
+			center_z + layer_offset
+		};
+		const double space_diagonal_half_length = std::sqrt(
+			block_half_x * block_half_x
+			+ block_half_y * block_half_y
+			+ layer_offset * layer_offset);
+
+		// 两个 Z 层只放置每个分块的 X/Y 主杆。
+		for (double layer_z : layer_centers) {
+			for (double block_y : block_y_centers) {
+				for (double block_x : block_x_centers) {
+					add_component(
+						block_x, block_y, layer_z,
+						1.0, 0.0, 0.0,
+						block_half_x);
+					add_component(
+						block_x, block_y, layer_z,
+						0.0, 1.0, 0.0,
+						block_half_y);
+				}
+			}
+		}
+
+		// 每个分块放置四根跨层空间斜杆；Z 向投影仍是两条对角线，
+		// 但杆件连接 z=-layer_offset 与 z=+layer_offset，并穿过 z=0。
+		for (double block_y : block_y_centers) {
+			for (double block_x : block_x_centers) {
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, -layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, -layer_offset,
+					space_diagonal_half_length);
+
+				// Z 向中心杆连接两层主杆，并在分块中心与空间斜杆相交。
+				add_component(
+					block_x, block_y, center_z,
+					0.0, 0.0, 1.0,
+					layer_offset);
+			}
+		}
+
+		// 加载边构件覆盖 x=xmax、y=ymin 的整条厚度方向边界，
+		// 并与右下分块的跨层空间斜杆相交，将分布载荷传入主体。
+		add_component(
+			xmax, ymin, center_z,
+			0.0, 0.0, 1.0,
+			0.50 * dz);
+		return components;
+	}
 	default:
 		base_component = { 0.6, 8.0, 1.0, std::atan(1.0), 0.0, 0.0 };
 		x_interval = 0.5;

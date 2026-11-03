@@ -1941,6 +1941,116 @@ void Cuda_TopOpt_MMC_Node(
 			0.0, 0.0, 1.0,
 			0.50 * DH);
 	}
+	else if (mmcType == 13) {
+		// 48 * 16 * 16：沿用 case 12 的四分块空间“米”字布局。
+		// XY 平面分成 2 * 2 个小块，Z 向设置对称双层并用空间斜杆贯通中层。
+		const double center_x = 0.5 * (xmin + xmax);
+		const double center_y = 0.5 * (ymin + ymax);
+		const double center_z = 0.5 * (zmin + zmax);
+		const double block_half_x = 0.25 * DL;
+		const double block_half_y = 0.25 * DW;
+		const double layer_offset = 0.25 * DH;
+		const double component_radius = 0.075 * std::min({ DL, DW, DH });
+		mmcComponents.reserve(37);
+
+		const auto add_component = [&](double component_center_x,
+			double component_center_y,
+			double component_center_z,
+			double direction_x,
+			double direction_y,
+			double direction_z,
+			double half_length) {
+			const double direction_norm = std::sqrt(
+				direction_x * direction_x
+				+ direction_y * direction_y
+				+ direction_z * direction_z);
+			const double normalized_z = std::clamp(
+				direction_z / direction_norm,
+				-1.0,
+				1.0);
+			// MMC 的长轴是局部 x 轴；beta/gamma 将其旋转到给定空间方向。
+			const double beta = -std::asin(normalized_z);
+			const double gamma = std::atan2(direction_y, direction_x);
+			mmcComponents.emplace_back(
+				component_center_x,
+				component_center_y,
+				component_center_z,
+				half_length,
+				component_radius,
+				component_radius,
+				0.0,
+				beta,
+				gamma);
+		};
+
+		const double block_x_centers[2] = {
+			center_x - block_half_x,
+			center_x + block_half_x
+		};
+		const double block_y_centers[2] = {
+			center_y - block_half_y,
+			center_y + block_half_y
+		};
+		const double layer_centers[2] = {
+			center_z - layer_offset,
+			center_z + layer_offset
+		};
+		const double space_diagonal_half_length = std::sqrt(
+			block_half_x * block_half_x
+			+ block_half_y * block_half_y
+			+ layer_offset * layer_offset);
+
+		// 两个 Z 层仅放置每个分块的 X/Y 主杆。
+		for (double layer_z : layer_centers) {
+			for (double block_y : block_y_centers) {
+				for (double block_x : block_x_centers) {
+					add_component(
+						block_x, block_y, layer_z,
+						1.0, 0.0, 0.0,
+						block_half_x);
+					add_component(
+						block_x, block_y, layer_z,
+						0.0, 1.0, 0.0,
+						block_half_y);
+				}
+			}
+		}
+
+		// 每个分块的四根斜杆均带 Z 分量，在两层之间形成真实空间交叉支撑，
+		// 从 Z 方向观察仍为“米”字，同时不会在 z=center_z 处留下整层空腔。
+		for (double block_y : block_y_centers) {
+			for (double block_x : block_x_centers) {
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, block_half_y, -layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, layer_offset,
+					space_diagonal_half_length);
+				add_component(
+					block_x, block_y, center_z,
+					block_half_x, -block_half_y, -layer_offset,
+					space_diagonal_half_length);
+
+				// Z 向中心杆连接双层主杆，并在分块中心与空间斜杆相交。
+				add_component(
+					block_x, block_y, center_z,
+					0.0, 0.0, 1.0,
+					layer_offset);
+			}
+		}
+
+		// 沿右下加载边增加贯穿厚度的收集杆，使初始构件与既有受力边界连接。
+		add_component(
+			xmax, ymin, center_z,
+			0.0, 0.0, 1.0,
+			0.50 * DH);
+	}
 	else{
 		BaseComponent = { 0.6, 8, 1, atan(1.0), 0, 0 };
 		mmcComponents = init(xyzRange, 0.5, 5, 5, BaseComponent, -1);
