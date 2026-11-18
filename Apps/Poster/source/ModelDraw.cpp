@@ -6502,6 +6502,7 @@ void ModelDraw::ShapeApproximation(uint32_t max_iter) {
 }
 void ModelDraw::Read_Bdy(std::string& filename) {
 	IGA::ReadBdy(filename, hexbdy, IGA::protected_cell);
+	topopt_boundary_file = filename;
 }
 
 void ModelDraw::savePickItem(string fileName)
@@ -6509,11 +6510,13 @@ void ModelDraw::savePickItem(string fileName)
     std::cout <<"WriteBdy\n";
     std::cout <<IGA::protected_cell.size() <<"\n";
 	IGA::WriteBdy(fileName, hexbdy, IGA::protected_cell);
+	topopt_boundary_file = fileName;
 }
 bool ModelDraw::loadPickFile(const std::string& filename)
 {
 	hexbdy.clear();
 	IGA::ReadBdy(filename, hexbdy, topopt_pro);
+	topopt_boundary_file = filename;
 
     // todo:
     auto find_close_item  = [&](int type, std::vector<std::vector<double>>& points)->int{
@@ -6609,6 +6612,8 @@ bool ModelDraw::loadPickFile(const std::string& filename)
 // bdy_type: 0, fixed; 1, force.
 void ModelDraw::addPickData(vector<double> bdy_value, int bdy_type)
 {
+	// 手工修改边界后，原文件名已不能准确代表当前工况。
+	topopt_boundary_file.clear();
 	auto a = IGA::BdyBase::Dirichlet;
 	if (bdy_type == 1) {
 		//force

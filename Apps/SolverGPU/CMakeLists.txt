@@ -4,12 +4,11 @@ target_compile_definitions(GPU_header_lib
 		INTERFACE INPUT_DIR=${PROJECT_SOURCE_DIR}/input/
 		INTERFACE OUTPUT_DIR=${PROJECT_SOURCE_DIR}/output/
 )
-file(GLOB INCLUDE_FILES *.h)
 target_include_directories(GPU_header_lib
 		INTERFACE
 		${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
 		"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.4/include"
-		${INCLUDE_FILES}
+		"${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 # CUDA and C++ compiler flags
@@ -65,6 +64,8 @@ add_library(${TargetName}
 		Cuda_TopOpt_MMC_SIMP_Sequential.h
 		Cuda_TopOpt_MMC_MultiMaterial_Simultaneous.h
 		MMC_Trace_Diagnostics.h
+		MMC_TorsionLayout.h
+		MMC_ThreeDimensionalLLayout.h
 		Cuda_TopOpt_MultiMaterial_SIMP.h
 		Cuda_TopOpt_MultiRes.h
 		Kernels/GP_Debug.cu

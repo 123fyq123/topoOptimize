@@ -21,6 +21,8 @@
 #include "GP_Spline_v0.h"
 #include "MMASolver.h"
 #include "MMC_Trace_Diagnostics.h"
+#include "MMC_TorsionLayout.h"
+#include "MMC_ThreeDimensionalLLayout.h"
 #include "OptimizationPaperRecorder.h"
 #include "Poster/source/Timer.h"
 #include "Poster/source/nanoflann.h"
@@ -1131,6 +1133,11 @@ std::vector<MMCComponent> InitializeComponentsForType(
 			0.50 * dz);
 		return components;
 	}
+	case 16:
+		// 与纯 MMC 共用同一套三维 L 型梁初始组件，保证顺序和同步对比一致。
+		return mmc_layout::MakeThreeDimensionalLBeamLayout<MMCComponent>(xyz_range);
+	case 15:
+		return mmc_layout::MakeTorsionBeamLayout<MMCComponent>(xyz_range);
 	case 14: {
 		std::vector<MMCComponent> components;
 		if (xyz_range.size() < 6) {

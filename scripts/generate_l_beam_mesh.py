@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a one-cell-thick, unit-hexahedron L-beam Medit mesh."""
+"""Generate a unit-hexahedron 2.5D or 3D L-beam Medit mesh."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 LatticePoint = tuple[int, int, int]
-Cell = tuple[int, int]
+Cell = tuple[int, int, int]
 
 
 def positive_int(value: str) -> int:
@@ -21,11 +21,18 @@ def positive_int(value: str) -> int:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Generate an L-shaped x-z design domain with one unit cell in the y direction."
+            "Generate an L-shaped x-z design domain extruded in the y direction."
         )
     )
     parser.add_argument("--length", "--L", type=positive_int, default=64, help="Outer x length")
     parser.add_argument("--height", "--H", type=positive_int, default=64, help="Outer z height")
+    parser.add_argument(
+        "--thickness",
+        "--W",
+        type=positive_int,
+        default=1,
+        help="Number of unit cells through the y direction",
+    )
     parser.add_argument(
         "--leg-width",
         "--Ld",
@@ -56,12 +63,19 @@ def validate_dimensions(length: int, height: int, leg_width: int, leg_height: in
         raise ValueError(f"Hd ({leg_height}) cannot exceed H ({height})")
 
 
-def build_cells(length: int, height: int, leg_width: int, leg_height: int) -> list[Cell]:
-    """Return cells as (i, k), where k=0 is the top cell row."""
+def build_cells(
+    length: int,
+    thickness: int,
+    height: int,
+    leg_width: int,
+    leg_height: int,
+) -> list[Cell]:
+    """Return cells as (i, j, k), where k=0 is the top cell row."""
     bottom_start = height - leg_height
     return [
-        (i, k)
+        (i, j, k)
         for k in range(height)
+        for j in range(thickness)
         for i in range(length)
         if i < leg_width or k >= bottom_start
     ]
@@ -69,11 +83,11 @@ def build_cells(length: int, height: int, leg_width: int, leg_height: int) -> li
 
 def build_vertex_ids(cells: list[Cell]) -> dict[LatticePoint, int]:
     points: set[LatticePoint] = set()
-    for i, k in cells:
+    for i, j, k in cells:
         for dk in (0, 1):
-            for j in (0, 1):
+            for dj in (0, 1):
                 for di in (0, 1):
-                    points.add((i + di, j, k + dk))
+                    points.add((i + di, j + dj, k + dk))
 
     # Match the repository's regular mesh ordering: z rows, then y, then x.
     return {
@@ -87,6 +101,7 @@ def build_vertex_ids(cells: list[Cell]) -> dict[LatticePoint, int]:
 
 def default_output_path(
     length: int,
+    thickness: int,
     height: int,
     leg_width: int,
     leg_height: int,
@@ -98,9 +113,11 @@ def default_output_path(
         / "topopt"
         / "data"
         / "mmc"
-        / f"l_beam_{length}_1_{height}"
+        / f"l_beam_{length}_{thickness}_{height}"
     )
-    return directory / f"l_beam_{length}_1_{height}_Ld{leg_width}_Hd{leg_height}.mesh"
+    return directory / (
+        f"l_beam_{length}_{thickness}_{height}_Ld{leg_width}_Hd{leg_height}.mesh"
+    )
 
 
 def format_coordinate(value: float) -> str:
@@ -112,11 +129,13 @@ def format_coordinate(value: float) -> str:
 def write_mesh(
     path: Path,
     length: int,
+    thickness: int,
     height: int,
     cells: list[Cell],
     vertex_ids: dict[LatticePoint, int],
 ) -> None:
     half_length = length / 2.0
+    half_thickness = thickness / 2.0
     half_height = height / 2.0
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -128,7 +147,7 @@ def write_mesh(
 
         for i, j, k in sorted(vertex_ids, key=vertex_ids.get):
             x = i - half_length
-            y = j - 0.5
+            y = j - half_thickness
             z = half_height - k
             output.write(
                 f"{format_coordinate(x)} {format_coordinate(y)} "
@@ -137,16 +156,16 @@ def write_mesh(
 
         output.write("Hexahedra\n")
         output.write(f"{len(cells)}\n")
-        for i, k in cells:
+        for i, j, k in cells:
             corners = (
-                (i, 0, k),
-                (i + 1, 0, k),
-                (i + 1, 1, k),
-                (i, 1, k),
-                (i, 0, k + 1),
-                (i + 1, 0, k + 1),
-                (i + 1, 1, k + 1),
-                (i, 1, k + 1),
+                (i, j, k),
+                (i + 1, j, k),
+                (i + 1, j + 1, k),
+                (i, j + 1, k),
+                (i, j, k + 1),
+                (i + 1, j, k + 1),
+                (i + 1, j + 1, k + 1),
+                (i, j + 1, k + 1),
             )
             output.write(" ".join(str(vertex_ids[corner]) for corner in corners))
             output.write(" 1\n")
@@ -159,10 +178,7 @@ def main() -> int:
     validate_dimensions(args.length, args.height, args.leg_width, args.leg_height)
 
     output_path = args.output or default_output_path(
-        args.length,
-        args.height,
-        args.leg_width,
-        args.leg_height,
+        args.length, args.thickness, args.height, args.leg_width, args.leg_height
     )
     output_path = output_path.resolve()
     if output_path.exists() and not args.force:
@@ -170,21 +186,36 @@ def main() -> int:
             f"Output already exists: {output_path}\nUse --force to overwrite it."
         )
 
-    cells = build_cells(args.length, args.height, args.leg_width, args.leg_height)
+    cells = build_cells(
+        args.length,
+        args.thickness,
+        args.height,
+        args.leg_width,
+        args.leg_height,
+    )
     vertex_ids = build_vertex_ids(cells)
-    write_mesh(output_path, args.length, args.height, cells, vertex_ids)
+    write_mesh(
+        output_path,
+        args.length,
+        args.thickness,
+        args.height,
+        cells,
+        vertex_ids,
+    )
 
     expected_cells = (
         args.leg_width * args.height
         + (args.length - args.leg_width) * args.leg_height
-    )
+    ) * args.thickness
     if len(cells) != expected_cells:
         raise RuntimeError(
             f"Internal cell-count mismatch: generated {len(cells)}, expected {expected_cells}"
         )
 
     print(f"Generated: {output_path}")
-    print(f"Dimensions: L={args.length}, y=1, H={args.height}")
+    print(
+        f"Dimensions: L={args.length}, y={args.thickness}, H={args.height}"
+    )
     print(f"Legs: Ld={args.leg_width}, Hd={args.leg_height}")
     print(f"Vertices: {len(vertex_ids)}")
     print(f"Hexahedra: {len(cells)}")

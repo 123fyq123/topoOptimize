@@ -33,8 +33,14 @@
 #include <Eigen/Dense>
 #include "MMASolver.h"
 #include "MMC_Trace_Diagnostics.h"
+#include "MMC_TorsionLayout.h"
+#include "MMC_ThreeDimensionalLLayout.h"
 #include "OptimizationPaperRecorder.h"
+#include <filesystem>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <stdexcept>
 namespace Cuda_TopOpt_Pipeline_nsp {
 	using namespace nanoflann;
 	struct Point {
@@ -101,6 +107,81 @@ namespace Cuda_TopOpt_Pipeline_nsp {
 		}
 	}
 
+}
+
+namespace {
+	constexpr double kMmcIterationMeshDensityThreshold = 0.5;
+
+	void WriteMmcIterationMesh(
+		const std::map<int, Eigen::Vector3d>& all_vertex,
+		const std::map<int, std::vector<std::pair<int, Eigen::Vector3d>>>& cell_to_vertex,
+		const std::vector<double>& density,
+		const std::filesystem::path& output_path) {
+		std::vector<int> selected_cell_ids;
+		std::map<int, int> output_vertex_indices;
+
+		for (const auto& cell_entry : cell_to_vertex) {
+			const int cell_id = cell_entry.first;
+			if (cell_id < 0
+				|| cell_id >= static_cast<int>(density.size())
+				|| density[cell_id] < kMmcIterationMeshDensityThreshold) {
+				continue;
+			}
+			selected_cell_ids.push_back(cell_id);
+			for (const auto& vertex_entry : cell_entry.second) {
+				output_vertex_indices.emplace(vertex_entry.first, 0);
+			}
+		}
+
+		int next_output_index = 1;
+		for (auto& vertex_entry : output_vertex_indices) {
+			vertex_entry.second = next_output_index++;
+		}
+
+		std::filesystem::create_directories(output_path.parent_path());
+		std::ofstream output(output_path);
+		if (!output) {
+			throw std::runtime_error(
+				"Cannot create the MMC iteration mesh: " + output_path.string());
+		}
+
+		// 仅保留占有率达到显示阈值的单元，并重排实际使用的顶点，生成独立可读的 Medit 网格。
+		output << "MeshVersionFormatted 1\n";
+		output << "Dimension 3\n";
+		output << "Vertices\n" << output_vertex_indices.size() << "\n";
+		output << std::setprecision(17);
+		for (const auto& vertex_entry : output_vertex_indices) {
+			const auto vertex = all_vertex.find(vertex_entry.first);
+			if (vertex == all_vertex.end()) {
+				throw std::runtime_error(
+					"An MMC iteration mesh cell references an unknown vertex.");
+			}
+			output << vertex->second.x() << " "
+				<< vertex->second.y() << " "
+				<< vertex->second.z() << " -1\n";
+		}
+
+		output << "Hexahedra\n" << selected_cell_ids.size() << "\n";
+		for (const int cell_id : selected_cell_ids) {
+			const auto& cell_vertices = cell_to_vertex.at(cell_id);
+			if (cell_vertices.size() != 8) {
+				throw std::runtime_error(
+					"An MMC iteration mesh cell does not have eight vertices.");
+			}
+			for (const auto& vertex_entry : cell_vertices) {
+				output << output_vertex_indices.at(vertex_entry.first) << " ";
+			}
+			output << "1\n";
+		}
+		output << "End\n";
+		output.close();
+		if (!output) {
+			throw std::runtime_error(
+				"Failed while writing the MMC iteration mesh: " + output_path.string());
+		}
+		std::cout << "[MMC] Saved iteration mesh: "
+			<< output_path.string() << std::endl;
+	}
 }
 
 void GPU_MMA(
@@ -1683,7 +1764,8 @@ void Cuda_TopOpt_MMC_Node(
 	std::atomic_bool& is_need_update_model,
 	int mmcType,
 	const std::string& paper_record_path,
-	int* completed_iterations) {
+	int* completed_iterations,
+	const std::string& iteration_mesh_output_directory) {
 	Timer timer;
 	const auto paper_run_start = std::chrono::steady_clock::now();
 	optimization_paper_record::IterationWriter paper_output(paper_record_path, false);
@@ -2152,6 +2234,17 @@ void Cuda_TopOpt_MMC_Node(
 			0.0, 0.0, 1.0,
 			0.50 * DH);
 	}
+	else if (mmcType == 16) {
+		// 48 * 10 * 48 三维 L 型梁：L 平面采用 20 个局部 X 单元，
+		// 每个单元使用四根空间体对角杆和一根贯穿厚度的连接杆。
+		mmcComponents =
+			mmc_layout::MakeThreeDimensionalLBeamLayout<MMC_Component>(xyzRange);
+	}
+	else if (mmcType == 15) {
+		// 48 * 16 * 16 扭转梁：X 向三分段、Y 向双排、Z 向双层，
+		// 并以右端两根贯穿厚度的收集杆连接四个加载角。
+		mmcComponents = mmc_layout::MakeTorsionBeamLayout<MMC_Component>(xyzRange);
+	}
 	else if (mmcType == 14) {
 		// 128 * 1 * 128、臂宽 48 的 2.5D L 型梁。保持与 type 8
 		// 相近的晶格物理尺寸，使用 4 格臂宽和 6 格延伸区。
@@ -2618,6 +2711,20 @@ void Cuda_TopOpt_MMC_Node(
 		++paper_completed_iterations;
 		if (completed_iterations != nullptr) {
 			*completed_iterations = paper_completed_iterations;
+		}
+		if (!iteration_mesh_output_directory.empty()
+			&& paper_completed_iterations % 5 == 0) {
+			std::ostringstream mesh_file_name;
+			mesh_file_name << "iteration_"
+				<< std::setw(4) << std::setfill('0')
+				<< paper_completed_iterations
+				<< ".mesh";
+			WriteMmcIterationMesh(
+				allVertex,
+				cell2V,
+				density,
+				std::filesystem::path(iteration_mesh_output_directory)
+					/ mesh_file_name.str());
 		}
 		is_need_update_model = true;
 	}

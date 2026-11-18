@@ -110,6 +110,8 @@ public:
 	IGA::HexBdy hexbdy;
 	// IGA::CCBezierBdy ccbdy;
     std::vector<int> topopt_pro;
+	// 记录当前拓扑优化边界文件，用于给迭代结果目录标注受力工况。
+	std::string topopt_boundary_file;
 	void Read_Bdy(std::string& filename);
 	/// 
 	void savePickItem(string name);

@@ -112,6 +112,7 @@ void TopOpt_GPU_V0(std::string _filename,
 void TopOpt_GPU_MMC(std::string _filename,
 	IGA::HexBdy& hexbdy,
 	std::vector<int>& pro,
+	const std::string& boundary_condition_file,
 	int mmcType,
 	double target_rate,
 	double max_iter,
@@ -145,6 +146,18 @@ void TopOpt_GPU_MMC(std::string _filename,
 	std::string neighbor_file = "./temp/" + model_name + ".tinfo";  // <neighbor_id; weight>
 	std::string density_file = "./temp/" + model_name + ".density";
 	std::string protect_cells_file = "./temp/" + model_name + ".prot";
+
+	const std::filesystem::path model_path(_filename);
+	const std::string model_scale_name =
+		model_path.parent_path().filename().string();
+	const std::string load_case_name = boundary_condition_file.empty()
+		? "interactive_boundary"
+		: std::filesystem::path(boundary_condition_file).stem().string();
+	// 每个模型和受力工况使用独立目录，避免重复运行其他工况时覆盖结果。
+	const std::filesystem::path iteration_mesh_directory =
+		model_path.parent_path()
+		/ "result"
+		/ (model_scale_name + "_" + load_case_name);
 
 
 	IGA_CC_Helper::write2Bezier(bezier_file, m_solids);    // xml
@@ -217,7 +230,23 @@ void TopOpt_GPU_MMC(std::string _filename,
 
 	{
 		std::cout << "protected_cell size = " << pro.size() << "\n";
-		Cuda_TopOpt_MMC_Node(allVertex, cell2V, bezier_file, bdy_file, pro, neighbor_info, target_rate, max_iter, Yangs, Poisson, density, is_need_update_topopt_model, mmcType);
+		Cuda_TopOpt_MMC_Node(
+			allVertex,
+			cell2V,
+			bezier_file,
+			bdy_file,
+			pro,
+			neighbor_info,
+			target_rate,
+			max_iter,
+			Yangs,
+			Poisson,
+			density,
+			is_need_update_topopt_model,
+			mmcType,
+			std::string(),
+			nullptr,
+			iteration_mesh_directory.string());
 	}
 }
 

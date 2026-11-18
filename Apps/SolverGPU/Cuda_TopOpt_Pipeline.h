@@ -1,4 +1,4 @@
-//
+ï»¿//
 //
 // Created by XieJin on 10/27/2023.
 //
@@ -37,9 +37,10 @@ void Cuda_TopOpt_MMC_Node(
 	std::atomic_bool& is_need_update_model,
 	int mmcType,
 	const std::string& paper_record_path = std::string(),
-	int* completed_iterations = nullptr);
+	int* completed_iterations = nullptr,
+	const std::string& iteration_mesh_output_directory = std::string());
 
-//0-1ÀëÉ¢ÍØÆËÓÅ»¯
+//0-1ç¦»æ•£æ‹“æ‰‘ä¼˜åŒ–
 void Cuda_TopOpt_Discrete(const std::string& input_model_file,
 	const std::string& bdy_file,
 	const std::vector<int>& protect_cell_ids,
