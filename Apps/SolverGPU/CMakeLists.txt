@@ -66,6 +66,7 @@ add_library(${TargetName}
 		MMC_Trace_Diagnostics.h
 		MMC_TorsionLayout.h
 		MMC_ThreeDimensionalLLayout.h
+		MMC_ChairLayout.h
 		Cuda_TopOpt_MultiMaterial_SIMP.h
 		Cuda_TopOpt_MultiRes.h
 		Kernels/GP_Debug.cu

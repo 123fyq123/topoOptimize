@@ -23,6 +23,7 @@
 #include "MMC_Trace_Diagnostics.h"
 #include "MMC_TorsionLayout.h"
 #include "MMC_ThreeDimensionalLLayout.h"
+#include "MMC_ChairLayout.h"
 #include "OptimizationPaperRecorder.h"
 #include "Poster/source/Timer.h"
 #include "Poster/source/nanoflann.h"
@@ -1133,6 +1134,9 @@ std::vector<MMCComponent> InitializeComponentsForType(
 			0.50 * dz);
 		return components;
 	}
+	case 17:
+		// 与纯 MMC 共用椅子交叉细杆布局，保证顺序与同步算法使用相同初始几何。
+		return mmc_layout::MakeChairLayout<MMCComponent>(xyz_range);
 	case 16:
 		// 与纯 MMC 共用同一套三维 L 型梁初始组件，保证顺序和同步对比一致。
 		return mmc_layout::MakeThreeDimensionalLBeamLayout<MMCComponent>(xyz_range);

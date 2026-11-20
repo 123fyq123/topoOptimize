@@ -142,10 +142,10 @@ iGamePoster::iGamePoster(QWidget* parent) :QMainWindow(parent), ui(new Ui::MainW
 		ui->TopOpt_Iters_Simultaneous->setText("20");
 		ui->TopOpt_Iters_Simultaneous->setValidator(validator_2);
 		ui->TopOpt_MMC_type->setValidator(
-			new QIntValidator(1, 16, ui->TopOpt_MMC_type));
+			new QIntValidator(1, 17, ui->TopOpt_MMC_type));
 		ui->TopOpt_MMC_type_Simultaneous->setText("1");
 		ui->TopOpt_MMC_type_Simultaneous->setValidator(
-			new QIntValidator(1, 16, ui->TopOpt_MMC_type_Simultaneous));
+			new QIntValidator(1, 17, ui->TopOpt_MMC_type_Simultaneous));
 		ui->TopOpt_Material_Ratio->setText("1.5");
 		ui->TopOpt_Material_Ratio->setValidator(validator_2);
 		ui->TopOpt_Material_E1->setText("1.0");

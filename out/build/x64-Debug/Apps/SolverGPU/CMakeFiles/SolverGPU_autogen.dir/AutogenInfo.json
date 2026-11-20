@@ -193,6 +193,12 @@
 			null
 		],
 		[
+			"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/MMC_ChairLayout.h",
+			"MU",
+			"EWIEGA46WW/moc_MMC_ChairLayout.cpp",
+			null
+		],
+		[
 			"D:/labCode/LabViewer-Vsub/Apps/SolverGPU/MMC_ThreeDimensionalLLayout.h",
 			"MU",
 			"EWIEGA46WW/moc_MMC_ThreeDimensionalLLayout.cpp",

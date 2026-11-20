@@ -35,6 +35,7 @@
 #include "MMC_Trace_Diagnostics.h"
 #include "MMC_TorsionLayout.h"
 #include "MMC_ThreeDimensionalLLayout.h"
+#include "MMC_ChairLayout.h"
 #include "OptimizationPaperRecorder.h"
 #include <filesystem>
 #include <fstream>
@@ -2233,6 +2234,11 @@ void Cuda_TopOpt_MMC_Node(
 			xmax, ymin, center_z,
 			0.0, 0.0, 1.0,
 			0.50 * DH);
+	}
+	else if (mmcType == 17) {
+		// 24 * 24 * 40 三维椅子：底座和直椅背均使用局部空间交叉细杆，
+		// 并在座面及椅背加载区域补充短连接杆，保证初始传力路径连续。
+		mmcComponents = mmc_layout::MakeChairLayout<MMC_Component>(xyzRange);
 	}
 	else if (mmcType == 16) {
 		// 48 * 10 * 48 三维 L 型梁：L 平面采用 20 个局部 X 单元，
